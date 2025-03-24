@@ -1,21 +1,41 @@
 import { validateWordScrambleData } from "./templates/WordScramble/utils";
 import { validateJigsawConfig } from "./templates/JigsawPuzzle/utils";
 
+// Helper function to load puzzles with error handling
+const loadPuzzle = async (importFn, validator) => {
+  try {
+    const module = await importFn();
+    return validator(module.default);
+  } catch (error) {
+    console.error("Error loading puzzle:", error);
+    throw error;
+  }
+};
+
 // Word scramble puzzles registry
 export const wordScramblePuzzles = {
-  pillars: () => import("./data/wordscramble/pillars.json").then(module => validateWordScrambleData(module.default)),
-  ramadan: () => import("./data/wordscramble/ramadan.json").then(module => validateWordScrambleData(module.default)),
+  pillars: () => loadPuzzle(
+    () => import("./data/wordscramble/pillars.json"), 
+    validateWordScrambleData
+  ),
+  ramadan: () => loadPuzzle(
+    () => import("./data/wordscramble/ramadan.json"), 
+    validateWordScrambleData
+  ),
   // Add more word scramble puzzles here:
-  // prophets: () => import("./data/wordscramble/prophets.json").then(module => validateWordScrambleData(module.default)),
-  // prayers: () => import("./data/wordscramble/prayers.json").then(module => validateWordScrambleData(module.default)),
+  // prophets: () => loadPuzzle(() => import("./data/wordscramble/prophets.json"), validateWordScrambleData),
+  // prayers: () => loadPuzzle(() => import("./data/wordscramble/prayers.json"), validateWordScrambleData),
 };
 
 // Jigsaw puzzles registry
 export const jigsawPuzzles = {
-  kaaba: () => import("./data/jigsaw/kaaba.json").then(module => validateJigsawConfig(module.default)),
+  kaaba: () => loadPuzzle(
+    () => import("./data/jigsaw/kaaba.json"), 
+    validateJigsawConfig
+  ),
   // Add more jigsaw puzzles here:
-  // masjid: () => import("./data/jigsaw/masjid.json").then(module => validateJigsawConfig(module.default)),
-  // mosque: () => import("./data/jigsaw/mosque.json").then(module => validateJigsawConfig(module.default)),
+  // masjid: () => loadPuzzle(() => import("./data/jigsaw/masjid.json"), validateJigsawConfig),
+  // mosque: () => loadPuzzle(() => import("./data/jigsaw/mosque.json"), validateJigsawConfig),
 };
 
 // Get a list of all available puzzles for home page display

@@ -52,10 +52,39 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
 
   useEffect(() => initializeWord(), [currentWordIndex, data]);
 
+  const scrambleWord = (solution: string[]): string[] => {
+    let scrambled = [...solution];
+    
+    // Fisher-Yates shuffle algorithm for better randomization
+    for (let i = scrambled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [scrambled[i], scrambled[j]] = [scrambled[j], scrambled[i]];
+    }
+    
+    // Check if scrambled word is the same as original
+    if (scrambled.join('') === solution.join('')) {
+      // If it's the same, swap a couple of characters or try again
+      if (scrambled.length >= 2) {
+        // Force a swap of two characters
+        const pos1 = Math.floor(Math.random() * scrambled.length);
+        let pos2 = Math.floor(Math.random() * scrambled.length);
+        while (pos2 === pos1) {
+          pos2 = Math.floor(Math.random() * scrambled.length);
+        }
+        [scrambled[pos1], scrambled[pos2]] = [scrambled[pos2], scrambled[pos1]];
+      } else {
+        // For single character words, there's nothing to scramble
+        console.warn("Word too short to scramble:", solution.join(''));
+      }
+    }
+    
+    return scrambled;
+  };
+
   const initializeWord = () => {
     if (data.words && data.words.length > 0) {
       const solution = data.words[currentWordIndex].solution.split('');
-      const scrambled = solution.sort(() => Math.random() - 0.5);
+      const scrambled = scrambleWord(solution);
       setLetters(scrambled);
     }
   };
