@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "title": "Ramadan Word Scramble",
+    "difficulty": "medium",
+    "learningObjectives": ["Learn about Ramadan"],
+    "instructions": "Unscramble the words to learn about the Ramadan."
+  },
+  "words": [
+    {
+      "solution": "Fasting",
+      "hint": "One of the five pillars of Islam",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Iftar",
+      "hint": "Meal to break the fast",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Suhoor",
+      "hint": "Meal before the fast begins",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Quran",
+      "hint": "Holy book of Islam",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Ramadan",
+      "hint": "Month of fasting",
+      "reference": "Islamic teachings"
+    }
+  ]
+}

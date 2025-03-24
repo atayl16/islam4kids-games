@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "title": "Kaaba Puzzle",
+    "difficulty": "medium",
+    "learningObjectives": [
+      "Learn about the Kaaba",
+      "Improve problem-solving skills"
+    ],
+    "imageAlt": "Kaaba image"
+  },
+  "jigsawConfig": {
+    "imageSrc": "/images/kaaba.png",
+    "rows": 4,
+    "columns": 5
+  }
+}

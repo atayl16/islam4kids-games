@@ -1,0 +1,128 @@
+/* Overall container */
+.puzzle-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Container maintains aspect ratio */
+.puzzle-container {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Controls section */
+.puzzle-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+/* Progress indicator */
+.progress {
+  margin-left: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Game area container */
+.game-area {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  overflow: visible;
+}
+
+/* Puzzle board */
+.puzzle-board {
+  position: relative;
+  background-color: #f8f4e3;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* Piece tray */
+.piece-tray {
+  position: relative;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+/* Background guide */
+.puzzle-guide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  z-index: 1;
+  border-radius: 2px;
+}
+
+/* Individual puzzle piece */
+.piece {
+  position: absolute;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-sizing: border-box;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Completed piece styling */
+.piece.solved {
+  border-color: rgba(0,0,0,0.2);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+/* Target position indicator */
+.piece-placeholder {
+  position: absolute;
+  background: rgba(200, 200, 200, 0.3);
+  z-index: 2;
+}
+
+/* Completion message */
+.completion-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(43, 88, 12, 0.9);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  z-index: 30;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .piece {
+    border-width: 0.5px;
+  }
+  
+  .completion-message {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+    width: 80%;
+  }
+}

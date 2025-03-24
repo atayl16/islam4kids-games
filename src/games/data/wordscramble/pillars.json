@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "title": "Pillars of Islam",
+    "difficulty": "medium",
+    "learningObjectives": ["Learn the pillars of Islam"],
+    "instructions": "Unscramble the words to learn about the pillars of Islam."
+  },
+  "words": [
+    {
+      "solution": "Pray",
+      "hint": "One of the five pillars of Islam",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Charity",
+      "hint": "One of the five pillars of Islam",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Fasting",
+      "hint": "One of the five pillars of Islam",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Pilgrimage",
+      "hint": "One of the five pillars of Islam",
+      "reference": "Islamic teachings"
+    },
+    {
+      "solution": "Faith",
+      "hint": "One of the five pillars of Islam",
+      "reference": "Islamic teachings"
+    }
+  ]
+}

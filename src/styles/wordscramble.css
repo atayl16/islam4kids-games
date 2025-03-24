@@ -1,0 +1,151 @@
+/* Word Scramble Game Styles */
+.word-scramble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  min-width: 800px; /* Ensure minimum width */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.scramble-title {
+  color: #4a8f29;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.scramble-instructions {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.letter-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+  width: 100%;
+  min-height: 80px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.letter-tile {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: #f2f7ed;
+  border: 2px solid #4a8f29;
+  border-radius: 8px;
+  cursor: grab;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.letter-tile.dragging {
+  opacity: 0.5;
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.letter-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.scramble-controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.scramble-button {
+  padding: 10px 20px;
+  min-width: 120px;
+  background-color: #4a8f29;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scramble-button:hover {
+  background-color: #3d7620;
+  transform: translateY(-2px);
+}
+
+.hint-box {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f2f7ed;
+  border-radius: 8px;
+  border-left: 4px solid #4a8f29;
+  width: 100%;
+  max-width: 600px;
+}
+
+.hint-box h3 {
+  color: #4a8f29;
+  margin-bottom: 10px;
+}
+
+.reference {
+  margin-top: 10px;
+  font-style: italic;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Make sure game container has fixed width */
+.game-container {
+  width: 100%;
+  max-width: 1000px;
+  min-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 850px) {
+  .word-scramble,
+  .game-container {
+    min-width: 95%;
+  }
+  
+  .letter-tile {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+  
+  .scramble-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .scramble-button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
