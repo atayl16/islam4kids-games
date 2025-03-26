@@ -1,0 +1,88 @@
+{
+  "words": [
+    {
+      "term": "Shahada",
+      "translation": "Declaration of Faith",
+      "arabic": "الشهادة",
+      "hints": ["First pillar", "Includes declaration of Tawheed", "Quran 3:18"],
+      "categories": ["Pillars"]
+    },
+    {
+      "term": "Salah",
+      "translation": "Prayer",
+      "arabic": "الصلاة",
+      "hints": ["Second pillar", "Performed five times daily", "Quran 29:45"],
+      "categories": ["Pillars"]
+    },
+    {
+      "term": "Sawm",
+      "translation": "Fasting",
+      "arabic": "الصوم",
+      "hints": ["Third pillar", "During the month of Ramadan", "Quran 2:183"],
+      "categories": ["Pillars", "Ramadan"]
+    },
+    {
+      "term": "Zakat",
+      "translation": "Charity",
+      "arabic": "الزكاة",
+      "hints": ["Fourth pillar", "Obligatory charity", "Quran 2:110"],
+      "categories": ["Pillars", "Ramadan"]
+    },
+    {
+      "term": "Hajj",
+      "translation": "Pilgrimage",
+      "arabic": "الحج",
+      "hints": ["Fifth pillar", "To Makkah", "Quran 3:97"],
+      "categories": ["Pillars"]
+    },
+    {
+      "term": "Tawheed",
+      "translation": "Oneness of God",
+      "arabic": "التوحيد",
+      "hints": ["Belief in one God", "First part of Shahada", "Quran 112:1"],
+      "categories": ["Beliefs"]
+    },
+    {
+      "term": "Risalah",
+      "translation": "Prophethood",
+      "arabic": "الرسالة",
+      "hints": ["Belief in Prophets", "Second part of Shahada", "Quran 3:144"],
+      "categories": ["Beliefs"]
+    },
+    {
+      "term": "Akhirah",
+      "translation": "Hereafter",
+      "arabic": "الآخرة",
+      "hints": ["Belief in the afterlife", "Day of Judgement", "Quran 2:197"],
+      "categories": ["Beliefs"]
+    },
+    {
+      "term": "Qadr",
+      "translation": "Predestination",
+      "arabic": "القدر",
+      "hints": ["Belief in fate", "Everything is written", "Quran 6:59"],
+      "categories": ["Beliefs"]
+    },
+    {
+      "term": "Quran",
+      "translation": "Recitation",
+      "arabic": "القرآن",
+      "hints": ["Holy book of Islam", "Revealed to Prophet Muhammad", "Quran 2:185"],
+      "categories": ["Quran"]
+    },
+    {
+      "term": "Hadith",
+      "translation": "Tradition",
+      "arabic": "الحديث",
+      "hints": ["Sayings of Prophet Muhammad", "Second source of Islamic teachings", "Sahih Bukhari"],
+      "categories": ["Hadith"]
+    },
+    {
+      "term": "Sunnah",
+      "translation": "Practice",
+      "arabic": "السنة",
+      "hints": ["Actions of Prophet Muhammad", "Third source of Islamic teachings", "Quran 33:21"],
+      "categories": ["Sunnah"]
+    }      
+  ]
+}

@@ -7,8 +7,10 @@ export const validateWordScrambleData = (data: unknown): WordScrambleData => {
 
   const d = data as WordScrambleData;
 
-  if (!["easy", "medium", "hard"].includes(d.meta.difficulty)) {
-    throw new Error(`Invalid difficulty level: ${d.meta.difficulty}`);
+  // Remove difficulty validation requirement
+  // Make sure words array exists
+  if (!Array.isArray(d.words) || d.words.length === 0) {
+    throw new Error("Game data must include words array");
   }
 
   return d;
