@@ -11,8 +11,8 @@ type PieceProps = {
   initialY: number;
   isSolved: boolean;
   onDrop: (id: number, x: number, y: number) => boolean;
-  boardPosition?: { top: number, left: number };
   checkPosition?: (id: number, x: number, y: number) => boolean;
+  boardPosition?: { top: number; left: number };
 };
 
 export const Piece = ({
@@ -25,8 +25,8 @@ export const Piece = ({
   initialY,
   isSolved,
   onDrop,
-  boardPosition = { top: 0, left: 0 },
-  checkPosition
+  checkPosition,
+  boardPosition
 }: PieceProps) => {
   const pieceRef = useRef<HTMLDivElement>(null);
   const initialPosition = useRef({ x: initialX, y: initialY });
@@ -40,8 +40,7 @@ export const Piece = ({
     type: "puzzle-piece",
     item: { id, initialX, initialY },
     canDrag: !isSolved, // Prevent dragging solved pieces
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
+    end: (_, monitor) => {
       const offset = monitor.getDifferenceFromInitialOffset();
       
       if (offset) {
@@ -50,7 +49,7 @@ export const Piece = ({
         const y = initialPosition.current.y + offset.y;
         
         // Check if near correct position
-        const isCorrect = checkPosition ? checkPosition(id, x, y) : false;
+        checkPosition ? checkPosition(id, x, y) : false;
         
         // If in correct position, snap directly
         // Otherwise, pass to onDrop which will handle further actions

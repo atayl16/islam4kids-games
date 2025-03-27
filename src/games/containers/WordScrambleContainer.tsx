@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { WordScramble } from "../templates/WordScramble";
-import { wordScramblePuzzles } from "../registry";
+import { wordScramblePuzzles, WordScrambleData } from "../registry";
 
 export const WordScrambleContainer = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
-  const [puzzleData, setPuzzleData] = useState(null);
+  const [puzzleData, setPuzzleData] = useState<WordScrambleData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!gameSlug || !wordScramblePuzzles[gameSlug]) {
+    if (!gameSlug || !(gameSlug in wordScramblePuzzles)) {
       setError("Puzzle not found");
       setLoading(false);
       return;
@@ -18,7 +18,7 @@ export const WordScrambleContainer = () => {
 
     const loadPuzzle = async () => {
       try {
-        const data = await wordScramblePuzzles[gameSlug]();
+        const data = await (wordScramblePuzzles as Record<string, () => Promise<WordScrambleData>>)[gameSlug]();
         setPuzzleData(data);
         setLoading(false);
       } catch (err) {

@@ -1,5 +1,8 @@
 import { WordScrambleData } from "./types";
 
+// Re-export the type so it can be imported from utils.ts
+export type { WordScrambleData };
+
 export const validateWordScrambleData = (data: unknown): WordScrambleData => {
   if (!data || typeof data !== "object") {
     throw new Error("Invalid game data");

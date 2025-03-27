@@ -1,8 +1,11 @@
-import { validateWordScrambleData } from "./templates/WordScramble/utils";
+import { validateWordScrambleData, WordScrambleData } from "./templates/WordScramble/utils";
 import { validateJigsawConfig } from "./templates/JigsawPuzzle/utils";
 
+// Re-export the WordScrambleData type
+export type { WordScrambleData };
+
 // Helper function to load puzzles with error handling
-const loadPuzzle = async (importFn, validator) => {
+const loadPuzzle = async (importFn: () => Promise<{ default: any }>, validator: (data: any) => any) => {
   try {
     const module = await importFn();
     return validator(module.default);
@@ -13,10 +16,10 @@ const loadPuzzle = async (importFn, validator) => {
 };
 
 // Extract all unique categories from the word bank
-const getWordBankCategories = async () => {
+const getWordBankCategories = async (): Promise<string[]> => {
   try {
     const wordBank = await import("./data/word-bank/words.json");
-    const allCategories = new Set();
+    const allCategories = new Set<string>();
     
     wordBank.default.words.forEach(word => {
       word.categories.forEach(category => {
@@ -32,7 +35,7 @@ const getWordBankCategories = async () => {
 };
 
 // Function to load word bank and filter by category
-const loadWordBankByCategory = async (category) => {
+const loadWordBankByCategory = async (category: string) => {
   try {
     const wordBank = await import("./data/word-bank/words.json");
     const filteredWords = wordBank.default.words.filter(word => 
@@ -62,9 +65,9 @@ const loadWordBankByCategory = async (category) => {
 };
 
 // Dynamically build word scramble puzzles from all categories
-export const buildWordScramblePuzzles = async () => {
+const buildWordScramblePuzzles = async (): Promise<{ [key: string]: () => Promise<WordScrambleData> }> => {
   const categories = await getWordBankCategories();
-  const puzzles = {};
+  const puzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
   
   categories.forEach(category => {
     // Convert category to kebab-case for URL slugs
@@ -76,7 +79,7 @@ export const buildWordScramblePuzzles = async () => {
 };
 
 // Word scramble puzzles registry - dynamically built
-export let wordScramblePuzzles = {
+export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {
   pillars: () => loadWordBankByCategory("Pillars"),
   ramadan: () => loadWordBankByCategory("Ramadan"),
 };

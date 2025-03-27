@@ -187,7 +187,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   };
 
   // Get current dimensions
-  const { containerWidth, containerHeight, pieceWidth, pieceHeight } =
+  const { containerWidth, containerHeight, pieceWidth } =
     calculateDimensions();
   const solvedCount = pieces.filter((p) => p.solved).length;
   const totalPieces = data.jigsawConfig.rows * data.jigsawConfig.columns;

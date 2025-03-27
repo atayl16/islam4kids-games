@@ -10,7 +10,7 @@ export const JigsawPuzzleContainer = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!puzzleSlug || !jigsawPuzzles[puzzleSlug]) {
+    if (!puzzleSlug || !(puzzleSlug in jigsawPuzzles)) {
       setError("Puzzle not found");
       setLoading(false);
       return;
@@ -18,7 +18,7 @@ export const JigsawPuzzleContainer = () => {
 
     const loadPuzzle = async () => {
       try {
-        const data = await jigsawPuzzles[puzzleSlug]();
+        const data = await jigsawPuzzles[puzzleSlug as keyof typeof jigsawPuzzles]();
         setPuzzleData(data);
         setLoading(false);
       } catch (err) {
