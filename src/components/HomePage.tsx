@@ -11,7 +11,7 @@ const formatName = (slug: string) => {
 };
 
 // Game card component
-const GameCard = ({ title, type, slug, path }: { title: string; type: string; slug: string; path: string }) => {
+const GameCard = ({ title, type, path }: { title: string; type: string; slug: string; path: string }) => {
   return (
     <Link to={path} className="game-card">
       <div className={`game-icon ${type}`}>
