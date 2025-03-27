@@ -1,0 +1,168 @@
+.word-search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.word-search-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: #2e7d32;
+  text-align: center;
+}
+
+.word-search-instructions {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.word-search-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 2rem;
+}
+
+.word-search-grid {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.word-search-row {
+  display: flex;
+}
+
+.word-search-cell {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 4px;
+  margin: 2px;
+  transition: all 0.2s;
+}
+
+.word-search-cell:hover {
+  background-color: #e0e0e0;
+}
+
+.word-search-cell.selected {
+  background-color: #c5e1a5;
+  color: #33691e;
+}
+
+.word-search-cell.found {
+  background-color: #81c784;
+  color: #2e7d32;
+}
+
+.word-search-words {
+  min-width: 200px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.word-search-words h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #2e7d32;
+  text-align: center;
+}
+
+.word-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.word-item {
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.word-item.found {
+  text-decoration: line-through;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.word-item .word {
+  font-weight: bold;
+}
+
+.word-item .hint {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.progress {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.completion-message {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 1rem;
+  background-color: #e8f5e9;
+  color: darkgreen;
+  border-radius: 8px;
+  border: 2px solid #81c784;
+}
+
+.completion-message h3 {
+  margin-top: 0;
+}
+
+.completion-message button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.completion-message button:hover {
+  background-color: #388e3c;
+}
+
+@media (max-width: 768px) {
+  .word-search-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .word-search-cell {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+  
+  .word-search-words {
+    margin-top: 1.5rem;
+    width: 100%;
+    max-width: 350px;
+  }
+}

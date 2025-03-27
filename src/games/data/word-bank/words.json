@@ -68,21 +68,196 @@
       "translation": "Recitation",
       "arabic": "القرآن",
       "hints": ["Holy book of Islam", "Revealed to Prophet Muhammad", "Quran 2:185"],
-      "categories": ["Quran"]
+      "categories": ["General"]
     },
     {
       "term": "Hadith",
       "translation": "Tradition",
       "arabic": "الحديث",
       "hints": ["Sayings of Prophet Muhammad", "Second source of Islamic teachings", "Sahih Bukhari"],
-      "categories": ["Hadith"]
+      "categories": ["General"]
     },
     {
       "term": "Sunnah",
       "translation": "Practice",
       "arabic": "السنة",
       "hints": ["Actions of Prophet Muhammad", "Third source of Islamic teachings", "Quran 33:21"],
-      "categories": ["Sunnah"]
-    }      
+      "categories": ["General"]
+    },
+    {
+      "term": "Muhammad",
+      "translation": "Praised One",
+      "arabic": "محمد",
+      "hints": ["Last Prophet", "Born in Makkah", "Received the Quran"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Ibrahim",
+      "translation": "Abraham",
+      "arabic": "إبراهيم",
+      "hints": ["Built the Kaaba", "Father of Ismail", "Friend of Allah"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Musa",
+      "translation": "Moses",
+      "arabic": "موسى",
+      "hints": ["Received the Torah", "Spoke to Allah directly", "Led the Children of Israel"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Isa",
+      "translation": "Jesus",
+      "arabic": "عيسى",
+      "hints": ["Born to Maryam", "Performed miracles", "Will return before Day of Judgment"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Nuh",
+      "translation": "Noah",
+      "arabic": "نوح",
+      "hints": ["Built an ark", "Great flood", "Preached for many years"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Adam",
+      "translation": "First human",
+      "arabic": "آدم",
+      "hints": ["First Prophet", "Created from clay", "Taught all names"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Yusuf",
+      "translation": "Joseph",
+      "arabic": "يوسف",
+      "hints": ["Son of Yaqub", "Dream interpreter", "Ruler in Egypt"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Sulaiman",
+      "translation": "Solomon",
+      "arabic": "سليمان",
+      "hints": ["Son of Dawud", "Could speak to animals", "Great king with wisdom"],
+      "categories": ["Prophets"]
+    },
+    {
+      "term": "Iftar",
+      "translation": "Breaking fast",
+      "arabic": "إفطار",
+      "hints": ["After sunset", "First meal after fasting", "Often starts with dates"],
+      "categories": ["Ramadan"]
+    },
+    {
+      "term": "Suhoor",
+      "translation": "Pre-dawn meal",
+      "arabic": "سحور",
+      "hints": ["Before Fajr", "Last meal before fasting", "Important for strength during fast"],
+      "categories": ["Ramadan"]
+    },
+    {
+      "term": "Taraweeh",
+      "translation": "Night prayers",
+      "arabic": "تراويح",
+      "hints": ["Special Ramadan prayers", "After Isha", "Usually in congregation"],
+      "categories": ["Ramadan"]
+    },
+    {
+      "term": "Laylatul Qadr",
+      "translation": "Night of Power",
+      "arabic": "ليلة القدر",
+      "hints": ["Better than 1000 months", "Quran was revealed", "In the last 10 days of Ramadan"],
+      "categories": ["Ramadan"]
+    },
+    {
+      "term": "Eid",
+      "translation": "Festival",
+      "arabic": "عيد",
+      "hints": ["Celebration after Ramadan", "Special prayer", "Giving gifts"],
+      "categories": ["Ramadan"]
+    },
+    {
+      "term": "Masjid",
+      "translation": "Mosque",
+      "arabic": "مسجد",
+      "hints": ["Place of worship", "Where Muslims pray", "Has a mihrab and minbar"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Wudu",
+      "translation": "Ablution",
+      "arabic": "وضوء",
+      "hints": ["Ritual washing", "Before prayer", "Cleanses body and mind"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Ihsan",
+      "translation": "Excellence",
+      "arabic": "إحسان",
+      "hints": ["Doing good", "Worship as if you see Allah", "Best level of faith"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Taqwa",
+      "translation": "God-consciousness",
+      "arabic": "تقوى",
+      "hints": ["Awareness of Allah", "Fear and love of Allah", "Protection against sin"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Jannah",
+      "translation": "Paradise",
+      "arabic": "جنة",
+      "hints": ["Reward for believers", "Gardens with rivers", "Eternal happiness"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Dua",
+      "translation": "Supplication",
+      "arabic": "دعاء",
+      "hints": ["Asking Allah", "Personal prayer", "Direct communication with Allah"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Iman",
+      "translation": "Faith",
+      "arabic": "إيمان",
+      "hints": ["Belief in heart", "Trust in Allah", "Six articles of faith"],
+      "categories": ["Beliefs"]
+    },
+    {
+      "term": "Halal",
+      "translation": "Permissible",
+      "arabic": "حلال",
+      "hints": ["Allowed in Islam", "Opposite of haram", "Lawful food and actions"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Fiqh",
+      "translation": "Jurisprudence",
+      "arabic": "فقه",
+      "hints": ["Understanding of Islamic law", "Rules for worship and daily life", "Different schools"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Ummah",
+      "translation": "Community",
+      "arabic": "أمة",
+      "hints": ["Global Muslim community", "Brotherhood and sisterhood", "United by faith"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Sadaqah",
+      "translation": "Voluntary charity",
+      "arabic": "صدقة",
+      "hints": ["Giving to the needy", "Not obligatory", "Form of worship"],
+      "categories": ["General"]
+    },
+    {
+      "term": "Jihad",
+      "translation": "Struggle",
+      "arabic": "جهاد",
+      "hints": ["Striving in the way of Allah", "Inner spiritual struggle", "Effort against evil"],
+      "categories": ["General"]
+    }
   ]
 }
