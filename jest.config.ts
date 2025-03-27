@@ -15,6 +15,10 @@ const config: Config = {
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
+  // Add this option to show failing tests last
+  reporters: [
+    ["default", { "reverseTestOrder": true }]
+  ]
 };
 
 export default config;

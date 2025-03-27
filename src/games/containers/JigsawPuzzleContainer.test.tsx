@@ -12,11 +12,6 @@ jest.mock("../templates/JigsawPuzzle", () => ({
   ),
 }));
 
-// Define the type for the mocked jigsawPuzzles
-interface MockedJigsawPuzzles {
-  "valid-puzzle": jest.Mock<() => Promise<{ id: string; pieces: number }>>;
-}
-
 // Mock the jigsawPuzzles registry
 jest.mock("../registry", () => {
   const mockJigsawPuzzles: { [key: string]: jest.Mock } = {
