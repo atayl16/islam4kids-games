@@ -5,8 +5,16 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "resolveJsonModule": true,
-    "esModuleInterop": true
+    "jsx": "react-jsx", // Enables JSX support
+    "module": "ESNext", // Ensures ES module support
+    "target": "ESNext", // Ensures modern JavaScript support
+    "strict": true, // Optional: Enables strict type checking
+    "esModuleInterop": true, // Ensures compatibility with CommonJS modules
+    "skipLibCheck": true, // Optional: Skips type checking of declaration files
+    "moduleResolution": "node", // Ensures proper module resolution
+    "allowJs": true, // Optional: Allows JavaScript files
+    "resolveJsonModule": true, // Optional: Allows importing JSON files
+    "types": ["@testing-library/jest-dom", "node"] // Ensures type definitions for Jest and Node.js
   }
 }
 
