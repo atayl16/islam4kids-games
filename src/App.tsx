@@ -4,9 +4,12 @@ import { Header } from "./components/Header";
 import { HomePage } from "./components/HomePage";
 import { WordScrambleContainer } from "./games/containers/WordScrambleContainer";
 import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer";
+import { WordSearchContainer } from "./games/containers/WordSearchContainer";
 import "./styles/base.css";
 import "./styles/wordscramble.css";
 import "./styles/jigsaw.css";
+import "./styles/wordsearch.css";
+
 
 export default function App() {
   return (
@@ -31,6 +34,24 @@ export default function App() {
           element={
             <div className="embed-wrapper">
               <WordScrambleContainer />
+            </div>
+          } 
+        />
+
+        <Route 
+          path="/wordsearch/:gameSlug" 
+          element={
+            <div className="game-container">
+              <WordSearchContainer />
+            </div>
+          } 
+        />
+
+        <Route 
+          path="/embed/wordsearch/:gameSlug" 
+          element={
+            <div className="embed-wrapper">
+              <WordSearchContainer />
             </div>
           } 
         />

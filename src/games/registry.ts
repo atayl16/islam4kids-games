@@ -1,8 +1,24 @@
 import { validateWordScrambleData, WordScrambleData } from "./templates/WordScramble/utils";
 import { validateJigsawConfig } from "./templates/JigsawPuzzle/utils";
+import { 
+  WordSearchData,
+  generateWordSearchGrid 
+} from "./templates/WordSearch";
+import wordBankData from "./data/word-bank/words.json";
 
-// Re-export the WordScrambleData type
-export type { WordScrambleData };
+// Initialize empty puzzle registries that will be populated dynamically
+export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
+export let wordSearchPuzzles: { [key: string]: () => Promise<WordSearchData> } = {};
+
+// Update getAvailablePuzzles to always return the current puzzles
+export const getAvailablePuzzles = () => ({
+  wordScramble: Object.keys(wordScramblePuzzles),
+  jigsaw: Object.keys(jigsawPuzzles),
+  wordSearch: Object.keys(wordSearchPuzzles),
+});
+
+// Re-export the WordScrambleData and WordSearchData types
+export type { WordScrambleData, WordSearchData };
 
 // Helper function to load puzzles with error handling
 const loadPuzzle = async (importFn: () => Promise<{ default: any }>, validator: (data: any) => any) => {
@@ -15,21 +31,39 @@ const loadPuzzle = async (importFn: () => Promise<{ default: any }>, validator: 
   }
 };
 
-// Extract all unique categories from the word bank
-const getWordBankCategories = async (): Promise<string[]> => {
+// Helper function to count words for a given category
+const getWordCountForCategory = (category: string): number => {
+  return wordBankData.words.filter(word => 
+    word.categories.includes(category)
+  ).length;
+};
+
+// Extract all unique categories from the word bank that have enough words
+const getWordBankCategories = (): string[] => {
   try {
-    const wordBank = await import("./data/word-bank/words.json");
-    const allCategories = new Set<string>();
+    const categoryMap = new Map<string, number>();
     
-    wordBank.default.words.forEach(word => {
-      word.categories.forEach(category => {
-        allCategories.add(category);
-      });
+    // Count words per category
+    wordBankData.words.forEach(word => {
+      if (word.categories) {
+        word.categories.forEach(category => {
+          const currentCount = categoryMap.get(category) || 0;
+          categoryMap.set(category, currentCount + 1);
+        });
+      }
     });
     
-    return Array.from(allCategories) as string[];
+    // Filter categories with enough words (at least 4 for a reasonable puzzle)
+    const MIN_WORDS_FOR_PUZZLE = 4;
+    const validCategories = Array.from(categoryMap.entries())
+      .filter(([category, count]) => {
+        return count >= MIN_WORDS_FOR_PUZZLE && category !== "General";
+      })
+      .map(([category]) => category);
+    
+    return validCategories;
   } catch (error) {
-    console.error("Error loading word bank categories:", error);
+    console.error("Error processing word bank categories:", error);
     return [];
   }
 };
@@ -37,8 +71,7 @@ const getWordBankCategories = async (): Promise<string[]> => {
 // Function to load word bank and filter by category
 const loadWordBankByCategory = async (category: string) => {
   try {
-    const wordBank = await import("./data/word-bank/words.json");
-    const filteredWords = wordBank.default.words.filter(word => 
+    const filteredWords = wordBankData.words.filter(word => 
       word.categories.includes(category)
     );
     
@@ -54,7 +87,7 @@ const loadWordBankByCategory = async (category: string) => {
       },
       words: filteredWords.map(word => ({
         solution: word.term,
-        hint: word.hints[0] || `This is a ${category} term`,
+        hint: word.hints?.[0] || `This is a ${category} term`,
         reference: word.translation
       }))
     });
@@ -64,32 +97,66 @@ const loadWordBankByCategory = async (category: string) => {
   }
 };
 
-// Dynamically build word scramble puzzles from all categories
-const buildWordScramblePuzzles = async (): Promise<{ [key: string]: () => Promise<WordScrambleData> }> => {
-  const categories = await getWordBankCategories();
-  const puzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
+// Function to generate word search from category
+const loadWordSearchByCategory = async (category: string, difficulty: string = "medium") => {
+  try {
+    return generateWordSearchGrid(category, difficulty);
+  } catch (error) {
+    console.error(`Error generating word search for category ${category}:`, error);
+    throw error;
+  }
+};
+
+// Function to convert category name to a URL-friendly slug
+const categoryToSlug = (category: string): string => {
+  return category.toLowerCase().replace(/\s+/g, "-");
+};
+
+// Function to initialize all puzzles
+const initializePuzzles = () => {
+  const validCategories = getWordBankCategories();
+  console.log(`Found ${validCategories.length} categories with enough words:`, validCategories);
   
-  categories.forEach(category => {
-    // Convert category to kebab-case for URL slugs
-    const slug = category.toLowerCase().replace(/\s+/g, '-');
-    puzzles[slug] = () => loadWordBankByCategory(category);
+  // Reset puzzles
+  wordScramblePuzzles = {};
+  wordSearchPuzzles = {};
+  
+  // Build both puzzle types for each category
+  validCategories.forEach(category => {
+    const slug = categoryToSlug(category);
+    
+    // Add word scramble puzzle
+    wordScramblePuzzles[slug] = () => loadWordBankByCategory(category);
+    
+    // Add word search puzzle
+    wordSearchPuzzles[slug] = () => loadWordSearchByCategory(category);
+    
+    console.log(`Added puzzles for category: ${category} (slug: ${slug})`);
   });
   
-  return puzzles;
+  // Add general category if it has enough words
+  if (getWordCountForCategory("General") >= 5) {
+    const generalSlug = categoryToSlug("General");
+    wordScramblePuzzles[generalSlug] = () => loadWordBankByCategory("General");
+    wordSearchPuzzles[generalSlug] = () => loadWordSearchByCategory("General");
+    console.log(`Added puzzles for General category`);
+  }
 };
 
-// Word scramble puzzles registry - dynamically built
-export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {
-  pillars: () => loadWordBankByCategory("Pillars"),
-  ramadan: () => loadWordBankByCategory("Ramadan"),
+// Initialize puzzles immediately
+initializePuzzles();
+
+// Add an event handler for rebuilding puzzles
+// This can be called after updating the words.json file programmatically
+export const rebuildPuzzles = () => {
+  initializePuzzles();
+  return {
+    wordScramble: Object.keys(wordScramblePuzzles),
+    wordSearch: Object.keys(wordSearchPuzzles)
+  };
 };
 
-// Initialize dynamic puzzles
-buildWordScramblePuzzles().then(puzzles => {
-  wordScramblePuzzles = puzzles;
-});
-
-// Jigsaw puzzles registry - unchanged
+// Jigsaw puzzles registry - these still need to be defined manually
 export const jigsawPuzzles = {
   kaaba: () => loadPuzzle(
     () => import("./data/jigsaw/kaaba.json"), 
@@ -98,15 +165,4 @@ export const jigsawPuzzles = {
   // Add more jigsaw puzzles here:
   // masjid: () => loadPuzzle(() => import("./data/jigsaw/masjid.json"), validateJigsawConfig),
   // mosque: () => loadPuzzle(() => import("./data/jigsaw/mosque.json"), validateJigsawConfig),
-};
-
-// Get a list of all available puzzles for home page display
-export const getAvailablePuzzles = () => {
-  const wordScrambleKeys = Object.keys(wordScramblePuzzles);
-  const jigsawKeys = Object.keys(jigsawPuzzles);
-  
-  return {
-    wordScramble: wordScrambleKeys,
-    jigsaw: jigsawKeys
-  };
 };
