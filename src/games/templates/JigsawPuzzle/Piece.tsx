@@ -25,8 +25,7 @@ export const Piece = ({
   initialY,
   isSolved,
   onDrop,
-  checkPosition,
-  boardPosition
+  checkPosition
 }: PieceProps) => {
   const pieceRef = useRef<HTMLDivElement>(null);
   const initialPosition = useRef({ x: initialX, y: initialY });

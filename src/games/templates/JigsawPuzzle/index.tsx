@@ -49,7 +49,6 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     let pieceHeight = pieceWidth;
     
     // Calculate total dimensions preserving aspect ratio
-    const containerWidth = pieceWidth * columns;
     const containerHeight = pieceHeight * rows;
     
     // If container is too tall, scale down proportionally
