@@ -1,11 +1,13 @@
-name: Build and Test
+name: Run Tests
 
 on:
+  pull_request:
+    branches: [ main ]
   push:
     branches: [ main ]
 
 jobs:
-  test-build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,14 +23,6 @@ jobs:
       
       - name: Run tests
         run: npm test
-      
+
       - name: Build project
         run: npm run build
-      
-      # Note: Actual deployment happens through direct Netlify-GitHub integration
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist-files
-          path: dist
-          retention-days: 5
