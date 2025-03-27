@@ -1,12 +1,15 @@
 .app-header {
+  position: fixed; /* Fix the header at the top */
+  top: 0;
+  left: 0;
+  width: 100%; /* Ensure the header spans the full width */
   background: linear-gradient(to right, #4a8f29, #68bf3b);
   padding: 15px 0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  z-index: 1000; /* Ensure the header stays above all other content */
 }
 
+/* Ensure the header container is centered and does not affect the header's width */
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -14,6 +17,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .header-logo {
@@ -97,4 +101,9 @@
     padding: 6px 12px;
     font-size: 0.9rem;
   }
+}
+
+/* Add padding to the body to prevent content from being hidden behind the fixed header */
+body {
+  padding-top: 75px; /* Adjust this value to match the height of your header */
 }

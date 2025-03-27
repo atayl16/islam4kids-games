@@ -181,27 +181,6 @@ html {
   }
 }
 
-/* Consistent width containers */
-.app-header {
-  width: 100%;
-  position: relative;
-  background-color: var(--islamic-green);
-  padding: 15px 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 100;
-}
-
-.header-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
 /* Root container for all game content */
 #root {
   width: 100%;
@@ -351,4 +330,16 @@ html {
   text-align: center;
   padding: 2rem;
   color: #666;
+}
+
+/* Ensure the app container is structured properly */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Add padding to the body to prevent content from being hidden behind the fixed header */
+body {
+  padding-top: 75px; /* Adjust this value to match the height of the header */
 }
