@@ -5,10 +5,13 @@ import {
   generateWordSearchGrid 
 } from "./templates/WordSearch";
 import wordBankData from "./data/word-bank/words.json";
+import fs from 'fs';
+import path from 'path';
 
 // Initialize empty puzzle registries that will be populated dynamically
 export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
 export let wordSearchPuzzles: { [key: string]: () => Promise<WordSearchData> } = {};
+export let jigsawPuzzles: { [key: string]: () => Promise<any> } = {};
 
 // Update getAvailablePuzzles to always return the current puzzles
 export const getAvailablePuzzles = () => ({
@@ -112,6 +115,53 @@ const categoryToSlug = (category: string): string => {
   return category.toLowerCase().replace(/\s+/g, "-");
 };
 
+// Function to convert slug to title case (used for jigsaw puzzles)
+const slugToTitle = (slug: string): string => {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
+
+// Function to initialize all jigsaw puzzles from the files in data/jigsaw directory
+const initializeJigsawPuzzles = () => {
+  try {
+    // Use Node.js fs module to read jigsaw puzzle files
+    const jigsawDir = path.join(__dirname, './data/jigsaw');
+    const files = fs.readdirSync(jigsawDir);
+    
+    // Reset jigsaw puzzles
+    jigsawPuzzles = {};
+    
+    files.filter(file => file.endsWith('.json')).forEach(file => {
+      // Extract the filename without extension as the puzzle key
+      const fileName = file.replace(/\.json$/, '');
+      const puzzleKey = fileName.toLowerCase();
+      
+      // Create a title from the filename
+      const puzzleTitle = slugToTitle(puzzleKey);
+      
+      // Register the puzzle
+      jigsawPuzzles[puzzleKey] = () => loadPuzzle(
+        () => import(`./data/jigsaw/${fileName}.json`),
+        validateJigsawConfig
+      );
+      
+      console.log(`Added jigsaw puzzle: ${puzzleTitle} (key: ${puzzleKey})`);
+    });
+  } catch (error) {
+    console.error("Error initializing jigsaw puzzles:", error);
+    
+    // Fallback to the static definition for environments where require.context isn't available
+    jigsawPuzzles = {
+      kaaba: () => loadPuzzle(
+        () => import("./data/jigsaw/kaaba.json"), 
+        validateJigsawConfig
+      )
+    };
+  }
+};
+
 // Function to initialize all puzzles
 const initializePuzzles = () => {
   const validCategories = getWordBankCategories();
@@ -141,6 +191,9 @@ const initializePuzzles = () => {
     wordSearchPuzzles[generalSlug] = () => loadWordSearchByCategory("General");
     console.log(`Added puzzles for General category`);
   }
+  
+  // Initialize jigsaw puzzles
+  initializeJigsawPuzzles();
 };
 
 // Initialize puzzles immediately
@@ -152,17 +205,7 @@ export const rebuildPuzzles = () => {
   initializePuzzles();
   return {
     wordScramble: Object.keys(wordScramblePuzzles),
+    jigsaw: Object.keys(jigsawPuzzles),
     wordSearch: Object.keys(wordSearchPuzzles)
   };
-};
-
-// Jigsaw puzzles registry - these still need to be defined manually
-export const jigsawPuzzles = {
-  kaaba: () => loadPuzzle(
-    () => import("./data/jigsaw/kaaba.json"), 
-    validateJigsawConfig
-  ),
-  // Add more jigsaw puzzles here:
-  // masjid: () => loadPuzzle(() => import("./data/jigsaw/masjid.json"), validateJigsawConfig),
-  // mosque: () => loadPuzzle(() => import("./data/jigsaw/mosque.json"), validateJigsawConfig),
 };
