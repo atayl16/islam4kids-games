@@ -4,6 +4,7 @@ import { MemoryCard as MemoryCardComponent } from "./MemoryCard";
 import { initializeCards } from "./utils";
 import { MemoryCard } from "./types";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
+import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 
 
 type Props = {
@@ -17,17 +18,6 @@ export const MemoryMatch = ({ words }: Props) => {
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [showHint, setShowHint] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Calculate available difficulty levels based on word count
-  const availableDifficulties = () => {
-    return {
-      easy: words.length >= 3,
-      medium: words.length >= 3,
-      hard: words.length >= 3,
-    };
-  };
-
-  const difficulties = availableDifficulties();
 
   // Initialize the cards when the game starts or difficulty changes
   useEffect(() => {
@@ -101,7 +91,7 @@ export const MemoryMatch = ({ words }: Props) => {
 
   const matchedCards = cards.filter((c) => c.isMatched).length;
   const totalPairs = cards.length / 2;
-  const isGameComplete = matchedCards === totalPairs && cards.length > 0;
+  const isGameComplete = matchedCards === cards.length && cards.length > 0;
 
   return (
     <div className="memoryMatch">
@@ -118,9 +108,9 @@ export const MemoryMatch = ({ words }: Props) => {
 
       <PuzzleControls
         currentDifficulty={difficulty}
-        onDifficultyChange={(difficulty: string) =>
-          setDifficulty(difficulty as "easy" | "medium" | "hard")
-        }
+        onDifficultyChange={(difficulty: string) => {
+          setDifficulty(difficulty as "easy" | "medium" | "hard");
+        }}
         onScramble={resetGame}
         solvedCount={matchedCards / 2}
         totalPieces={totalPairs}
@@ -173,10 +163,17 @@ export const MemoryMatch = ({ words }: Props) => {
       <div className="status">
         <p>Moves: {moves}</p>
         <p>
-          Matches: {matchedCards / 2} / {totalPairs}
+          Matches: {matchedCards} / {totalPairs}
         </p>
-        {isGameComplete && <p className="success">You Win!</p>}
       </div>
+      {/* Completion Overlay */}
+      <CompletionOverlay
+        isVisible={isGameComplete}
+        title="Mashallah! Great Memory!"
+        message={`You found all ${totalPairs} matches in ${moves} moves!`}
+        onPlayAgain={resetGame}
+        soundEffect="/audio/takbir.mp3"
+      />
     </div>
   );
 };

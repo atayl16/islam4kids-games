@@ -83,21 +83,6 @@
   z-index: 2;
 }
 
-/* Completion message */
-.completion-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(43, 88, 12, 0.9);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  text-align: center;
-  z-index: 30;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .piece {

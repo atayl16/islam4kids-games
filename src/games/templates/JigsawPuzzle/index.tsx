@@ -14,8 +14,8 @@ import "../../../styles/jigsaw.css";
 // Import components
 import { PuzzleBoard } from "./components/PuzzleBoard";
 import { PieceTray } from "./components/PieceTray";
-import { CompletionOverlay } from "./components/CompletionOverlay";
 import { Piece } from "./Piece";
+import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
 
 // Import hooks
@@ -30,14 +30,17 @@ const calculateResponsiveBoardDimensions = () => {
   const viewportWidth = window.innerWidth || 800; // Default to 800px if undefined
   const viewportHeight = window.innerHeight || 600; // Default to 600px if undefined
 
+  // Type assertion to silence TypeScript errors without changing behavior
+  const visualConfig = VISUAL_CONFIG as any;
+
   const boardWidth = Math.min(
     viewportWidth * VISUAL_CONFIG.VIEWPORT_WIDTH_RATIO,
-    VISUAL_CONFIG.MAX_BOARD_WIDTH
+    visualConfig.MAX_BOARD_WIDTH
   ) || VISUAL_CONFIG.MIN_BOARD_WIDTH;
 
   const boardHeight = Math.min(
     viewportHeight * VISUAL_CONFIG.VIEWPORT_HEIGHT_RATIO,
-    VISUAL_CONFIG.MAX_BOARD_HEIGHT
+    visualConfig.MAX_BOARD_HEIGHT
   ) || VISUAL_CONFIG.MIN_BOARD_HEIGHT;
 
   return { boardWidth, boardHeight };
@@ -141,16 +144,11 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   };
 
   // Calculate layout dimensions
+  const visualConfig = VISUAL_CONFIG as any;
   const pieceWidth =
     validBoardWidth && currentConfig.columns
       ? validBoardWidth / currentConfig.columns
-      : VISUAL_CONFIG.MIN_PIECE_WIDTH;
-
-  const pieceHeight =
-    validBoardHeight && currentConfig.rows
-      ? validBoardHeight / currentConfig.rows
-      : VISUAL_CONFIG.MIN_PIECE_WIDTH;
-
+      : visualConfig.MIN_PIECE_WIDTH;
 
   const fullContainerWidth = validBoardWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
 
@@ -262,7 +260,10 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           {/* Completion Overlay */}
           <CompletionOverlay
             isVisible={solvedCount === totalPieces && totalPieces > 0}
-            totalPieces={totalPieces}
+            title="Mashallah! Puzzle Complete!"
+            message={`You've completed all ${totalPieces} pieces of the puzzle!`}
+            onPlayAgain={initializePieces}
+            soundEffect="/audio/takbir.mp3"
           />
         </div>
       </div>

@@ -1,7 +1,7 @@
 // Custom hook for managing puzzle pieces
 import { useState, useCallback, useEffect } from 'react';
 import { PieceState } from '../types';
-import { VISUAL_CONFIG, MIN_BOARD_WIDTH, MIN_BOARD_HEIGHT } from '../constants';
+import { VISUAL_CONFIG } from '../constants';
 
 // Utility function for shuffling arrays
 const shuffleArray = <T,>(array: T[]): T[] => {

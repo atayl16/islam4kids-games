@@ -1,4 +1,3 @@
-// src/containers/WordSearchContainer.tsx
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { WordSearch } from "../templates/WordSearch";
@@ -36,5 +35,8 @@ export const WordSearchContainer = () => {
   if (error || !puzzleData)
     return <div className="error">{error || "Something went wrong"}</div>;
 
-  return <WordSearch data={puzzleData} />;
+  // Extract the category from the puzzle data
+  const category = puzzleData.words[0]?.categories?.[0] || "general";
+
+  return <WordSearch data={puzzleData} category={category} />;
 };

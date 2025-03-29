@@ -1,5 +1,8 @@
   import { useState, useEffect } from 'react';
   import { WordSearchData, WordPosition } from './types';
+  import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
+  import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
+  import { generateWordSearchGrid } from './utils';
   
   // Component for individual grid cells
   const Cell = ({ 
@@ -34,18 +37,32 @@
     const [startCell, setStartCell] = useState<WordPosition | null>(null);
     const [foundWords, setFoundWords] = useState<string[]>([]);
     const [gameComplete, setGameComplete] = useState(false);
+    const [showHints, setShowHints] = useState(false);
+    const [difficulty, setDifficulty] = useState<string>("medium");
+    const [gameData, setGameData] = useState<WordSearchData>(data);
+  
+    useEffect(() => {
+      const category = data?.categories?.[0] || "general"; // Use the first category or fallback to "general"
+      console.log("Difficulty changed to:", difficulty);
+      console.log("Category:", category);
+    
+      // Regenerate the grid with the new difficulty
+      const newData = generateWordSearchGrid(category, difficulty);
+      setGameData(newData);
+    
+      // Reset game state
+      setFoundWords([]);
+      setSelectedCells([]);
+      setStartCell(null);
+      setGameComplete(false);
+    }, [difficulty, data?.categories]);
   
     // Check for game completion
     useEffect(() => {
-      if (foundWords.length === data.words.length && data.words.length > 0) {
+      if (foundWords.length === gameData.words.length && gameData.words.length > 0) {
         setGameComplete(true);
-        try {
-          new Audio('/audio/completion.mp3').play().catch(e => console.log('Audio play failed', e));
-        } catch (error) {
-          console.log('Audio playback error:', error);
-        }
       }
-    }, [foundWords, data.words.length]);
+    }, [foundWords, gameData.words.length]);
   
     // Handle cell click
     const handleCellClick = (row: number, col: number) => {
@@ -101,13 +118,13 @@
     const checkSelection = (cells: WordPosition[]) => {
       // Get the selected letters
       const selectedLetters = cells.map(cell => 
-        data.grid[cell.row][cell.col]
+        gameData.grid[cell.row][cell.col]
       ).join('');
       
       const reversedLetters = [...selectedLetters].reverse().join('');
       
       // Check if it matches a word
-      for (const wordData of data.words) {
+      for (const wordData of gameData.words) {
         if (!foundWords.includes(wordData.word) && 
             (wordData.word === selectedLetters || wordData.word === reversedLetters)) {
           
@@ -135,7 +152,7 @@
     
     // Check if a cell is in the found words
     const isCellInFoundWord = (row: number, col: number): boolean => {
-      return data.wordPlacements.some(placement => 
+      return gameData.wordPlacements.some(placement => 
         foundWords.includes(placement.word) &&
         placement.positions.some(pos => pos.row === row && pos.col === col)
       );
@@ -145,17 +162,55 @@
     const isCellSelected = (row: number, col: number): boolean => {
       return selectedCells.some(cell => cell.row === row && cell.col === col);
     };
+    
+    // Reset the game
+    const resetGame = () => {
+      setFoundWords([]);
+      setSelectedCells([]);
+      setStartCell(null);
+      setGameComplete(false);
+    };
   
+    const gridSize = gameData?.grid?.length || 0;
+    
     return (
       <div className="word-search">
-        <h2 className="word-search-title">{data.title}</h2>
-        {data.meta?.instructions && (
-          <p className="word-search-instructions">{data.meta.instructions}</p>
+        <h2 className="word-search-title">{gameData.title || "Word Search"}</h2>
+        {gameData.meta?.instructions && (
+          <p className="word-search-instructions">
+            {gameData.meta.instructions}
+          </p>
         )}
-        
+
+        <PuzzleControls
+          currentDifficulty={difficulty}
+          solvedCount={foundWords.length}
+          totalPieces={gameData.words.length}
+          onScramble={resetGame}
+          scrambleLabel="Reset Game"
+          progressLabel={(solved, total) => `${solved} / ${total} words found`}
+          difficultyOptions={[
+            { value: "easy", label: "Easy (8×8 grid, no diagonals)" },
+            { value: "medium", label: "Medium (10×10 grid)" },
+            { value: "hard", label: "Hard (12×12 grid, more diagonals)" },
+          ]}
+          onDifficultyChange={(newDifficulty) => {
+            console.log("Difficulty changed to:", newDifficulty);
+            setDifficulty(newDifficulty);
+          }}
+          hintButton={
+            <button
+              onClick={() => setShowHints(!showHints)}
+              className="hint-toggle-button"
+            >
+              {showHints ? "Hide Hints" : "Show Hints"}
+            </button>
+          }
+        />
+
         <div className="word-search-container">
           <div className="word-search-grid">
-            {data.grid.map((row, rowIndex) => (
+            {gameData.grid.map((row, rowIndex) => (
               <div key={`row-${rowIndex}`} className="word-search-row">
                 {row.map((letter, colIndex) => (
                   <Cell
@@ -171,32 +226,35 @@
               </div>
             ))}
           </div>
-          
+
           <div className="word-search-words">
             <h3>Find these words:</h3>
             <div className="word-list">
-              {data.words.map((wordData) => (
-                <div 
+              {gameData.words.map((wordData) => (
+                <div
                   key={wordData.word}
-                  className={`word-item ${foundWords.includes(wordData.word) ? 'found' : ''}`}
+                  className={`word-item ${
+                    foundWords.includes(wordData.word) ? "found" : ""
+                  }`}
                 >
                   <span className="word">{wordData.word}</span>
-                  {wordData.hint && <span className="hint"> - {wordData.hint}</span>}
+                  {showHints && wordData.hint && (
+                    <span className="hint"> - {wordData.hint}</span>
+                  )}
                 </div>
               ))}
             </div>
-            <div className="progress">
-              {foundWords.length} / {data.words.length} words found
-            </div>
           </div>
         </div>
-        
-        {gameComplete && (
-          <div className="completion-message">
-            <h3>Mashallah! You found all the words!</h3>
-            <button onClick={() => window.location.reload()}>Play Again</button>
-          </div>
-        )}
+
+        {/* Completion Overlay */}
+        <CompletionOverlay
+          isVisible={gameComplete}
+          title="Mashallah! Word Finder!"
+          message={`You've found all ${gameData.words.length} words!`}
+          onPlayAgain={resetGame}
+          soundEffect="/audio/takbir.mp3"
+        />
       </div>
     );
   };
