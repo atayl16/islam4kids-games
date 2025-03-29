@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { JigsawPuzzle } from "./index";
+import { render, screen, fireEvent } from "@testing-library/react";
+import { JigsawPuzzle, JIGSAW_DIFFICULTY_PRESETS } from "./index";
 
 // Mock the HTML5Backend and TouchBackend
 jest.mock('react-dnd-html5-backend', () => ({
@@ -26,14 +26,14 @@ describe("JigsawPuzzle Component", () => {
     id: "test-puzzle",
     meta: {
       title: "Test Puzzle",
-      difficulty: "easy" as const, // Use const assertion for literal type
+      difficulty: "easy" as const,
       learningObjectives: ["Test objective"],
       imageAlt: "Test image description"
     },
     jigsawConfig: {
       imageSrc: "test-image.jpg",
-      rows: 2,
-      columns: 2
+      rows: 3,
+      columns: 3
     }
   };
 
@@ -44,5 +44,36 @@ describe("JigsawPuzzle Component", () => {
     expect(screen.getByText(/Scramble Pieces/i)).toBeInTheDocument();
     expect(screen.getByText(/Completed/i)).toBeInTheDocument();
     expect(screen.getByText(/Drag pieces to the puzzle board/i)).toBeInTheDocument();
+  });
+
+  it("displays difficulty selector with correct options", () => {
+    render(<JigsawPuzzle data={mockData} />);
+    
+    const selector = screen.getByLabelText(/Difficulty:/i);
+    expect(selector).toBeInTheDocument();
+    
+    // Check if all difficulty options are available
+    Object.values(JIGSAW_DIFFICULTY_PRESETS).forEach(preset => {
+      expect(screen.getByText(preset.label)).toBeInTheDocument();
+    });
+  });
+
+  it("uses the default difficulty from the puzzle data", () => {
+    render(<JigsawPuzzle data={mockData} />);
+    
+    const selector = screen.getByLabelText(/Difficulty:/i) as HTMLSelectElement;
+    expect(selector.value).toBe("easy");
+  });
+
+  it("changes difficulty when selector is changed", () => {
+    render(<JigsawPuzzle data={mockData} />);
+    
+    const selector = screen.getByLabelText(/Difficulty:/i) as HTMLSelectElement;
+    
+    // Change to hard difficulty
+    fireEvent.change(selector, { target: { value: "hard" } });
+    
+    // Check if the value was updated
+    expect(selector.value).toBe("hard");
   });
 });

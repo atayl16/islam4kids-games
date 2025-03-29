@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "title": "Quran Puzzle",
+    "difficulty": "medium",
+    "learningObjectives": [
+      "Recognize the Quran",
+      "Improve problem-solving skills"
+    ],
+    "imageAlt": "Quran image"
+  },
+  "jigsawConfig": {
+    "imageSrc": "/images/quran.jpg"
+  }
+}
