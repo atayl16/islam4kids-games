@@ -1,13 +1,33 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { JigsawPuzzle } from "../templates/JigsawPuzzle";
+import { JIGSAW_DIFFICULTY_PRESETS } from "../templates/JigsawPuzzle/constants";
 import { jigsawPuzzles } from "../registry";
+
+// Define the expected structure of puzzle data
+interface PuzzleData {
+  meta: {
+    title: string;
+    defaultDifficulty?: string;
+    learningObjectives?: string[];
+    imageAlt?: string;
+  };
+  jigsawConfig: {
+    imageSrc: string;
+    [key: string]: any;
+  };
+}
 
 export const JigsawPuzzleContainer = () => {
   const { puzzleSlug } = useParams<{ puzzleSlug: string }>();
-  const [puzzleData, setPuzzleData] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [puzzleData, setPuzzleData] = useState<PuzzleData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Get difficulty from query params if available
+  const difficultyParam = searchParams.get('difficulty');
+  const isValidDifficulty = difficultyParam && Object.keys(JIGSAW_DIFFICULTY_PRESETS).includes(difficultyParam);
 
   useEffect(() => {
     if (!puzzleSlug || !(puzzleSlug in jigsawPuzzles)) {
@@ -18,7 +38,11 @@ export const JigsawPuzzleContainer = () => {
 
     const loadPuzzle = async () => {
       try {
-        const data = await jigsawPuzzles[puzzleSlug as keyof typeof jigsawPuzzles]();
+        // Get the puzzle function
+        const puzzleFunction = jigsawPuzzles[puzzleSlug as keyof typeof jigsawPuzzles];
+        
+        // Call the puzzle loader function
+        const data = await puzzleFunction();
         setPuzzleData(data);
         setLoading(false);
       } catch (err) {
@@ -29,7 +53,7 @@ export const JigsawPuzzleContainer = () => {
     };
 
     loadPuzzle();
-  }, [puzzleSlug]);
+  }, [puzzleSlug, difficultyParam, isValidDifficulty]);
 
   if (loading) {
     return <div className="loading">Loading puzzle...</div>;
@@ -39,5 +63,15 @@ export const JigsawPuzzleContainer = () => {
     return <div className="error">{error || "Something went wrong"}</div>;
   }
 
-  return <JigsawPuzzle data={puzzleData} />;
+  // If needed, merge in the difficulty from URL parameters
+  const enhancedData = {
+    ...puzzleData,
+    meta: {
+      ...puzzleData.meta,
+      // If difficultyParam is valid, use it; otherwise keep the default or fall back to "medium"
+      defaultDifficulty: isValidDifficulty ? difficultyParam : (puzzleData.meta.defaultDifficulty || "medium")
+    }
+  };
+
+  return <JigsawPuzzle data={enhancedData} />;
 };

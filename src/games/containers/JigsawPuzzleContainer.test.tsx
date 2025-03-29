@@ -15,7 +15,20 @@ jest.mock("../templates/JigsawPuzzle", () => ({
 // Mock the jigsawPuzzles registry
 jest.mock("../registry", () => {
   const mockJigsawPuzzles: { [key: string]: jest.Mock } = {
-    "valid-puzzle": jest.fn().mockResolvedValue({ id: "valid-puzzle", pieces: 100 }),
+    "valid-puzzle": jest.fn().mockResolvedValue({
+      id: "valid-puzzle",
+      meta: {
+        title: "Valid Puzzle",
+        defaultDifficulty: "medium",
+        learningObjectives: ["Test objective"],
+        imageAlt: "Test image description",
+      },
+      jigsawConfig: {
+        imageSrc: "test-image.jpg",
+        rows: 3,
+        columns: 3,
+      },
+    }),
   };
   return { jigsawPuzzles: mockJigsawPuzzles };
 });

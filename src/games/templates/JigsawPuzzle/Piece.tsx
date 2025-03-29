@@ -11,8 +11,8 @@ type PieceProps = {
   initialY: number;
   isSolved: boolean;
   onDrop: (id: number, x: number, y: number) => boolean;
-  checkPosition?: (id: number, x: number, y: number) => boolean;
   boardPosition?: { top: number; left: number };
+  style?: React.CSSProperties;
 };
 
 export const Piece = ({
@@ -25,7 +25,8 @@ export const Piece = ({
   initialY,
   isSolved,
   onDrop,
-  checkPosition
+  boardPosition = { top: 0, left: 0 },
+  style = {},
 }: PieceProps) => {
   const pieceRef = useRef<HTMLDivElement>(null);
   const initialPosition = useRef({ x: initialX, y: initialY });
@@ -35,30 +36,38 @@ export const Piece = ({
     initialPosition.current = { x: initialX, y: initialY };
   }, [initialX, initialY]);
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "puzzle-piece",
-    item: { id, initialX, initialY },
-    canDrag: !isSolved, // Prevent dragging solved pieces
-    end: (_, monitor) => {
-      const offset = monitor.getDifferenceFromInitialOffset();
-      
-      if (offset) {
-        // Calculate new position
-        const x = initialPosition.current.x + offset.x;
-        const y = initialPosition.current.y + offset.y;
-        
-        // Check if near correct position
-        checkPosition ? checkPosition(id, x, y) : false;
-        
-        // If in correct position, snap directly
-        // Otherwise, pass to onDrop which will handle further actions
-        onDrop(id, x, y);
-      }
-    },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: "puzzle-piece",
+      item: { id, initialX, initialY },
+      canDrag: !isSolved, // Prevent dragging solved pieces
+      end: (_, monitor) => {
+        const offset = monitor.getDifferenceFromInitialOffset();
+
+        if (offset) {
+          // Calculate new position
+          const x = initialPosition.current.x + offset.x;
+          const y = initialPosition.current.y + offset.y;
+
+          // Adjust position relative to board
+          const relativeX = x - boardPosition.left;
+          const relativeY = y - boardPosition.top;
+
+          console.log(
+            `Piece ${id} dropped at: abs(${x}, ${y}) rel(${relativeX}, ${relativeY})`
+          );
+
+          // Pass to onDrop which will handle snapping and solving
+          const result = onDrop(id, relativeX, relativeY);
+          console.log(`Piece ${id} snapping result: ${result}`);
+        }
+      },
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
     }),
-  }), [id, initialX, initialY, isSolved, onDrop, checkPosition]);
+    [id, initialX, initialY, isSolved, onDrop, boardPosition]
+  );
 
   // Background position calculations
   const col = id % columns;
@@ -90,7 +99,12 @@ export const Piece = ({
         backgroundPosition: `${backgroundPositionX}px ${backgroundPositionY}px`,
         backgroundSize: `${columns * size}px ${rows * size}px`,
         zIndex: isSolved ? 10 : 20,
-        boxShadow: isSolved ? "0 2px 4px rgba(0,0,0,0.2)" : isDragging ? "0 5px 10px rgba(0,0,0,0.3)" : "none",
+        boxShadow: isSolved
+          ? "0 2px 4px rgba(0,0,0,0.2)"
+          : isDragging
+          ? "0 5px 10px rgba(0,0,0,0.3)"
+          : "none",
+        ...style,
       }}
     />
   );
