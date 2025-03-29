@@ -4,260 +4,519 @@
       "term": "Shahada",
       "translation": "Declaration of Faith",
       "arabic": "الشهادة",
+      "categories": ["Pillars"],
       "hints": ["First pillar", "Includes declaration of Tawheed", "Quran 3:18"],
-      "categories": ["Pillars"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "First pillar of Islam",
+          "medium": "Declaration including Tawheed",
+          "hard": "Quran 3:18: 'Allah witnesses...'"
+        }
+      }
     },
     {
       "term": "Salah",
       "translation": "Prayer",
       "arabic": "الصلاة",
+      "categories": ["Pillars"],
       "hints": ["Second pillar", "Performed five times daily", "Quran 29:45"],
-      "categories": ["Pillars"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Prayer done five times daily",
+          "medium": "Second pillar of Islam",
+          "hard": "Quran 29:45: Prevents immorality"
+        }
+      }
     },
     {
       "term": "Sawm",
       "translation": "Fasting",
       "arabic": "الصوم",
+      "categories": ["Pillars", "Ramadan"],
       "hints": ["Third pillar", "During the month of Ramadan", "Quran 2:183"],
-      "categories": ["Pillars", "Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Fasting during Ramadan",
+          "medium": "Third pillar of Islam",
+          "hard": "Quran 2:183: Prescribed as it was for those before"
+        }
+      }
     },
     {
       "term": "Zakat",
       "translation": "Charity",
       "arabic": "الزكاة",
+      "categories": ["Pillars", "Ramadan"],
       "hints": ["Fourth pillar", "Obligatory charity", "Quran 2:110"],
-      "categories": ["Pillars", "Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Giving to the poor",
+          "medium": "Fourth pillar of Islam",
+          "hard": "Quran 2:110: Purification of wealth"
+        }
+      }
     },
     {
       "term": "Hajj",
       "translation": "Pilgrimage",
       "arabic": "الحج",
+      "categories": ["Pillars"],
       "hints": ["Fifth pillar", "To Makkah", "Quran 3:97"],
-      "categories": ["Pillars"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Journey to Makkah",
+          "medium": "Fifth pillar of Islam",
+          "hard": "Quran 3:97: Obligation for those who can afford"
+        }
+      }
     },
     {
       "term": "Tawheed",
       "translation": "Oneness of God",
       "arabic": "التوحيد",
+      "categories": ["Beliefs"],
       "hints": ["Belief in one God", "First part of Shahada", "Quran 112:1"],
-      "categories": ["Beliefs"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Belief in one God",
+          "medium": "First part of the Shahada",
+          "hard": "Quran 112:1: 'Say: He is Allah, the One'"
+        }
+      }
     },
     {
       "term": "Risalah",
       "translation": "Prophethood",
       "arabic": "الرسالة",
+      "categories": ["Beliefs"],
       "hints": ["Belief in Prophets", "Second part of Shahada", "Quran 3:144"],
-      "categories": ["Beliefs"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Belief in prophets",
+          "medium": "Second part of the Shahada",
+          "hard": "Quran 3:144: Muhammad is a messenger"
+        }
+      }
     },
     {
       "term": "Akhirah",
       "translation": "Hereafter",
       "arabic": "الآخرة",
+      "categories": ["Beliefs"],
       "hints": ["Belief in the afterlife", "Day of Judgement", "Quran 2:197"],
-      "categories": ["Beliefs"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Life after death",
+          "medium": "Day of Judgment",
+          "hard": "Quran 2:197: Final destination"
+        }
+      }
     },
     {
       "term": "Qadr",
       "translation": "Predestination",
       "arabic": "القدر",
+      "categories": ["Beliefs"],
       "hints": ["Belief in fate", "Everything is written", "Quran 6:59"],
-      "categories": ["Beliefs"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Divine destiny",
+          "medium": "Everything happens by Allah's will",
+          "hard": "Quran 6:59: Not a leaf falls but He knows it"
+        }
+      }
     },
     {
       "term": "Quran",
       "translation": "Recitation",
       "arabic": "القرآن",
+      "categories": ["General"],
       "hints": ["Holy book of Islam", "Revealed to Prophet Muhammad", "Quran 2:185"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Holy book of Islam",
+          "medium": "Revealed to Prophet Muhammad",
+          "hard": "Quran 2:185: Guidance for humanity"
+        }
+      }
     },
     {
       "term": "Hadith",
       "translation": "Tradition",
       "arabic": "الحديث",
+      "categories": ["General"],
       "hints": ["Sayings of Prophet Muhammad", "Second source of Islamic teachings", "Sahih Bukhari"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Sayings of the Prophet",
+          "medium": "Second source of Islamic teachings",
+          "hard": "Collections include Sahih Bukhari and Muslim"
+        }
+      }
     },
     {
       "term": "Sunnah",
       "translation": "Practice",
       "arabic": "السنة",
+      "categories": ["General"],
       "hints": ["Actions of Prophet Muhammad", "Third source of Islamic teachings", "Quran 33:21"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Way of the Prophet",
+          "medium": "Actions and approvals of the Prophet",
+          "hard": "Quran 33:21: 'In the Messenger is a good example'"
+        }
+      }
     },
     {
       "term": "Muhammad",
       "translation": "Praised One",
       "arabic": "محمد",
+      "categories": ["Prophets"],
       "hints": ["Last Prophet", "Born in Makkah", "Received the Quran"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Last Prophet of Islam",
+          "medium": "Born in Makkah, received the Quran",
+          "hard": "Seal of the Prophets mentioned in Quran 33:40"
+        }
+      }
     },
     {
       "term": "Ibrahim",
       "translation": "Abraham",
       "arabic": "إبراهيم",
+      "categories": ["Prophets"],
       "hints": ["Built the Kaaba", "Father of Ismail", "Friend of Allah"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Built the Kaaba",
+          "medium": "Father of Ismail (Ishmael)",
+          "hard": "Known as Khalilullah (Friend of Allah)"
+        }
+      }
     },
     {
       "term": "Musa",
       "translation": "Moses",
       "arabic": "موسى",
+      "categories": ["Prophets"],
       "hints": ["Received the Torah", "Spoke to Allah directly", "Led the Children of Israel"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Received the Torah",
+          "medium": "Led the Children of Israel from Egypt",
+          "hard": "Kalimullah (one who spoke directly with Allah)"
+        }
+      }
     },
     {
       "term": "Isa",
       "translation": "Jesus",
       "arabic": "عيسى",
+      "categories": ["Prophets"],
       "hints": ["Born to Maryam", "Performed miracles", "Will return before Day of Judgment"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Born to Virgin Maryam",
+          "medium": "Performed miracles like healing",
+          "hard": "Will return before the Day of Judgment"
+        }
+      }
     },
     {
       "term": "Nuh",
       "translation": "Noah",
       "arabic": "نوح",
+      "categories": ["Prophets"],
       "hints": ["Built an ark", "Great flood", "Preached for many years"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Built an ark during the flood",
+          "medium": "Preached for hundreds of years",
+          "hard": "Only a few believed in his message"
+        }
+      }
     },
     {
       "term": "Adam",
       "translation": "First human",
       "arabic": "آدم",
+      "categories": ["Prophets"],
       "hints": ["First Prophet", "Created from clay", "Taught all names"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "First human being",
+          "medium": "Created from clay by Allah",
+          "hard": "Allah taught him the names of all things"
+        }
+      }
     },
     {
       "term": "Yusuf",
       "translation": "Joseph",
       "arabic": "يوسف",
+      "categories": ["Prophets"],
       "hints": ["Son of Yaqub", "Dream interpreter", "Ruler in Egypt"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Son of Prophet Yaqub",
+          "medium": "Could interpret dreams",
+          "hard": "Became a ruler in Egypt after imprisonment"
+        }
+      }
     },
     {
       "term": "Sulaiman",
       "translation": "Solomon",
       "arabic": "سليمان",
+      "categories": ["Prophets"],
       "hints": ["Son of Dawud", "Could speak to animals", "Great king with wisdom"],
-      "categories": ["Prophets"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Wise king and prophet",
+          "medium": "Son of Prophet Dawud (David)",
+          "hard": "Could speak with animals and commanded the wind"
+        }
+      }
     },
     {
       "term": "Iftar",
       "translation": "Breaking fast",
       "arabic": "إفطار",
+      "categories": ["Ramadan"],
       "hints": ["After sunset", "First meal after fasting", "Often starts with dates"],
-      "categories": ["Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Breaking the fast at sunset",
+          "medium": "First meal after fasting during Ramadan",
+          "hard": "Traditionally begins with dates and water"
+        }
+      }
     },
     {
       "term": "Suhoor",
       "translation": "Pre-dawn meal",
       "arabic": "سحور",
+      "categories": ["Ramadan"],
       "hints": ["Before Fajr", "Last meal before fasting", "Important for strength during fast"],
-      "categories": ["Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Meal before dawn in Ramadan",
+          "medium": "Last meal before beginning the fast",
+          "hard": "Eaten before Fajr prayer during Ramadan"
+        }
+      }
     },
     {
       "term": "Taraweeh",
       "translation": "Night prayers",
       "arabic": "تراويح",
+      "categories": ["Ramadan"],
       "hints": ["Special Ramadan prayers", "After Isha", "Usually in congregation"],
-      "categories": ["Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Special night prayers in Ramadan",
+          "medium": "Performed after Isha prayer",
+          "hard": "Usually consists of 8 or 20 rakats in congregation"
+        }
+      }
     },
     {
       "term": "Laylatul Qadr",
       "translation": "Night of Power",
       "arabic": "ليلة القدر",
+      "categories": ["Ramadan"],
       "hints": ["Better than 1000 months", "Quran was revealed", "In the last 10 days of Ramadan"],
-      "categories": ["Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "The night the Quran was revealed",
+          "medium": "Found in the last 10 days of Ramadan",
+          "hard": "Worship on this night is better than 1000 months"
+        }
+      }
     },
     {
       "term": "Eid",
       "translation": "Festival",
       "arabic": "عيد",
+      "categories": ["Ramadan"],
       "hints": ["Celebration after Ramadan", "Special prayer", "Giving gifts"],
-      "categories": ["Ramadan"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Islamic celebration or festival",
+          "medium": "Eid al-Fitr marks the end of Ramadan",
+          "hard": "Includes special prayers and giving to the poor"
+        }
+      }
     },
     {
       "term": "Masjid",
       "translation": "Mosque",
       "arabic": "مسجد",
+      "categories": ["General"],
       "hints": ["Place of worship", "Where Muslims pray", "Has a mihrab and minbar"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Place where Muslims pray",
+          "medium": "Contains a mihrab indicating the qibla",
+          "hard": "From the Arabic word meaning 'place of prostration'"
+        }
+      }
     },
     {
       "term": "Wudu",
       "translation": "Ablution",
       "arabic": "وضوء",
+      "categories": ["General"],
       "hints": ["Ritual washing", "Before prayer", "Cleanses body and mind"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Ritual washing before prayer",
+          "medium": "Includes washing hands, face, arms, and feet",
+          "hard": "Mentioned in Quran 5:6 as purification"
+        }
+      }
     },
     {
       "term": "Ihsan",
       "translation": "Excellence",
       "arabic": "إحسان",
+      "categories": ["General"],
       "hints": ["Doing good", "Worship as if you see Allah", "Best level of faith"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Doing good with excellence",
+          "medium": "Highest level of faith after Islam and Iman",
+          "hard": "To worship Allah as if you see Him"
+        }
+      }
     },
     {
       "term": "Taqwa",
       "translation": "God-consciousness",
       "arabic": "تقوى",
+      "categories": ["General"],
       "hints": ["Awareness of Allah", "Fear and love of Allah", "Protection against sin"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Awareness of Allah",
+          "medium": "Consciousness of Allah in all actions",
+          "hard": "Combines love, fear, and awareness of Allah"
+        }
+      }
     },
     {
       "term": "Jannah",
       "translation": "Paradise",
       "arabic": "جنة",
+      "categories": ["General"],
       "hints": ["Reward for believers", "Gardens with rivers", "Eternal happiness"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Paradise or Heaven in Islam",
+          "medium": "Gardens with rivers flowing beneath",
+          "hard": "Eternal reward for the righteous believers"
+        }
+      }
     },
     {
       "term": "Dua",
       "translation": "Supplication",
       "arabic": "دعاء",
+      "categories": ["General"],
       "hints": ["Asking Allah", "Personal prayer", "Direct communication with Allah"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Personal prayer to Allah",
+          "medium": "Asking Allah for help or guidance",
+          "hard": "Described as 'the essence of worship' in hadith"
+        }
+      }
     },
     {
       "term": "Iman",
       "translation": "Faith",
       "arabic": "إيمان",
+      "categories": ["Beliefs"],
       "hints": ["Belief in heart", "Trust in Allah", "Six articles of faith"],
-      "categories": ["Beliefs"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Faith or belief in Islam",
+          "medium": "Includes the six articles of faith",
+          "hard": "Comprises belief in the heart, verbal declaration, and action"
+        }
+      }
     },
     {
       "term": "Halal",
       "translation": "Permissible",
       "arabic": "حلال",
+      "categories": ["General"],
       "hints": ["Allowed in Islam", "Opposite of haram", "Lawful food and actions"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Things permitted in Islam",
+          "medium": "Applies to food, drink, and all actions",
+          "hard": "Derived from root word meaning 'to untie' or 'to free'"
+        }
+      }
     },
     {
       "term": "Fiqh",
       "translation": "Jurisprudence",
       "arabic": "فقه",
+      "categories": ["General"],
       "hints": ["Understanding of Islamic law", "Rules for worship and daily life", "Different schools"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Islamic law and rulings",
+          "medium": "Understanding religious rules for worship and daily life",
+          "hard": "Includes various schools like Hanafi, Shafi'i, Maliki, Hanbali"
+        }
+      }
     },
     {
       "term": "Ummah",
       "translation": "Community",
       "arabic": "أمة",
+      "categories": ["General"],
       "hints": ["Global Muslim community", "Brotherhood and sisterhood", "United by faith"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Muslim community worldwide",
+          "medium": "Brotherhood and sisterhood in Islam",
+          "hard": "Mentioned in Quran as 'the best community raised for mankind'"
+        }
+      }
     },
     {
       "term": "Sadaqah",
       "translation": "Voluntary charity",
       "arabic": "صدقة",
+      "categories": ["General"],
       "hints": ["Giving to the needy", "Not obligatory", "Form of worship"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Voluntary charity in Islam",
+          "medium": "Given freely to help others in need",
+          "hard": "From Arabic root word meaning 'truth' and 'sincerity'"
+        }
+      }
     },
     {
       "term": "Jihad",
       "translation": "Struggle",
       "arabic": "جهاد",
+      "categories": ["General"],
       "hints": ["Striving in the way of Allah", "Inner spiritual struggle", "Effort against evil"],
-      "categories": ["General"]
+      "meta": {
+        "difficultyHints": {
+          "easy": "Struggle or striving in Islam",
+          "medium": "Includes inner spiritual struggle against desires",
+          "hard": "From root word meaning 'to strive' or 'to exert effort'"
+        }
+      }
     }
   ]
 }
