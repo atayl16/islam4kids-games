@@ -4,16 +4,11 @@ import {
   WordSearchData,
   generateWordSearchGrid 
 } from "./templates/WordSearch";
-import { JIGSAW_DIFFICULTY_PRESETS } from "./templates/JigsawPuzzle/constants";
 import wordBankData from "./data/word-bank/words.json";
 
 // Initialize empty puzzle registries that will be populated dynamically
 export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
 export let wordSearchPuzzles: { [key: string]: () => Promise<WordSearchData> } = {};
-<<<<<<< Updated upstream
-=======
-export let jigsawPuzzles: { [key: string]: (difficulty?: string) => Promise<any> } = {};
->>>>>>> Stashed changes
 
 // Update getAvailablePuzzles to always return the current puzzles
 export const getAvailablePuzzles = () => ({
@@ -32,46 +27,6 @@ const loadPuzzle = async (importFn: () => Promise<{ default: any }>, validator: 
     return validator(module.default);
   } catch (error) {
     console.error("Error loading puzzle:", error);
-    throw error;
-  }
-};
-
-// Helper function to load jigsaw puzzles with difficulty setting
-const loadJigsawPuzzle = async (
-  importFn: () => Promise<{ default: any }>, 
-  validator: (data: any) => any,
-  difficulty?: string
-) => {
-  try {
-    // Use the loadPuzzle function to load the basic puzzle data
-    const puzzleData = await loadPuzzle(importFn, validator);
-    
-    // If difficulty is specified and valid, use it
-    const selectedDifficulty = 
-      (difficulty && Object.keys(JIGSAW_DIFFICULTY_PRESETS).includes(difficulty))
-        ? difficulty 
-        : (puzzleData.meta?.defaultDifficulty || "medium");
-    
-    // Get the difficulty configuration
-    const difficultyConfig = 
-      JIGSAW_DIFFICULTY_PRESETS[selectedDifficulty as keyof typeof JIGSAW_DIFFICULTY_PRESETS] || 
-      JIGSAW_DIFFICULTY_PRESETS.medium;
-    
-    // Merge puzzle data with difficulty settings
-    return {
-      ...puzzleData,
-      meta: {
-        ...puzzleData.meta,
-        defaultDifficulty: selectedDifficulty
-      },
-      jigsawConfig: {
-        ...puzzleData.jigsawConfig,
-        rows: difficultyConfig.rows,
-        columns: difficultyConfig.columns
-      }
-    };
-  } catch (error) {
-    console.error("Error loading jigsaw puzzle:", error);
     throw error;
   }
 };
@@ -157,63 +112,6 @@ const categoryToSlug = (category: string): string => {
   return category.toLowerCase().replace(/\s+/g, "-");
 };
 
-<<<<<<< Updated upstream
-=======
-// Function to convert slug to title case (used for jigsaw puzzles)
-const slugToTitle = (slug: string): string => {
-  return slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
-
-// Function to initialize all jigsaw puzzles from the files in data/jigsaw directory
-const initializeJigsawPuzzles = () => {
-  try {
-    // Use Node.js fs module to read jigsaw puzzle files
-    const jigsawDir = path.join(__dirname, './data/jigsaw');
-    const files = fs.readdirSync(jigsawDir);
-    
-    // Reset jigsaw puzzles
-    jigsawPuzzles = {};
-    
-    files.filter(file => file.endsWith('.json')).forEach(file => {
-      // Extract the filename without extension as the puzzle key
-      const fileName = file.replace(/\.json$/, '');
-      const puzzleKey = fileName.toLowerCase();
-      
-      // Create a title from the filename
-      const puzzleTitle = slugToTitle(puzzleKey);
-      
-      // Register the puzzle with support for difficulty parameter
-      jigsawPuzzles[puzzleKey] = (difficulty?: string) => loadJigsawPuzzle(
-        () => import(`./data/jigsaw/${fileName}.json`),
-        validateJigsawConfig,
-        difficulty
-      );
-      
-      console.log(`Added jigsaw puzzle: ${puzzleTitle} (key: ${puzzleKey})`);
-    });
-  } catch (error) {
-    console.error("Error initializing jigsaw puzzles:", error);
-    
-    // Fallback to the static definition for environments where require.context isn't available
-    jigsawPuzzles = {
-      kaaba: (difficulty?: string) => loadJigsawPuzzle(
-        () => import("./data/jigsaw/kaaba.json"), 
-        validateJigsawConfig,
-        difficulty
-      ),
-      quran: (difficulty?: string) => loadJigsawPuzzle(
-        () => import("./data/jigsaw/quran.json"),
-        validateJigsawConfig,
-        difficulty
-      ),
-    };
-  }
-};
-
->>>>>>> Stashed changes
 // Function to initialize all puzzles
 const initializePuzzles = () => {
   const validCategories = getWordBankCategories();
