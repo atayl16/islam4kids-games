@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { WordBankEntry } from "../../../types/WordBank";
 import { MemoryCard as MemoryCardComponent } from "./MemoryCard";
-import { initializeCards, getDifficultySettings } from "./utils";
+import { initializeCards } from "./utils";
 import { MemoryCard } from "./types";
-import styles from "./styles.module.css";
 
 type Props = {
   words: WordBankEntry[];
@@ -13,9 +12,7 @@ export const MemoryMatch = ({ words }: Props) => {
   const [cards, setCards] = useState<MemoryCard[]>([]);
   const [flippedIds, setFlippedIds] = useState<string[]>([]);
   const [moves, setMoves] = useState(0);
-  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
-    "easy"
-  );
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("easy");
   const [showHint, setShowHint] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -106,54 +103,48 @@ export const MemoryMatch = ({ words }: Props) => {
 
   const matchedCards = cards.filter((c) => c.isMatched).length;
   const totalPairs = cards.length / 2;
-  const isGameComplete = matchedCards === cards.length && cards.length > 0;
-
+  const isGameComplete = matchedCards === totalPairs && cards.length > 0;
+  
   return (
-    <div className={styles.memoryMatch}>
-      <h2 className={styles.title}>Memory Match</h2>
-      <p className={styles.instructions}>
+    <div className="memoryMatch">
+      <h2 className="title">Memory Match</h2>
+      <p className="instructions">
         Match all the cards to complete the game. Select a difficulty to start.
       </p>
 
       {error && (
-        <div className={styles.errorBox}>
+        <div className="errorBox">
           <p>{error}</p>
         </div>
       )}
 
-      <div className={styles.controls}>
+      <div className="controls">
         <button
-          className={`${styles.button} ${
-            difficulty === "easy" ? styles.active : ""
-          }`}
+          className={`button ${difficulty === "easy" ? "active" : ""}`}
           onClick={() => setDifficulty("easy")}
           disabled={!difficulties.easy}
         >
           Easy
         </button>
         <button
-          className={`${styles.button} ${
-            difficulty === "medium" ? styles.active : ""
-          }`}
+          className={`button ${difficulty === "medium" ? "active" : ""}`}
           onClick={() => setDifficulty("medium")}
           disabled={!difficulties.medium}
         >
           Medium
         </button>
         <button
-          className={`${styles.button} ${
-            difficulty === "hard" ? styles.active : ""
-          }`}
+          className={`button ${difficulty === "hard" ? "active" : ""}`}
           onClick={() => setDifficulty("hard")}
           disabled={!difficulties.hard}
         >
           Hard
         </button>
-        <button className={styles.button} onClick={resetGame}>
+        <button className="button" onClick={resetGame}>
           Reset
         </button>
         <button
-          className={styles.button}
+          className="button"
           onClick={() => setShowHint(!showHint)}
         >
           {showHint ? "Hide Hint" : "Show Hint"}
@@ -161,14 +152,14 @@ export const MemoryMatch = ({ words }: Props) => {
       </div>
 
       {showHint && (
-        <div className={styles.hintBox}>
+        <div className="hintBox">
           <h3>Hint:</h3>
           <p>Try to remember the positions of the cards!</p>
         </div>
       )}
 
       <div
-        className={styles.grid}
+        className={`grid ${difficulty}`}
         style={{
           gridTemplateColumns: `repeat(${Math.ceil(
             Math.sqrt(cards.length)
@@ -183,16 +174,18 @@ export const MemoryMatch = ({ words }: Props) => {
             disabled={
               card.isMatched || flippedIds.length === 2 || card.isFlipped
             }
+            data-testid="memory-card"
+            data-word-id={card.word.id}
           />
         ))}
       </div>
 
-      <div className={styles.status}>
+      <div className="status">
         <p>Moves: {moves}</p>
         <p>
           Matches: {matchedCards / 2} / {totalPairs}
         </p>
-        {isGameComplete && <p className={styles.success}>You Win!</p>}
+        {isGameComplete && <p className="success">You Win!</p>}
       </div>
     </div>
   );

@@ -184,6 +184,10 @@ const initializeJigsawPuzzles = () => {
       kaaba: () => loadPuzzle(
         () => import("./data/jigsaw/kaaba.json"), 
         validateJigsawConfig
+      ),
+      quran: () => loadPuzzle(
+        () => import("./data/jigsaw/quran.json"),
+        validateJigsawConfig
       )
     };
   }

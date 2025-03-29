@@ -1,7 +1,6 @@
 import React from "react";
 import clsx from "clsx";
 import { MemoryCard as MemoryCardType } from "./types";
-import styles from "./styles.module.css";
 
 type Props = {
   card: MemoryCardType;
@@ -9,11 +8,11 @@ type Props = {
   disabled?: boolean;
 };
 
-export const MemoryCard = React.memo(({ card, onClick, disabled = false }: Props) => (
+export const MemoryCard = React.memo(({ card, onClick, disabled = false, ...rest }: Props) => (
   <button
-    className={clsx(styles.card, {
-      [styles.flipped]: card.isFlipped,
-      [styles.matched]: card.isMatched,
+    className={clsx("card", {
+      "flipped": card.isFlipped,
+      "matched": card.isMatched,
     })}
     onClick={onClick}
     disabled={disabled || card.isMatched}
@@ -24,18 +23,19 @@ export const MemoryCard = React.memo(({ card, onClick, disabled = false }: Props
         ? `Card showing ${card.word.translation}`
         : "Hidden card"
     }
+    {...rest}
   >
-    <div className={styles.inner}>
+    <div className="inner">
       {/* Front of the card (hidden side) */}
-      <div className={styles.front}>
-        <span className={styles.symbol}>❓</span> {/* Generic symbol for hidden cards */}
+      <div className="front">
+        {/* The front styling is handled via CSS ::after content */}
       </div>
 
       {/* Back of the card (revealed side) */}
-      <div className={styles.back}>
-        <h3 className={styles.term}>{card.word.term}</h3>
-        <p className={styles.translation}>{card.word.translation}</p>
-        <span className={styles.arabic}>{card.word.arabic}</span>
+      <div className="back">
+        <span className="arabic">{card.word.arabic}</span>
+        <h3 className="term">{card.word.term}</h3>
+        <p className="translation">{card.word.translation}</p>
       </div>
     </div>
   </button>

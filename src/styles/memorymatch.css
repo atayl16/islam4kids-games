@@ -259,7 +259,7 @@
 }
 
 @media (max-width: 768px) {
-  .controls {
+  controls {
     flex-direction: column;
     align-items: center;
   }
@@ -267,4 +267,28 @@
   .button {
     width: 80%;
   }
+}
+
+/* Add error box styling */
+.errorBox {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 5px;
+  border-left: 4px solid #dc3545;
+  text-align: center;
+}
+
+/* Fix for easy difficulty level */
+.easy {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.medium {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.hard {
+  grid-template-columns: repeat(5, 1fr);
 }

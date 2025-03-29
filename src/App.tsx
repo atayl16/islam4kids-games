@@ -10,6 +10,7 @@ import "./styles/base.css";
 import "./styles/wordscramble.css";
 import "./styles/jigsaw.css";
 import "./styles/wordsearch.css";
+import "./styles/memorymatch.css";
 
 export default function App() {
   return (

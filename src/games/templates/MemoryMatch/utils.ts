@@ -1,7 +1,5 @@
 import { MemoryMatchData, MemoryCard } from "./types";
-import { GameDifficultySettings } from "./types";
 import { WordBankEntry } from "../../../types/WordBank";
-import { nanoid } from "nanoid";
 
 // Re-export the type so it can be imported from utils.ts
 export type { MemoryMatchData };
