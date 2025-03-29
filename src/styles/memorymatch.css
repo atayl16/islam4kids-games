@@ -33,40 +33,6 @@
   font-size: 1.1rem;
 }
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-
-.button {
-  background: #ecf0f1;
-  color: #2c3e50;
-  border: none;
-  border-radius: 8px;
-  padding: 0.7rem 1.2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.button:hover {
-  background: #3498db;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.button.active {
-  background: #3498db;
-  color: white;
-  box-shadow: 0 2px 5px rgba(52, 152, 219, 0.4);
-}
-
 .hintBox {
   background: #fcf8e3;
   border-left: 4px solid #f0ad4e;
@@ -259,25 +225,9 @@
 }
 
 @media (max-width: 768px) {
-  controls {
-    flex-direction: column;
-    align-items: center;
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .button {
-    width: 80%;
-  }
-}
-
-/* Add error box styling */
-.errorBox {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  border-radius: 5px;
-  border-left: 4px solid #dc3545;
-  text-align: center;
 }
 
 /* Fix for easy difficulty level */

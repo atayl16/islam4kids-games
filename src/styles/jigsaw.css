@@ -16,22 +16,6 @@
   align-items: center;
 }
 
-/* Controls section */
-.puzzle-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-/* Progress indicator */
-.progress {
-  margin-left: 16px;
-  font-weight: 500;
-  color: #333;
-}
-
 /* Game area container */
 .game-area {
   display: flex;
@@ -79,7 +63,7 @@
 .piece {
   position: absolute;
   overflow: hidden;
-  border: 1px solid rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
@@ -87,8 +71,8 @@
 
 /* Completed piece styling */
 .piece.solved {
-  border-color: rgba(0,0,0,0.2);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
 
@@ -111,7 +95,7 @@
   border-radius: 8px;
   text-align: center;
   z-index: 30;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Mobile optimizations */
@@ -119,7 +103,7 @@
   .piece {
     border-width: 0.5px;
   }
-  
+
   .completion-message {
     font-size: 0.9rem;
     padding: 0.8rem;

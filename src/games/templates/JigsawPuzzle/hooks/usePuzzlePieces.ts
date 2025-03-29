@@ -1,7 +1,7 @@
 // Custom hook for managing puzzle pieces
 import { useState, useCallback, useEffect } from 'react';
 import { PieceState } from '../types';
-import { VISUAL_CONFIG } from '../constants';
+import { VISUAL_CONFIG, MIN_BOARD_WIDTH, MIN_BOARD_HEIGHT } from '../constants';
 
 // Utility function for shuffling arrays
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -25,118 +25,143 @@ const playSnapSound = () => {
 export const usePuzzlePieces = (
   rows: number,
   columns: number,
-  calculateDimensions: () => any,
+  boardWidth: number | undefined,
+  boardHeight: number | undefined,
   updateBoardRect: () => void
 ) => {
   const [pieces, setPieces] = useState<PieceState[]>([]);
   const [solvedCount, setSolvedCount] = useState(0);
   const totalPieces = rows * columns;
-  
+
+  // Ensure we have valid values for board dimensions with multiple fallbacks
+  const validBoardWidth = typeof boardWidth === 'number' ? boardWidth : 
+                         (typeof VISUAL_CONFIG.MIN_BOARD_WIDTH === 'number' ? 
+                          VISUAL_CONFIG.MIN_BOARD_WIDTH : 400);
+                         
+  const validBoardHeight = typeof boardHeight === 'number' ? boardHeight : 
+                          (typeof VISUAL_CONFIG.MIN_BOARD_HEIGHT === 'number' ? 
+                           VISUAL_CONFIG.MIN_BOARD_HEIGHT : 300);
+
+  console.log("Board dimension check:", {
+    originalBoardWidth: boardWidth,
+    originalBoardHeight: boardHeight,
+    validBoardWidth,
+    validBoardHeight,
+    visualConfigMinWidth: VISUAL_CONFIG.MIN_BOARD_WIDTH,
+    visualConfigMinHeight: VISUAL_CONFIG.MIN_BOARD_HEIGHT
+  });
+
   // Update solvedCount whenever pieces change
   useEffect(() => {
     const newSolvedCount = pieces.filter((p) => p.solved).length;
     setSolvedCount(newSolvedCount);
-  
-    // Log for debugging
+
     console.log(`Solved pieces: ${newSolvedCount}/${totalPieces}`);
-  
-    // Check for completion
+
     if (newSolvedCount === totalPieces && totalPieces > 0) {
       console.log('🎉 Puzzle completed!');
     }
   }, [pieces, totalPieces]);
-  
+
   // Initialize pieces
   const initializePieces = useCallback(() => {
-    // Clear existing pieces
     setPieces([]);
     setSolvedCount(0);
-    
-    // Update board position before creating pieces
+
     updateBoardRect();
-    
-    const { containerWidth, containerHeight, pieceWidth, pieceHeight } = calculateDimensions();
-    
-    // Create piece pile on the right side
-    const pileWidth = containerWidth * VISUAL_CONFIG.PILE_WIDTH_RATIO; 
-    const pileHeight = containerHeight * VISUAL_CONFIG.PILE_HEIGHT_RATIO;
-    
-    // Starting position for the pile (right side of puzzle board)
-    const pileLeft = containerWidth + 40; // 40px gap from puzzle board
-    const pileTop = 150; // Better vertical positioning
-    
-    // Create and shuffle pieces
+
+    // Make sure we have valid values for all dimensions
+    const pieceWidth = columns > 0 ? validBoardWidth / columns : 80;
+    const pieceHeight = rows > 0 ? validBoardHeight / rows : 80;
+
+    const pileWidth = validBoardWidth * 0.8; // Fallback if VISUAL_CONFIG.PILE_WIDTH_RATIO is undefined
+    const pileHeight = validBoardHeight * 0.8; // Fallback if VISUAL_CONFIG.PILE_HEIGHT_RATIO is undefined
+
+    const pileLeft = validBoardWidth + 40;
+    const pileTop = 150;
+
+    console.log("Debugging initializePieces:");
+    console.log("validBoardWidth:", validBoardWidth);
+    console.log("validBoardHeight:", validBoardHeight);
+    console.log("columns:", columns);
+    console.log("rows:", rows);
+    console.log("pieceWidth:", pieceWidth);
+    console.log("pieceHeight:", pieceHeight);
+    console.log("pileWidth:", pileWidth);
+    console.log("pileHeight:", pileHeight);
+
     const shuffledIds = shuffleArray(Array.from({ length: totalPieces }, (_, i) => i));
-    
-    const initialPieces = shuffledIds.map(id => {
-      // Generate random position within the pile area
-      const randomX = pileLeft + Math.random() * (pileWidth - pieceWidth);
-      const randomY = pileTop + Math.random() * (pileHeight - pieceHeight);
-      
+
+    const initialPieces = shuffledIds.map((id) => {
+      const randomX = pileLeft + Math.random() * Math.max(0, pileWidth - pieceWidth);
+      const randomY = pileTop + Math.random() * Math.max(0, pileHeight - pieceHeight);
+
+      console.log(`Piece ${id}: randomX=${randomX}, randomY=${randomY}`);
+
       return {
         id,
         x: randomX,
         y: randomY,
-        solved: false
+        solved: false,
       };
     });
-    
+
     console.log(`Created ${initialPieces.length} puzzle pieces`);
     setPieces(initialPieces);
-  }, [calculateDimensions, rows, columns, updateBoardRect, totalPieces]);
-  
+  }, [columns, rows, validBoardWidth, validBoardHeight, updateBoardRect, totalPieces]);
+
   // Handle piece movement and snapping
   const handlePieceMove = useCallback((id: number, x: number, y: number) => {
-    const { pieceWidth, pieceHeight } = calculateDimensions();
-  
-    // Calculate correct grid position for this piece
+    const pieceWidth = columns > 0 ? validBoardWidth / columns : 80;
+    const pieceHeight = rows > 0 ? validBoardHeight / rows : 80;
+
     const col = id % columns;
     const row = Math.floor(id / columns);
-  
-    // Calculate target position on the board grid
+
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
-  
-    // Define a more forgiving snapping threshold (e.g., 120% of the larger dimension)
-    const snapThreshold = Math.max(pieceWidth, pieceHeight) * 1.2;
-  
-    // Calculate the differences
+
+    // Use a safe value for snapThreshold
+    const snapThreshold = Math.max(pieceWidth, pieceHeight, 80) * 
+                          (typeof VISUAL_CONFIG.SNAP_THRESHOLD_RATIO === 'number' ? 
+                           VISUAL_CONFIG.SNAP_THRESHOLD_RATIO : 1.5);
+
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
-  
-    // Check if the piece is close enough to snap into place
+
+    console.log("Debugging handlePieceMove:");
+    console.log("id:", id);
+    console.log("x:", x, "y:", y);
+    console.log("pieceWidth:", pieceWidth, "pieceHeight:", pieceHeight);
+    console.log("targetX:", targetX, "targetY:", targetY);
+    console.log("diffX:", diffX, "diffY:", diffY);
+    console.log("snapThreshold:", snapThreshold);
+
     const isSolved = diffX <= snapThreshold && diffY <= snapThreshold;
-  
-    console.log(
-      `Piece ${id}: position=(${x}, ${y}), target=(${targetX}, ${targetY}), diffX=${diffX}, diffY=${diffY}, snapThreshold=${snapThreshold}, isSolved=${isSolved}`
-    );
-  
-    // Update piece position
+
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {
         if (piece.id !== id) return piece;
-  
-        // Snap to correct position if solved
+
         if (isSolved) {
           console.log(`Piece ${id} snapped to position (${targetX}, ${targetY})`);
           playSnapSound();
           return { ...piece, x: targetX, y: targetY, solved: true };
         }
-  
-        // Otherwise, update position without snapping
+
         return { ...piece, x, y, solved: false };
       })
     );
-  
+
     return isSolved;
-  }, [calculateDimensions, columns]);
-  
+  }, [columns, validBoardWidth, validBoardHeight]);
+
   return {
     pieces,
     setPieces,
     initializePieces,
     handlePieceMove,
     solvedCount,
-    totalPieces
+    totalPieces,
   };
 };

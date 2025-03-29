@@ -3,6 +3,8 @@ import { WordBankEntry } from "../../../types/WordBank";
 import { MemoryCard as MemoryCardComponent } from "./MemoryCard";
 import { initializeCards } from "./utils";
 import { MemoryCard } from "./types";
+import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
+
 
 type Props = {
   words: WordBankEntry[];
@@ -18,7 +20,6 @@ export const MemoryMatch = ({ words }: Props) => {
 
   // Calculate available difficulty levels based on word count
   const availableDifficulties = () => {
-    // To play any difficulty, we need at least 3 words
     return {
       easy: words.length >= 3,
       medium: words.length >= 3,
@@ -44,7 +45,6 @@ export const MemoryMatch = ({ words }: Props) => {
 
   // Handle card click
   const handleCardClick = (cardId: string) => {
-    // Prevent flipping more than two cards or flipping the same card twice
     if (flippedIds.length < 2 && !flippedIds.includes(cardId)) {
       setCards((prevCards) =>
         prevCards.map((card) =>
@@ -68,12 +68,10 @@ export const MemoryMatch = ({ words }: Props) => {
         setTimeout(() => {
           setCards((prevCards) =>
             prevCards.map((card) => {
-              // For matched cards, set both isFlipped and isMatched to true
               if (flippedIds.includes(card.id)) {
                 if (isMatch) {
                   return { ...card, isFlipped: true, isMatched: true };
                 }
-                // For non-matched cards, flip them back
                 return { ...card, isFlipped: false, isMatched: false };
               }
               return card;
@@ -104,7 +102,7 @@ export const MemoryMatch = ({ words }: Props) => {
   const matchedCards = cards.filter((c) => c.isMatched).length;
   const totalPairs = cards.length / 2;
   const isGameComplete = matchedCards === totalPairs && cards.length > 0;
-  
+
   return (
     <div className="memoryMatch">
       <h2 className="title">Memory Match</h2>
@@ -118,38 +116,30 @@ export const MemoryMatch = ({ words }: Props) => {
         </div>
       )}
 
-      <div className="controls">
-        <button
-          className={`button ${difficulty === "easy" ? "active" : ""}`}
-          onClick={() => setDifficulty("easy")}
-          disabled={!difficulties.easy}
-        >
-          Easy
-        </button>
-        <button
-          className={`button ${difficulty === "medium" ? "active" : ""}`}
-          onClick={() => setDifficulty("medium")}
-          disabled={!difficulties.medium}
-        >
-          Medium
-        </button>
-        <button
-          className={`button ${difficulty === "hard" ? "active" : ""}`}
-          onClick={() => setDifficulty("hard")}
-          disabled={!difficulties.hard}
-        >
-          Hard
-        </button>
-        <button className="button" onClick={resetGame}>
-          Reset
-        </button>
-        <button
-          className="button"
-          onClick={() => setShowHint(!showHint)}
-        >
-          {showHint ? "Hide Hint" : "Show Hint"}
-        </button>
-      </div>
+      <PuzzleControls
+        currentDifficulty={difficulty}
+        onDifficultyChange={(difficulty: string) =>
+          setDifficulty(difficulty as "easy" | "medium" | "hard")
+        }
+        onScramble={resetGame}
+        solvedCount={matchedCards / 2}
+        totalPieces={totalPairs}
+        difficultyOptions={[
+          { value: "easy", label: "Easy" },
+          { value: "medium", label: "Medium" },
+          { value: "hard", label: "Hard" },
+        ]}
+        scrambleLabel="Reset Game"
+        progressLabel={(solved, total) => `Matches: ${solved}/${total}`}
+        hintButton={
+          <button
+            onClick={() => setShowHint(!showHint)}
+            className="hint-toggle-button"
+          >
+            {showHint ? "Hide Hint" : "Show Hint"}
+          </button>
+        }
+      />
 
       {showHint && (
         <div className="hintBox">
