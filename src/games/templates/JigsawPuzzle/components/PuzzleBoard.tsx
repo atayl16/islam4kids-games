@@ -10,7 +10,7 @@ interface PuzzleBoardProps {
   currentConfig: any;
   pieces: PieceState[];
   onDrop: (id: number, x: number, y: number) => boolean;
-  boardRef: React.RefObject<HTMLDivElement>;
+  boardRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const PuzzleBoard = ({

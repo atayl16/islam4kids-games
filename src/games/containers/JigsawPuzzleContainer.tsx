@@ -39,7 +39,7 @@ export const JigsawPuzzleContainer = () => {
     const loadPuzzle = async () => {
       try {
         // Get the puzzle function
-        const puzzleFunction = jigsawPuzzles[puzzleSlug];
+        const puzzleFunction = jigsawPuzzles[puzzleSlug as keyof typeof jigsawPuzzles];
         
         // Call the puzzle loader function
         const data = await puzzleFunction();

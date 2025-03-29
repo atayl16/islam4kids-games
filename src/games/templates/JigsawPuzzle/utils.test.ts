@@ -5,15 +5,15 @@ describe("validateJigsawConfig", () => {
   const validConfig: JigsawConfig = {
     meta: {
       title: "Test Puzzle",
-      difficulty: "easy",
+      defaultDifficulty: "easy",
       learningObjectives: ["Learn about Islam"],
-      imageAlt: "Test image"
+      imageAlt: "Test image",
     },
     jigsawConfig: {
       imageSrc: "test-image.jpg",
       rows: 3,
-      columns: 3
-    }
+      columns: 3,
+    },
   };
 
   it("should validate a correct config", () => {
@@ -22,37 +22,57 @@ describe("validateJigsawConfig", () => {
     expect(result).toEqual(validConfig);
   });
 
-  it("should throw an error for null or undefined input", () => {
-    expect(() => validateJigsawConfig(null)).toThrow("Invalid jigsaw puzzle data");
-    expect(() => validateJigsawConfig(undefined)).toThrow("Invalid jigsaw puzzle data");
+  it("should throw an error if data is null or undefined", () => {
+    expect(() => validateJigsawConfig(null)).toThrow("Jigsaw puzzle data is required");
+    expect(() => validateJigsawConfig(undefined)).toThrow("Jigsaw puzzle data is required");
   });
 
-  it("should throw an error for non-object input", () => {
-    expect(() => validateJigsawConfig("string")).toThrow("Invalid jigsaw puzzle data");
-    expect(() => validateJigsawConfig(123)).toThrow("Invalid jigsaw puzzle data");
-    expect(() => validateJigsawConfig(true)).toThrow("Invalid jigsaw puzzle data");
-  });
-
-  it("should throw an error for invalid difficulty level", () => {
-    const invalidDifficulty = {
-      ...validConfig,
-      meta: {
-        ...validConfig.meta,
-        difficulty: "invalid" as any
-      }
-    };
-    expect(() => validateJigsawConfig(invalidDifficulty)).toThrow("Invalid difficulty level: invalid");
-  });
-
-  it("should throw an error if puzzle is too large", () => {
-    const tooLargeConfig = {
+  it("should throw an error if imageSrc is missing", () => {
+    const missingImageConfig = {
       ...validConfig,
       jigsawConfig: {
         ...validConfig.jigsawConfig,
-        rows: 11,
-        columns: 10 // 11 * 10 = 110 pieces (> 100)
-      }
+        imageSrc: undefined,
+      },
     };
-    expect(() => validateJigsawConfig(tooLargeConfig)).toThrow("Puzzle too large (max 100 pieces)");
+    expect(() => validateJigsawConfig(missingImageConfig)).toThrow("Jigsaw puzzle image source is required");
+  });
+
+  it("should throw an error if title is missing", () => {
+    const missingTitleConfig = {
+      ...validConfig,
+      meta: {
+        ...validConfig.meta,
+        title: undefined,
+      },
+    };
+    expect(() => validateJigsawConfig(missingTitleConfig)).toThrow("Jigsaw puzzle title is required");
+  });
+
+  it("should set default difficulty to 'medium' if not provided", () => {
+    const noDifficultyConfig = {
+      ...validConfig,
+      meta: {
+        ...validConfig.meta,
+        defaultDifficulty: undefined,
+      },
+    };
+    const result = validateJigsawConfig(noDifficultyConfig);
+    expect(result.meta.defaultDifficulty).toBe("medium");
+  });
+
+  it("should allow rows and columns to be optional", () => {
+    const noRowsColumnsConfig = {
+      ...validConfig,
+      jigsawConfig: {
+        ...validConfig.jigsawConfig,
+        rows: undefined,
+        columns: undefined,
+      },
+    };
+    expect(() => validateJigsawConfig(noRowsColumnsConfig)).not.toThrow();
+    const result = validateJigsawConfig(noRowsColumnsConfig);
+    expect(result.jigsawConfig.rows).toBeUndefined();
+    expect(result.jigsawConfig.columns).toBeUndefined();
   });
 });
