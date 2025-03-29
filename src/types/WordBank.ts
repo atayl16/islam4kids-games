@@ -16,6 +16,7 @@ export interface WordBankEntry {
   arabic: string;
   hints: string[];
   references: string[];
+  categories: string[];
   games: {
     wordScramble?: {
       scrambled?: string;
