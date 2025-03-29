@@ -1,9 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryMatch } from "./index"; // Fixed import - matches named export
-import { WordBankEntry } from "../../../types/WordBank"; // Fixed import to match what component uses
+import { MemoryMatch } from "./index";
+import { WordBankEntry } from "../../../types/WordBank";
 
-// Mocking words with the correct structure
 const mockWords: WordBankEntry[] = [
   {
     id: "1",
@@ -79,107 +78,96 @@ const mockWords: WordBankEntry[] = [
   },
 ];
 
+const TEST_IDS = {
+  memoryCard: "memory-card",
+};
+
+const TEXTS = {
+  moves: (count: number) => `Moves: ${count}`,
+  error: "Couldn't create a game. You need at least 3 words to play.",
+};
+
+const setup = (words = mockWords) => {
+  const user = userEvent.setup();
+  render(<MemoryMatch words={words} />);
+  return { user };
+};
+
+const clickDifficultyButton = async (user: ReturnType<typeof userEvent.setup>, difficulty: string) => {
+  const button = screen.getByRole("button", { name: new RegExp(difficulty, "i") });
+  await user.click(button);
+  return button;
+};
+
+const getCards = () => screen.getAllByTestId(TEST_IDS.memoryCard);
+
 describe("MemoryMatch", () => {
   it("flips cards and checks for matches", async () => {
-    const user = userEvent.setup();
-    render(<MemoryMatch words={mockWords} />);
+    const { user } = setup();
 
-    const cards = screen.getAllByTestId("memory-card");
+    const cards = getCards();
     await user.click(cards[0]);
     await user.click(cards[1]);
 
-    // Wait for the card flip animation
-    await waitFor(() => {}, { timeout: 1100 });
-
-    // Check that moves counter was updated
-    expect(screen.getByText(/Moves: 1/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(TEXTS.moves(1))).toBeInTheDocument();
+    });
   });
 
-  it("changes difficulty level when buttons are clicked", async () => {
-    const user = userEvent.setup();
-    
-    render(<MemoryMatch words={mockWords} />);
-    
-    // Initially should be on easy
-    const easyButton = screen.getByRole('button', { name: /easy/i });
-    expect(easyButton).toHaveClass('active');
-    
-    // Click medium difficulty
-    const mediumButton = screen.getByRole('button', { name: /medium/i });
-    await user.click(mediumButton);
-    
-    // Should now be on medium difficulty
-    await waitFor(() => {
-      expect(mediumButton).toHaveClass('active');
-      expect(easyButton).not.toHaveClass('active');
-    });
-    
-    // Click hard difficulty
-    const hardButton = screen.getByRole('button', { name: /hard/i });
-    await user.click(hardButton);
-    
-    // Should now be on hard difficulty
-    await waitFor(() => {
-      expect(hardButton).toHaveClass('active');
-      expect(mediumButton).not.toHaveClass('active');
+  describe("Difficulty selection", () => {
+    it.each([
+      ["easy", "medium"],
+      ["medium", "hard"],
+    ])("changes difficulty from %s to %s", async (from, to) => {
+      const { user } = setup();
+      const fromButton = await clickDifficultyButton(user, from);
+      expect(fromButton).toHaveClass("active");
+
+      const toButton = await clickDifficultyButton(user, to);
+      await waitFor(() => {
+        expect(toButton).toHaveClass("active");
+        expect(fromButton).not.toHaveClass("active");
+      });
     });
   });
 
   it("shows error when insufficient words are provided", async () => {
-    render(<MemoryMatch words={mockWords.slice(0, 2)} />); // Only 2 words, less than minimum 3
-    
-    // Error message should be displayed
-    expect(screen.getByText(/Couldn't create a game. You need at least 3 words to play./i)).toBeInTheDocument();
+    setup(mockWords.slice(0, 2)); // Only 2 words, less than minimum 3
+
+    expect(screen.getByText(TEXTS.error)).toBeInTheDocument();
+    expect(screen.queryByTestId(TEST_IDS.memoryCard)).not.toBeInTheDocument();
   });
 
   it("resets game when reset button is clicked", async () => {
-    const user = userEvent.setup();
-    
-    render(<MemoryMatch words={mockWords} />);
-    
-    // Make some moves
-    const cards = screen.getAllByTestId("memory-card");
+    const { user } = setup();
+    const cards = getCards();
     await user.click(cards[0]);
     await user.click(cards[1]);
-    
-    // Wait for animation
-    await waitFor(() => {}, { timeout: 1100 });
-    
-    // Check moves counter has increased
-    expect(screen.getByText(/Moves: 1/i)).toBeInTheDocument();
-    
-    // Click reset button
-    const resetButton = screen.getByRole('button', { name: /reset/i });
-    await user.click(resetButton);
-    
-    // Moves should be back to 0
+
     await waitFor(() => {
-      expect(screen.getByText(/Moves: 0/i)).toBeInTheDocument();
+      expect(screen.getByText(TEXTS.moves(1))).toBeInTheDocument();
+    });
+
+    const resetButton = screen.getByRole("button", { name: /reset/i });
+    await user.click(resetButton);
+
+    await waitFor(() => {
+      expect(screen.getByText(TEXTS.moves(0))).toBeInTheDocument();
     });
   });
 
   it("shows and hides hint when hint button is clicked", async () => {
-    const user = userEvent.setup();
-    
-    render(<MemoryMatch words={mockWords} />);
-    
-    // Initially hint should not be visible
+    const { user } = setup();
+
     expect(screen.queryByText(/Try to remember the positions/i)).not.toBeInTheDocument();
-    
-    // Click show hint button
-    const hintButton = screen.getByRole('button', { name: /show hint/i });
+
+    const hintButton = screen.getByRole("button", { name: /show hint/i });
     await user.click(hintButton);
-    
-    // Hint should be visible now
+
     expect(screen.getByText(/Try to remember the positions/i)).toBeInTheDocument();
-    
-    // Button text should change
-    expect(screen.getByRole('button', { name: /hide hint/i })).toBeInTheDocument();
-    
-    // Click hide hint button
-    await user.click(screen.getByRole('button', { name: /hide hint/i }));
-    
-    // Hint should be hidden again
+    expect(screen.getByRole("button", { name: /hide hint/i })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /hide hint/i }));
     expect(screen.queryByText(/Try to remember the positions/i)).not.toBeInTheDocument();
   });
 });
