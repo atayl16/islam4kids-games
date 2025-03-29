@@ -1,6 +1,7 @@
 {
   "words": [
     {
+      "id": "shahada-1",
       "term": "Shahada",
       "translation": "Declaration of Faith",
       "arabic": "الشهادة",
@@ -15,6 +16,7 @@
       }
     },
     {
+      "id": "salah-2",
       "term": "Salah",
       "translation": "Prayer",
       "arabic": "الصلاة",
@@ -29,6 +31,7 @@
       }
     },
     {
+      "id": "sawm-3",
       "term": "Sawm",
       "translation": "Fasting",
       "arabic": "الصوم",
@@ -43,6 +46,7 @@
       }
     },
     {
+      "id": "zakat-4",
       "term": "Zakat",
       "translation": "Charity",
       "arabic": "الزكاة",
@@ -57,6 +61,7 @@
       }
     },
     {
+      "id": "hajj-5",
       "term": "Hajj",
       "translation": "Pilgrimage",
       "arabic": "الحج",
@@ -71,6 +76,7 @@
       }
     },
     {
+      "id": "tawheed-6",
       "term": "Tawheed",
       "translation": "Oneness of God",
       "arabic": "التوحيد",
@@ -85,6 +91,7 @@
       }
     },
     {
+      "id": "risalah-7",
       "term": "Risalah",
       "translation": "Prophethood",
       "arabic": "الرسالة",
@@ -99,6 +106,7 @@
       }
     },
     {
+      "id": "akhirah-8",
       "term": "Akhirah",
       "translation": "Hereafter",
       "arabic": "الآخرة",
@@ -113,6 +121,7 @@
       }
     },
     {
+      "id": "qadr-9",
       "term": "Qadr",
       "translation": "Predestination",
       "arabic": "القدر",
@@ -127,6 +136,7 @@
       }
     },
     {
+      "id": "quran-10",
       "term": "Quran",
       "translation": "Recitation",
       "arabic": "القرآن",
@@ -141,6 +151,7 @@
       }
     },
     {
+      "id": "hadith-11",
       "term": "Hadith",
       "translation": "Tradition",
       "arabic": "الحديث",
@@ -155,6 +166,7 @@
       }
     },
     {
+      "id": "sunnah-12",
       "term": "Sunnah",
       "translation": "Practice",
       "arabic": "السنة",
@@ -169,6 +181,7 @@
       }
     },
     {
+      "id": "muhammad-13",
       "term": "Muhammad",
       "translation": "Praised One",
       "arabic": "محمد",
@@ -183,6 +196,7 @@
       }
     },
     {
+      "id": "ibrahim-14",
       "term": "Ibrahim",
       "translation": "Abraham",
       "arabic": "إبراهيم",
@@ -197,6 +211,7 @@
       }
     },
     {
+      "id": "musa-15",
       "term": "Musa",
       "translation": "Moses",
       "arabic": "موسى",
@@ -211,6 +226,7 @@
       }
     },
     {
+      "id": "isa-16",
       "term": "Isa",
       "translation": "Jesus",
       "arabic": "عيسى",
@@ -225,6 +241,7 @@
       }
     },
     {
+      "id": "nuh-17",
       "term": "Nuh",
       "translation": "Noah",
       "arabic": "نوح",
@@ -239,6 +256,7 @@
       }
     },
     {
+      "id": "adam-18",
       "term": "Adam",
       "translation": "First human",
       "arabic": "آدم",
@@ -253,6 +271,7 @@
       }
     },
     {
+      "id": "yusuf-19",
       "term": "Yusuf",
       "translation": "Joseph",
       "arabic": "يوسف",
@@ -267,6 +286,7 @@
       }
     },
     {
+      "id": "sulaiman-20",
       "term": "Sulaiman",
       "translation": "Solomon",
       "arabic": "سليمان",
@@ -281,6 +301,7 @@
       }
     },
     {
+      "id": "iftar-21",
       "term": "Iftar",
       "translation": "Breaking fast",
       "arabic": "إفطار",
@@ -295,6 +316,7 @@
       }
     },
     {
+      "id": "suhoor-22",
       "term": "Suhoor",
       "translation": "Pre-dawn meal",
       "arabic": "سحور",
@@ -309,6 +331,7 @@
       }
     },
     {
+      "id": "taraweeh-23",
       "term": "Taraweeh",
       "translation": "Night prayers",
       "arabic": "تراويح",
@@ -323,6 +346,7 @@
       }
     },
     {
+      "id": "laylatul-qadr-24",
       "term": "Laylatul Qadr",
       "translation": "Night of Power",
       "arabic": "ليلة القدر",
@@ -337,6 +361,7 @@
       }
     },
     {
+      "id": "eid-25",
       "term": "Eid",
       "translation": "Festival",
       "arabic": "عيد",
@@ -351,6 +376,7 @@
       }
     },
     {
+      "id": "masjid-26",
       "term": "Masjid",
       "translation": "Mosque",
       "arabic": "مسجد",
@@ -365,6 +391,7 @@
       }
     },
     {
+      "id": "wudu-27",
       "term": "Wudu",
       "translation": "Ablution",
       "arabic": "وضوء",
@@ -379,6 +406,7 @@
       }
     },
     {
+      "id": "ihsan-28",
       "term": "Ihsan",
       "translation": "Excellence",
       "arabic": "إحسان",
@@ -393,6 +421,7 @@
       }
     },
     {
+      "id": "taqwa-29",
       "term": "Taqwa",
       "translation": "God-consciousness",
       "arabic": "تقوى",
@@ -407,6 +436,7 @@
       }
     },
     {
+      "id": "jannah-30",
       "term": "Jannah",
       "translation": "Paradise",
       "arabic": "جنة",
@@ -421,6 +451,7 @@
       }
     },
     {
+      "id": "dua-31",
       "term": "Dua",
       "translation": "Supplication",
       "arabic": "دعاء",
@@ -435,6 +466,7 @@
       }
     },
     {
+      "id": "iman-32",
       "term": "Iman",
       "translation": "Faith",
       "arabic": "إيمان",
@@ -449,6 +481,7 @@
       }
     },
     {
+      "id": "halal-33",
       "term": "Halal",
       "translation": "Permissible",
       "arabic": "حلال",
@@ -463,6 +496,7 @@
       }
     },
     {
+      "id": "fiqh-34",
       "term": "Fiqh",
       "translation": "Jurisprudence",
       "arabic": "فقه",
@@ -477,6 +511,7 @@
       }
     },
     {
+      "id": "ummah-35",
       "term": "Ummah",
       "translation": "Community",
       "arabic": "أمة",
@@ -491,6 +526,7 @@
       }
     },
     {
+      "id": "sadaqah-36",
       "term": "Sadaqah",
       "translation": "Voluntary charity",
       "arabic": "صدقة",
@@ -505,6 +541,7 @@
       }
     },
     {
+      "id": "jihad-37",
       "term": "Jihad",
       "translation": "Struggle",
       "arabic": "جهاد",

@@ -1,10 +1,12 @@
 import { validateWordScrambleData, WordScrambleData } from "./templates/WordScramble/utils";
 import { validateJigsawConfig } from "./templates/JigsawPuzzle/utils";
+import { validateMemoryMatchData } from "./templates/MemoryMatch/utils";
 import { 
   WordSearchData,
   generateWordSearchGrid 
 } from "./templates/WordSearch";
 import wordBankData from "./data/word-bank/words.json";
+import { MemoryMatchData } from "./templates/MemoryMatch/types";
 import fs from 'fs';
 import path from 'path';
 
@@ -12,16 +14,18 @@ import path from 'path';
 export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
 export let wordSearchPuzzles: { [key: string]: () => Promise<WordSearchData> } = {};
 export let jigsawPuzzles: { [key: string]: () => Promise<any> } = {};
+export let memoryMatchPuzzles: { [key: string]: () => Promise<any> } = {};
 
 // Update getAvailablePuzzles to always return the current puzzles
 export const getAvailablePuzzles = () => ({
   wordScramble: Object.keys(wordScramblePuzzles),
   jigsaw: Object.keys(jigsawPuzzles),
   wordSearch: Object.keys(wordSearchPuzzles),
+  memoryMatch: Object.keys(memoryMatchPuzzles)
 });
 
 // Re-export the WordScrambleData and WordSearchData types
-export type { WordScrambleData, WordSearchData };
+export type { WordScrambleData, WordSearchData, MemoryMatchData };
 
 // Helper function to load puzzles with error handling
 const loadPuzzle = async (importFn: () => Promise<{ default: any }>, validator: (data: any) => any) => {
@@ -110,6 +114,29 @@ const loadWordSearchByCategory = async (category: string, difficulty: string = "
   }
 };
 
+
+// Function to load word bank and filter by category for Memory Match
+const loadMemoryMatchByCategory = async (category: string) => {
+  try {
+    const filteredWords = wordBankData.words.filter(word => 
+      word.categories.includes(category)
+    );
+    
+    if (filteredWords.length < 4) {
+      throw new Error(`Not enough words found for category: ${category}`);
+    }
+    
+    // Transform to the format expected by MemoryMatch component
+    return validateMemoryMatchData({
+      words: filteredWords.slice(0, 12), // Limit to 12 words for Memory Match
+      difficulty: "medium", // Default difficulty
+    });
+  } catch (error) {
+    console.error(`Error loading Memory Match words for category ${category}:`, error);
+    throw error;
+  }
+};
+
 // Function to convert category name to a URL-friendly slug
 const categoryToSlug = (category: string): string => {
   return category.toLowerCase().replace(/\s+/g, "-");
@@ -157,6 +184,10 @@ const initializeJigsawPuzzles = () => {
       kaaba: () => loadPuzzle(
         () => import("./data/jigsaw/kaaba.json"), 
         validateJigsawConfig
+      ),
+      quran: () => loadPuzzle(
+        () => import("./data/jigsaw/quran.json"),
+        validateJigsawConfig
       )
     };
   }
@@ -170,6 +201,7 @@ const initializePuzzles = () => {
   // Reset puzzles
   wordScramblePuzzles = {};
   wordSearchPuzzles = {};
+  memoryMatchPuzzles = {};
   
   // Build both puzzle types for each category
   validCategories.forEach(category => {
@@ -180,6 +212,9 @@ const initializePuzzles = () => {
     
     // Add word search puzzle
     wordSearchPuzzles[slug] = () => loadWordSearchByCategory(category);
+
+    // Add memory match puzzle
+    memoryMatchPuzzles[slug] = () => loadMemoryMatchByCategory(category);
     
     console.log(`Added puzzles for category: ${category} (slug: ${slug})`);
   });
@@ -206,6 +241,7 @@ export const rebuildPuzzles = () => {
   return {
     wordScramble: Object.keys(wordScramblePuzzles),
     jigsaw: Object.keys(jigsawPuzzles),
-    wordSearch: Object.keys(wordSearchPuzzles)
+    wordSearch: Object.keys(wordSearchPuzzles),
+    memoryMatch: Object.keys(memoryMatchPuzzles)
   };
 };

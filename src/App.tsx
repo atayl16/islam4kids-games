@@ -5,10 +5,12 @@ import { HomePage } from "./components/HomePage";
 import { WordScrambleContainer } from "./games/containers/WordScrambleContainer";
 import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer";
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
+import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer"; // Import MemoryMatchContainer
 import "./styles/base.css";
 import "./styles/wordscramble.css";
 import "./styles/jigsaw.css";
 import "./styles/wordsearch.css";
+import "./styles/memorymatch.css";
 
 export default function App() {
   return (
@@ -61,6 +63,25 @@ export default function App() {
               element={
                 <div className="game-container">
                   <JigsawPuzzleContainer />
+                </div>
+              } 
+            />
+
+            {/* Add Memory Match routes */}
+            <Route 
+              path="/memorymatch/:categorySlug" 
+              element={
+                <div className="game-container">
+                  <MemoryMatchContainer />
+                </div>
+              } 
+            />
+
+            <Route 
+              path="/embed/memorymatch/:categorySlug" 
+              element={
+                <div className="embed-wrapper">
+                  <MemoryMatchContainer />
                 </div>
               } 
             />

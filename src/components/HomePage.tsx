@@ -18,18 +18,26 @@ const GameCard = ({ title, type, path }: { title: string; type: string; slug: st
         {type === "wordScramble" && "🔤"}
         {type === "wordSearch" && "🔍"}
         {type === "jigsaw" && "🧩"}
+        {type === "memoryMatch" && "🃏"}
       </div>
       <div className="game-info">
         <h3>{title}</h3>
-        <span className="game-type">{type === "wordScramble" ? "Word Scramble" : 
-                                    type === "wordSearch" ? "Word Search" : "Jigsaw"}</span>
+        <span className="game-type">
+          {type === "wordScramble"
+            ? "Word Scramble"
+            : type === "wordSearch"
+            ? "Word Search"
+            : type === "jigsaw"
+            ? "Jigsaw"
+            : "Memory Match"}
+        </span>
       </div>
     </Link>
   );
 };
 
 export const HomePage = () => {
-  const { wordScramble, jigsaw, wordSearch } = getAvailablePuzzles();
+  const { wordScramble, jigsaw, wordSearch, memoryMatch } = getAvailablePuzzles(); // Include memoryMatch
   const [activeTab, setActiveTab] = useState<string>("all");
   
   // Create an array of all games with their types
@@ -51,6 +59,12 @@ export const HomePage = () => {
       title: `${formatName(slug)} Jigsaw Puzzle`,
       type: "jigsaw",
       path: `/jigsaw/${slug}`
+    })),
+    ...memoryMatch.map(slug => ({ 
+      slug, 
+      title: `${formatName(slug)} Memory Match`,
+      type: "memoryMatch",
+      path: `/memorymatch/${slug}`
     }))
   ];
   
@@ -97,6 +111,14 @@ export const HomePage = () => {
             onClick={() => setActiveTab("jigsaw")}
           >
             Jigsaw Puzzles
+          </button>
+        )}
+        {memoryMatch.length > 0 && (
+          <button 
+            className={`filter-btn ${activeTab === "memoryMatch" ? "active" : ""}`}
+            onClick={() => setActiveTab("memoryMatch")}
+          >
+            Memory Match
           </button>
         )}
       </div>

@@ -27,6 +27,10 @@ jest.mock('./games/containers/WordSearchContainer', () => ({
   WordSearchContainer: () => <div data-testid="mock-word-search" />
 }));
 
+jest.mock('./games/containers/MemoryMatchContainer', () => ({
+  MemoryMatchContainer: () => <div data-testid="mock-memory-match" />
+}));
+
 // Import the components we need to use directly in our test
 import { IslamicTheme } from './components/IslamicTheme';
 import { Header } from './components/Header';
@@ -34,6 +38,7 @@ import { HomePage } from './components/HomePage';
 import { WordScrambleContainer } from './games/containers/WordScrambleContainer';
 import { JigsawPuzzleContainer } from './games/containers/JigsawPuzzleContainer';
 import { WordSearchContainer } from './games/containers/WordSearchContainer';
+import { MemoryMatchContainer } from './games/containers/MemoryMatchContainer';
 
 // Use a custom render function for easier testing with routes
 const renderWithRouter = (initialEntries = ['']) => {
@@ -51,6 +56,7 @@ const renderWithRouter = (initialEntries = ['']) => {
             <Route path="/wordscramble/:id" element={<WordScrambleContainer />} />
             <Route path="/jigsaw/:id" element={<JigsawPuzzleContainer />} />
             <Route path="/wordsearch/:id" element={<WordSearchContainer />} />
+            <Route path="/memorymatch/:id" element={<MemoryMatchContainer />} />
             
             {/* Embedded versions */}
             <Route 
@@ -64,6 +70,10 @@ const renderWithRouter = (initialEntries = ['']) => {
             <Route 
               path="/embed/jigsaw/:id" 
               element={<div className="embed-wrapper"><JigsawPuzzleContainer /></div>} 
+            />
+            <Route 
+              path="/embed/memorymatch/:id" 
+              element={<div className="embed-wrapper"><MemoryMatchContainer /></div>} 
             />
             
             {/* Redirect unknown routes to home */}
@@ -110,6 +120,13 @@ describe('App', () => {
     expect(screen.getByTestId('mock-jigsaw-puzzle')).toBeInTheDocument();
   });
 
+  it('renders the correct route for memorymatch', () => {
+    renderWithRouter(['/memorymatch/islamic-terms']);
+    
+    expect(screen.queryByTestId('mock-home-page')).not.toBeInTheDocument();
+    expect(screen.getByTestId('mock-memory-match')).toBeInTheDocument();
+  });
+
   it('renders the embed version for wordscramble', () => {
     renderWithRouter(['/embed/wordscramble/islamic-terms']);
     
@@ -121,6 +138,20 @@ describe('App', () => {
     renderWithRouter(['/embed/wordsearch/islamic-terms']);
     
     const wrapper = screen.getByTestId('mock-word-search').closest('.embed-wrapper');
+    expect(wrapper).toBeInTheDocument();
+  });
+
+  it('renders the embed version for jigsaw', () => {
+    renderWithRouter(['/embed/jigsaw/kaaba']);
+    
+    const wrapper = screen.getByTestId('mock-jigsaw-puzzle').closest('.embed-wrapper');
+    expect(wrapper).toBeInTheDocument();
+  });
+
+  it('renders the embed version for memorymatch', () => {
+    renderWithRouter(['/embed/memorymatch/islamic-terms']);
+    
+    const wrapper = screen.getByTestId('mock-memory-match').closest('.embed-wrapper');
     expect(wrapper).toBeInTheDocument();
   });
 
