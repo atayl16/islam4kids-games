@@ -12,6 +12,7 @@ export interface WordPlacement {
 export interface WordData {
   word: string;
   hint?: string;
+  categories?: string[];
 }
 
 export interface WordSearchData {
@@ -25,4 +26,5 @@ export interface WordSearchData {
     difficulty?: "easy" | "medium" | "hard";
     learningObjectives?: string[];
   };
+  categories?: string[];
 }

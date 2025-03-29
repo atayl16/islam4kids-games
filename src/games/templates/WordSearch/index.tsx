@@ -2,7 +2,10 @@
   import { WordSearchData, WordPosition } from './types';
   import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
   import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
-  import { generateWordSearchGrid } from './utils';
+import { generateWordSearchGrid } from './utils';
+  
+  export { generateWordSearchGrid } from "./utils";
+  export type { WordSearchData, WordPosition, WordPlacement } from "./types";
   
   // Component for individual grid cells
   const Cell = ({ 
@@ -32,7 +35,7 @@
   };
   
   // Export main WordSearch component
-  export const WordSearch = ({ data }: { data: WordSearchData }) => {
+  export const WordSearch = ({ data, category }: { data: WordSearchData; category: string }) => {
     const [selectedCells, setSelectedCells] = useState<WordPosition[]>([]);
     const [startCell, setStartCell] = useState<WordPosition | null>(null);
     const [foundWords, setFoundWords] = useState<string[]>([]);
@@ -42,20 +45,19 @@
     const [gameData, setGameData] = useState<WordSearchData>(data);
   
     useEffect(() => {
-      const category = data?.categories?.[0] || "general"; // Use the first category or fallback to "general"
       console.log("Difficulty changed to:", difficulty);
       console.log("Category:", category);
-    
+  
       // Regenerate the grid with the new difficulty
       const newData = generateWordSearchGrid(category, difficulty);
       setGameData(newData);
-    
+  
       // Reset game state
       setFoundWords([]);
       setSelectedCells([]);
       setStartCell(null);
       setGameComplete(false);
-    }, [difficulty, data?.categories]);
+    }, [difficulty, category]);
   
     // Check for game completion
     useEffect(() => {
@@ -73,11 +75,11 @@
       } else {
         // Second cell selected - check if it forms a straight line
         const endCell = { row, col };
-        
+  
         // Determine if selection is a valid line
         const rowDiff = endCell.row - startCell.row;
         const colDiff = endCell.col - startCell.col;
-        
+  
         if (
           (rowDiff === 0 && colDiff !== 0) || // horizontal
           (colDiff === 0 && rowDiff !== 0) || // vertical
@@ -85,15 +87,15 @@
         ) {
           const cells = getCellsInLine(startCell, endCell);
           setSelectedCells(cells);
-          
+  
           // Check if selection matches a word
           checkSelection(cells);
         }
-        
+  
         setStartCell(null);
       }
     };
-    
+  
     // Get all cells in a straight line
     const getCellsInLine = (start: WordPosition, end: WordPosition): WordPosition[] => {
       const cells: WordPosition[] = [];
@@ -103,31 +105,31 @@
         Math.abs(end.row - start.row),
         Math.abs(end.col - start.col)
       );
-      
+  
       for (let i = 0; i <= steps; i++) {
         cells.push({
           row: start.row + i * dy,
           col: start.col + i * dx
         });
       }
-      
+  
       return cells;
     };
-    
+  
     // Check if the current selection matches a word
     const checkSelection = (cells: WordPosition[]) => {
       // Get the selected letters
       const selectedLetters = cells.map(cell => 
         gameData.grid[cell.row][cell.col]
       ).join('');
-      
+  
       const reversedLetters = [...selectedLetters].reverse().join('');
-      
+  
       // Check if it matches a word
       for (const wordData of gameData.words) {
         if (!foundWords.includes(wordData.word) && 
             (wordData.word === selectedLetters || wordData.word === reversedLetters)) {
-          
+  
           // Word found!
           setFoundWords([...foundWords, wordData.word]);
           try {
@@ -135,7 +137,7 @@
           } catch (error) {
             console.log('Audio playback error:', error);
           }
-          
+  
           // Clear selection after a short delay
           setTimeout(() => {
             setSelectedCells([]);
@@ -143,13 +145,13 @@
           return;
         }
       }
-      
+  
       // If no match, clear selection after a short delay
       setTimeout(() => {
         setSelectedCells([]);
       }, 300);
     };
-    
+  
     // Check if a cell is in the found words
     const isCellInFoundWord = (row: number, col: number): boolean => {
       return gameData.wordPlacements.some(placement => 
@@ -162,7 +164,7 @@
     const isCellSelected = (row: number, col: number): boolean => {
       return selectedCells.some(cell => cell.row === row && cell.col === col);
     };
-    
+  
     // Reset the game
     const resetGame = () => {
       setFoundWords([]);
@@ -171,8 +173,6 @@
       setGameComplete(false);
     };
   
-    const gridSize = gameData?.grid?.length || 0;
-    
     return (
       <div className="word-search">
         <h2 className="word-search-title">{gameData.title || "Word Search"}</h2>
@@ -181,7 +181,7 @@
             {gameData.meta.instructions}
           </p>
         )}
-
+  
         <PuzzleControls
           currentDifficulty={difficulty}
           solvedCount={foundWords.length}
@@ -207,7 +207,7 @@
             </button>
           }
         />
-
+  
         <div className="word-search-container">
           <div className="word-search-grid">
             {gameData.grid.map((row, rowIndex) => (
@@ -226,7 +226,7 @@
               </div>
             ))}
           </div>
-
+  
           <div className="word-search-words">
             <h3>Find these words:</h3>
             <div className="word-list">
@@ -246,7 +246,7 @@
             </div>
           </div>
         </div>
-
+  
         {/* Completion Overlay */}
         <CompletionOverlay
           isVisible={gameComplete}
@@ -258,7 +258,3 @@
       </div>
     );
   };
-  
-  // Re-export types and utility functions
-  export { generateWordSearchGrid } from './utils';
-  export * from './types';
