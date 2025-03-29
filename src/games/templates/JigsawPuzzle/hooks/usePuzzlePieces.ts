@@ -47,7 +47,7 @@ export const usePuzzlePieces = (
   }, [pieces, totalPieces]);
   
   // Initialize pieces
-  const initializePieces = useCallback((imageSrc: string) => {
+  const initializePieces = useCallback(() => {
     // Clear existing pieces
     setPieces([]);
     setSolvedCount(0);

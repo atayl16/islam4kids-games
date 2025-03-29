@@ -110,7 +110,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
     img.onload = () => {
       // Initialize pieces after image loads
-      initializePieces(currentConfig.imageSrc);
+      initializePieces();
 
       // Update board position after pieces are initialized
       setTimeout(updateBoardRect, 50);
@@ -165,7 +165,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
             currentDifficulty={currentDifficulty}
             onDifficultyChange={handleDifficultyChange}
             onScramble={() => {
-              initializePieces(currentConfig.imageSrc);
+              initializePieces();
             }}
             solvedCount={solvedCount}
             totalPieces={totalPieces}
