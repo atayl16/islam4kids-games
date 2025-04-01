@@ -153,55 +153,37 @@ const slugToTitle = (slug: string): string => {
 // Function to initialize all jigsaw puzzles from the files in data/jigsaw directory
 const initializeJigsawPuzzles = () => {
   try {
-    // Use Node.js fs module to read jigsaw puzzle files
-    const jigsawDir = path.join(__dirname, './data/jigsaw');
-    const files = fs.readdirSync(jigsawDir);
-    
+    // Use Vite's import.meta.glob to dynamically include all image files
+    const imageFiles = import.meta.glob("/public/images/jigsaw/*.{jpg,png}", {
+      eager: true,
+    });
+
     // Reset jigsaw puzzles
     jigsawPuzzles = {};
-    
-    files.filter(file => file.endsWith('.json')).forEach(file => {
-      // Extract the filename without extension as the puzzle key
-      const fileName = file.replace(/\.json$/, '');
+
+    Object.keys(imageFiles).forEach((filePath) => {
+      // Extract the filename from the file path
+      const fileName = filePath.split("/").pop()?.replace(/\.(jpg|png)$/i, "");
+      if (!fileName) return;
+
       const puzzleKey = fileName.toLowerCase();
-      
-      // Create a title from the filename
       const puzzleTitle = slugToTitle(puzzleKey);
-      
+
       // Register the puzzle
-      jigsawPuzzles[puzzleKey] = () => loadPuzzle(
-        () => import(`./data/jigsaw/${fileName}.json`),
-        validateJigsawConfig
-      );
-      
+      jigsawPuzzles[puzzleKey] = async () => ({
+        jigsawConfig: {
+          imageSrc: `/images/jigsaw/${fileName}.${filePath.split(".").pop()}`, // Correct URL path for public assets
+        },
+        meta: {
+          title: puzzleTitle,
+          defaultDifficulty: "medium", // Default difficulty
+        },
+      });
+
       console.log(`Added jigsaw puzzle: ${puzzleTitle} (key: ${puzzleKey})`);
     });
   } catch (error) {
     console.error("Error initializing jigsaw puzzles:", error);
-    
-    // Fallback to the static definition for environments where require.context isn't available
-    jigsawPuzzles = {
-      kaaba: () => loadPuzzle(
-        () => import("./data/jigsaw/kaaba.json"), 
-        validateJigsawConfig
-      ),
-      quran: () => loadPuzzle(
-        () => import("./data/jigsaw/quran.json"),
-        validateJigsawConfig
-      ),
-      mosque: () => loadPuzzle(
-        () => import("./data/jigsaw/mosque.json"),
-        validateJigsawConfig
-      ),
-      muslimahBff: () => loadPuzzle(
-        () => import("./data/jigsaw/muslimah-bff.json"),
-        validateJigsawConfig
-      ),
-      readOutside: () => loadPuzzle(
-        () => import("./data/jigsaw/read-outside.json"),
-        validateJigsawConfig
-      )
-    };
   }
 };
 
