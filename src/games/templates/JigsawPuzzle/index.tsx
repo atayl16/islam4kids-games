@@ -49,6 +49,7 @@ const calculateResponsiveBoardDimensions = () => {
 export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Validate configuration
   const validatedData = validateJigsawConfig(data);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   // Detect mobile devices
   const [isMobile] = useState(() =>
@@ -88,7 +89,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
   // Use boardRect.width and boardRect.height instead of calculating separately
   const { boardRect, updateBoardRect } = useBoardPosition(containerRef);
-  
+
   // When passing to usePuzzlePieces
   const {
     pieces,
@@ -137,6 +138,13 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     initializePieces,
     updateBoardRect,
   ]);
+
+  // Update overlay visibility when the puzzle is solved
+  useEffect(() => {
+    if (solvedCount === totalPieces && totalPieces > 0) {
+      setIsOverlayVisible(true);
+    }
+  }, [solvedCount, totalPieces]);
 
   // Handle difficulty change
   const handleDifficultyChange = (difficulty: string) => {
@@ -259,10 +267,14 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
           {/* Completion Overlay */}
           <CompletionOverlay
-            isVisible={solvedCount === totalPieces && totalPieces > 0}
+            isVisible={isOverlayVisible}
+            setIsVisible={setIsOverlayVisible}
             title="Mashallah! Puzzle Complete!"
             message={`You've completed all ${totalPieces} pieces of the puzzle!`}
-            onPlayAgain={initializePieces}
+            onPlayAgain={() => {
+              initializePieces();
+              setIsOverlayVisible(false); // Close overlay after restarting
+            }}
             soundEffect="/audio/takbir.mp3"
           />
         </div>

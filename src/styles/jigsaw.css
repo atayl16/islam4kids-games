@@ -20,7 +20,7 @@
 .game-area {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 1.25rem; /* Converted 20px to rem */
   position: relative;
   overflow: visible;
 }
@@ -28,9 +28,9 @@
 /* Puzzle board */
 .puzzle-board {
   position: relative;
-  background-color: #f8f4e3;
-  border: 2px solid #ccc;
-  border-radius: 4px;
+  background-color: var(--page-bg); /* Use variable for background */
+  border: 0.125rem solid #ccc; /* Converted 2px to rem */
+  border-radius: 0.25rem; /* Converted 4px to rem */
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -38,8 +38,8 @@
 /* Piece tray */
 .piece-tray {
   position: relative;
-  border: 2px dashed #ddd;
-  border-radius: 4px;
+  border: 0.125rem dashed #ddd; /* Converted 2px to rem */
+  border-radius: 0.25rem; /* Converted 4px to rem */
   background-color: #f9f9f9;
   box-sizing: border-box;
   flex-shrink: 0;
@@ -56,14 +56,14 @@
   background-repeat: no-repeat;
   opacity: 0.2;
   z-index: 1;
-  border-radius: 2px;
+  border-radius: 0.125rem; /* Converted 2px to rem */
 }
 
 /* Individual puzzle piece */
 .piece {
   position: absolute;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 0.0625rem solid rgba(0, 0, 0, 0.1); /* Converted 1px to rem */
   box-sizing: border-box;
   background-position: center;
   background-size: cover;
@@ -72,7 +72,7 @@
 /* Completed piece styling */
 .piece.solved {
   border-color: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2); /* Converted 2px and 4px to rem */
   z-index: 10;
 }
 
@@ -86,11 +86,11 @@
 /* Mobile optimizations */
 @media (max-width: 768px) {
   .piece {
-    border-width: 0.5px;
+    border-width: 0.03125rem; /* Converted 0.5px to rem */
   }
 
   .completion-message {
-    font-size: 0.9rem;
+    font-size: var(--font-size-small); /* Use variable for font size */
     padding: 0.8rem;
     width: 80%;
   }

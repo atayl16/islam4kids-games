@@ -119,17 +119,64 @@
   }
 }
 
-/* Completion message */
-.completion-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(43, 88, 12, 0.9);
+/* Overlay background styling */
+.completion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Adjusted to a darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Overlay content styling */
+.completion-overlay-content {
+  position: relative;
+  background: rgba(43, 88, 12, 0.9); /* Matches your previous green overlay */
   color: white;
-  padding: 1rem 2rem;
-  border-radius: 8px;
+  padding: 2rem;
+  border-radius: 10px;
   text-align: center;
-  z-index: 30;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Close button styling */
+.completion-overlay-content .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.completion-overlay-content .close-button:hover {
+  transform: scale(1.2);
+}
+
+/* Play Again button styling */
+.completion-overlay-content .play-again-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.completion-overlay-content .play-again-button:hover {
+  background: #2980b9;
 }

@@ -2,10 +2,10 @@
   import { WordSearchData, WordPosition } from './types';
   import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
   import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
-import { generateWordSearchGrid } from './utils';
+  import { generateWordSearchGrid } from './utils';
   
   export { generateWordSearchGrid } from "./utils";
-  export type { WordSearchData, WordPosition, WordPlacement } from "./types";
+  export type { WordSearchData } from "./types";
   
   // Component for individual grid cells
   const Cell = ({ 
@@ -39,10 +39,10 @@ import { generateWordSearchGrid } from './utils';
     const [selectedCells, setSelectedCells] = useState<WordPosition[]>([]);
     const [startCell, setStartCell] = useState<WordPosition | null>(null);
     const [foundWords, setFoundWords] = useState<string[]>([]);
-    const [gameComplete, setGameComplete] = useState(false);
     const [showHints, setShowHints] = useState(false);
     const [difficulty, setDifficulty] = useState<string>("medium");
     const [gameData, setGameData] = useState<WordSearchData>(data);
+    const [isOverlayVisible, setIsOverlayVisible] = useState(false); // State for overlay visibility
   
     useEffect(() => {
       console.log("Difficulty changed to:", difficulty);
@@ -56,13 +56,13 @@ import { generateWordSearchGrid } from './utils';
       setFoundWords([]);
       setSelectedCells([]);
       setStartCell(null);
-      setGameComplete(false);
+      setIsOverlayVisible(false); // Reset overlay visibility
     }, [difficulty, category]);
   
     // Check for game completion
     useEffect(() => {
       if (foundWords.length === gameData.words.length && gameData.words.length > 0) {
-        setGameComplete(true);
+        setIsOverlayVisible(true); // Show overlay when game is complete
       }
     }, [foundWords, gameData.words.length]);
   
@@ -170,7 +170,7 @@ import { generateWordSearchGrid } from './utils';
       setFoundWords([]);
       setSelectedCells([]);
       setStartCell(null);
-      setGameComplete(false);
+      setIsOverlayVisible(false); // Reset overlay visibility
     };
   
     return (
@@ -249,7 +249,8 @@ import { generateWordSearchGrid } from './utils';
   
         {/* Completion Overlay */}
         <CompletionOverlay
-          isVisible={gameComplete}
+          isVisible={isOverlayVisible}
+          setIsVisible={setIsOverlayVisible} // Pass setIsVisible to allow closing
           title="Mashallah! Word Finder!"
           message={`You've found all ${gameData.words.length} words!`}
           onPlayAgain={resetGame}

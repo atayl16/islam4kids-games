@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface CompletionOverlayProps {
   isVisible: boolean;
@@ -7,6 +7,7 @@ interface CompletionOverlayProps {
   onPlayAgain?: () => void;
   soundEffect?: string;
   children?: React.ReactNode;
+  setIsVisible?: (visible: boolean) => void; // Callback to update visibility
 }
 
 /**
@@ -18,8 +19,12 @@ export const CompletionOverlay: React.FC<CompletionOverlayProps> = ({
   message = "You've completed the game!",
   onPlayAgain,
   soundEffect = "/audio/takbir.mp3",
-  children
+  children,
+  setIsVisible
 }) => {
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Play sound effect when the overlay becomes visible
   useEffect(() => {
     if (isVisible && soundEffect) {
       try {
@@ -34,23 +39,51 @@ export const CompletionOverlay: React.FC<CompletionOverlayProps> = ({
     }
   }, [isVisible, soundEffect]);
 
+  // Close overlay when clicking outside of it
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (overlayRef.current && !overlayRef.current.contains(event.target as Node)) {
+        setIsVisible?.(false); // Close the overlay
+      }
+    };
+
+    if (isVisible) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isVisible, setIsVisible]);
+
   if (!isVisible) return null;
 
   return (
-    <div className="completion-message" data-testid="completion-overlay">
-      <h2>{title}</h2>
-      <p>{message}</p>
-      
-      {children}
-      
-      {onPlayAgain && (
+    <div className="completion-overlay" data-testid="completion-overlay">
+      <div className="completion-overlay-content" ref={overlayRef}>
+        {/* Close Button */}
         <button 
-          className="play-again-button" 
-          onClick={onPlayAgain}
+          className="close-button" 
+          onClick={() => setIsVisible?.(false)} 
+          aria-label="Close overlay"
         >
-          Play Again
+          ×
         </button>
-      )}
+
+        <h2>{title}</h2>
+        <p>{message}</p>
+        
+        {children}
+        
+        {onPlayAgain && (
+          <button 
+            className="play-again-button" 
+            onClick={onPlayAgain}
+          >
+            Play Again
+          </button>
+        )}
+      </div>
     </div>
   );
 };
