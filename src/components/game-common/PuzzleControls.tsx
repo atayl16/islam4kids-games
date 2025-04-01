@@ -47,7 +47,7 @@ const PuzzleControls: React.FC<PuzzleControlsProps> = ({
       </button>
 
       {/* Hint Button (if provided) */}
-      {hintButton && <div className="hint-button">{hintButton}</div>}
+      {hintButton}
 
       {/* Progress Display */}
       <div className="progress">

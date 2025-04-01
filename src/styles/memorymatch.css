@@ -63,61 +63,44 @@
   background: rgba(255, 255, 255, 0.7);
   border-radius: 10px;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  /* Grid template columns are set dynamically in the component */
 }
 
-/* Adjust grid columns for different screen sizes */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .easy {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .medium {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .hard {
-    grid-template-columns: repeat(4, 1fr);
-  }
+/* Optimized grid layouts for specific card counts */
+.grid.cards-6 {
+  grid-template-columns: repeat(3, 1fr);
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .easy {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .medium {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  .hard {
-    grid-template-columns: repeat(5, 1fr);
-  }
+.grid.cards-8 {
+  grid-template-columns: repeat(4, 1fr);
 }
 
-@media (min-width: 1025px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.grid.cards-10 {
+  grid-template-columns: repeat(5, 1fr);
+}
 
-  .easy {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.grid.cards-12 {
+  grid-template-columns: repeat(4, 1fr);
+}
 
-  .medium {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.grid.cards-14 {
+  grid-template-columns: repeat(7, 1fr);
+}
 
-  .hard {
-    grid-template-columns: repeat(5, 1fr);
-  }
+.grid.cards-16 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid.cards-18 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.grid.cards-20 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.grid.cards-24 {
+  grid-template-columns: repeat(6, 1fr);
 }
 
 .card {
@@ -176,6 +159,22 @@
   color: white;
   font-size: var(--font-size-large);
   font-weight: bold;
+}
+
+/* Add question mark icon to the front of cards */
+.front::before {
+  content: "?";
+  font-size: 2.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .back {
@@ -263,10 +262,6 @@
 }
 
 @media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .arabic {
     font-size: 1.5rem;
   }
@@ -278,19 +273,32 @@
   .translation {
     font-size: 0.8rem;
   }
+  
+  .front::before {
+    font-size: 2rem;
+    width: 2.8rem;
+    height: 2.8rem;
+  }
+  
+  /* Adjust grid layouts for smaller screens */
+  .grid.cards-10,
+  .grid.cards-14,
+  .grid.cards-18,
+  .grid.cards-20,
+  .grid.cards-24 {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-/* Fix for easy difficulty level */
-.easy {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.medium {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.hard {
-  grid-template-columns: repeat(5, 1fr);
+@media (max-width: 480px) {
+  /* Further reduce columns on very small screens */
+  .grid.cards-10,
+  .grid.cards-14,
+  .grid.cards-18,
+  .grid.cards-20,
+  .grid.cards-24 {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .title {
@@ -316,5 +324,34 @@
 
   .translation {
     font-size: 0.9rem;
+  }
+}
+
+/* Maximum columns for any undefined card count */
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  max-width: 800px;
+}
+
+/* Ensure cards larger than 24 have a reasonable number of columns */
+.grid.cards-26,
+.grid.cards-28,
+.grid.cards-30,
+.grid.cards-32,
+.grid.cards-36 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+@media (max-width: 768px) {
+  /* Default for any undefined card count on tablets */
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  /* Default for any undefined card count on mobile */
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   }
 }

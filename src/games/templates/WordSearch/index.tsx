@@ -39,7 +39,6 @@
     const [selectedCells, setSelectedCells] = useState<WordPosition[]>([]);
     const [startCell, setStartCell] = useState<WordPosition | null>(null);
     const [foundWords, setFoundWords] = useState<string[]>([]);
-    const [showHints, setShowHints] = useState(false);
     const [difficulty, setDifficulty] = useState<string>("medium");
     const [gameData, setGameData] = useState<WordSearchData>(data);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false); // State for overlay visibility
@@ -198,14 +197,6 @@
             console.log("Difficulty changed to:", newDifficulty);
             setDifficulty(newDifficulty);
           }}
-          hintButton={
-            <button
-              onClick={() => setShowHints(!showHints)}
-              className="hint-toggle-button"
-            >
-              {showHints ? "Hide Hints" : "Show Hints"}
-            </button>
-          }
         />
   
         <div className="word-search-container">
@@ -238,9 +229,6 @@
                   }`}
                 >
                   <span className="word">{wordData.word}</span>
-                  {showHints && wordData.hint && (
-                    <span className="hint"> - {wordData.hint}</span>
-                  )}
                 </div>
               ))}
             </div>

@@ -17,6 +17,9 @@
   --font-size-medium: 1rem; /* 16px */
   --font-size-small: 0.875rem; /* 14px */
   --font-size-xsmall: 0.75rem; /* 12px */
+  
+  /* Layout variables */
+  --header-height: 4rem; /* Adjust based on actual header height */
 }
 
 body {
@@ -28,6 +31,7 @@ body {
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden; /* Prevent horizontal scroll */
   width: 100%;
+  padding-top: var(--header-height); /* Use variable instead of hardcoded value */
 }
 
 html {
@@ -35,14 +39,35 @@ html {
   width: 100%;
 }
 
+/* Main content container styles */
+.main-content {
+  display: block; /* Override any flex or grid display */
+  padding-top: 1rem; /* Reduced from what might be a larger value */
+  min-height: calc(100vh - var(--header-height) - 2rem); /* Ensure content doesn't need to center vertically */
+}
+
+/* Fix for word scramble game specifically */
+.word-scramble {
+  margin-top: 0 !important; /* Override any large margins */
+  padding-top: 1rem !important;
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 14px; /* Scale down font size for smaller screens */
+  }
+  
+  :root {
+    --header-height: 3.5rem; /* Smaller header for mobile */
   }
 }
 
 @media (max-width: 480px) {
   html {
     font-size: 12px; /* Further scale down for very small screens */
+  }
+  
+  :root {
+    --header-height: 3rem; /* Even smaller header for very small screens */
   }
 }

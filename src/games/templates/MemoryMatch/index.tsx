@@ -147,14 +147,7 @@ export const MemoryMatch = ({ words }: Props) => {
         </div>
       )}
 
-      <div
-        className={`grid ${difficulty}`}
-        style={{
-          gridTemplateColumns: `repeat(${Math.ceil(
-            Math.sqrt(cards.length)
-          )}, 1fr)`,
-        }}
-      >
+      <div className={`grid ${difficulty} cards-${cards.length}`}>
         {cards.map((card) => (
           <MemoryCardComponent
             key={card.id}

@@ -112,13 +112,6 @@
   font-size: 0.9rem;
 }
 
-.progress {
-  margin-top: 1rem;
-  text-align: center;
-  font-weight: bold;
-  color: var(--accent-green);
-}
-
 .completion-message {
   margin-top: 2rem;
   text-align: center;
