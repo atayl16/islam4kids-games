@@ -15,9 +15,16 @@ jobs:
         with:
           node-version: 18.x
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
       
       - name: Install dependencies
-        run: npm ci
+        id: install
+        run: npm ci --no-audit --prefer-offline
+        continue-on-error: true
+      
+      - name: Retry install if needed
+        if: ${{ steps.install.outcome == 'failure' }}
+        run: npm install --no-audit --prefer-offline
       
       - name: Build project
         run: npm run build
