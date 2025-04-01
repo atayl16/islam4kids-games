@@ -7,10 +7,13 @@ import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer"
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
 import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer"; // Import MemoryMatchContainer
 import "./styles/base.css";
-import "./styles/wordscramble.css";
+import "./styles/header.css";
+import "./styles/homepage.css";
 import "./styles/jigsaw.css";
-import "./styles/wordsearch.css";
 import "./styles/memorymatch.css";
+import "./styles/shared.css";
+import "./styles/wordscramble.css";
+import "./styles/wordsearch.css";
 
 export default function App() {
   return (

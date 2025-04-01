@@ -188,6 +188,18 @@ const initializeJigsawPuzzles = () => {
       quran: () => loadPuzzle(
         () => import("./data/jigsaw/quran.json"),
         validateJigsawConfig
+      ),
+      mosque: () => loadPuzzle(
+        () => import("./data/jigsaw/mosque.json"),
+        validateJigsawConfig
+      ),
+      muslimahBff: () => loadPuzzle(
+        () => import("./data/jigsaw/muslimah-bff.json"),
+        validateJigsawConfig
+      ),
+      readOutside: () => loadPuzzle(
+        () => import("./data/jigsaw/read-outside.json"),
+        validateJigsawConfig
       )
     };
   }

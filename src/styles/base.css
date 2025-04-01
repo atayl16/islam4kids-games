@@ -10,16 +10,28 @@
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.2);
   --card-bg: #ffffff;
+
+  /* Universal font sizes */
+  --font-size-base: 16px; /* Default font size */
+  --font-size-large: 1.25rem; /* 20px */
+  --font-size-medium: 1rem; /* 16px */
+  --font-size-small: 0.875rem; /* 14px */
+  --font-size-xsmall: 0.75rem; /* 12px */
+  
+  /* Layout variables */
+  --header-height: 4rem; /* Adjust based on actual header height */
 }
 
 body {
   margin: 0;
   font-family: 'Amiri', serif;
+  font-size: var(--font-size-base);
   background: var(--page-bg);
   touch-action: manipulation;
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden; /* Prevent horizontal scroll */
   width: 100%;
+  padding-top: var(--header-height); /* Use variable instead of hardcoded value */
 }
 
 html {
@@ -27,319 +39,35 @@ html {
   width: 100%;
 }
 
+/* Main content container styles */
+.main-content {
+  display: block; /* Override any flex or grid display */
+  padding-top: 1rem; /* Reduced from what might be a larger value */
+  min-height: calc(100vh - var(--header-height) - 2rem); /* Ensure content doesn't need to center vertically */
+}
+
+/* Fix for word scramble game specifically */
+.word-scramble {
+  margin-top: 0 !important; /* Override any large margins */
+  padding-top: 1rem !important;
+}
+
 @media (max-width: 768px) {
   html {
-    font-size: 14px;
-  }
-}
-
-.home-container {
-  max-width: 1000px;
-  margin: 40px auto;
-  padding: 30px;
-  background: linear-gradient(135deg, #e6f2df 0%, #ffffff 100%);
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  border: 2px solid #4a8f29;
-  position: relative;
-  overflow: hidden;
-}
-
-.home-container::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 8px;
-  background: linear-gradient(90deg, #4a8f29, #68bf3b, #4a8f29);
-}
-
-.home-container h1 {
-  color: #2a5216;
-  margin-bottom: 40px;
-  font-size: 2.8rem;
-  position: relative;
-  display: inline-block;
-  padding: 0 15px 15px;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.home-container h1::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, transparent, #4a8f29, transparent);
-  border-radius: 2px;
-}
-
-.home-container nav {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.game-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 180px;
-  background: linear-gradient(145deg, #4a8f29, #68bf3b);
-  border: none;
-  border-radius: 16px;
-  padding: 20px;
-  text-decoration: none;
-  color: white;
-  font-size: 1.4rem;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  box-shadow: 0 6px 12px rgba(74, 143, 41, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.game-link::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  right: -10px;
-  bottom: -10px;
-  background: linear-gradient(45deg, #4a8f29, transparent, #4a8f29, transparent);
-  background-size: 400% 400%;
-  opacity: 0;
-  z-index: 1;
-  transition: opacity 0.3s ease;
-  animation: gradient-shift 3s ease infinite;
-}
-
-.game-link:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 12px 20px rgba(74, 143, 41, 0.4);
-}
-
-.game-link:hover::before {
-  opacity: 0.3;
-}
-
-.game-link::after {
-  content: "Play Now →";
-  position: absolute;
-  bottom: 15px;
-  right: 20px;
-  font-size: 0.9rem;
-  opacity: 0.8;
-  transition: all 0.3s ease;
-}
-
-.game-link:hover::after {
-  right: 15px;
-  opacity: 1;
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Add a decorative element for Islamic theme */
-.home-container::after {
-  content: "☪️";
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 2rem;
-  opacity: 0.2;
-}
-
-@media (max-width: 768px) {
-  .home-container h1 {
-    font-size: 2.2rem;
+    font-size: 14px; /* Scale down font size for smaller screens */
   }
   
-  .game-link {
-    height: 150px;
-    font-size: 1.2rem;
+  :root {
+    --header-height: 3.5rem; /* Smaller header for mobile */
   }
 }
 
 @media (max-width: 480px) {
-  .home-container {
-    padding: 20px;
-    margin: 20px;
+  html {
+    font-size: 12px; /* Further scale down for very small screens */
   }
   
-  .home-container h1 {
-    font-size: 1.8rem;
+  :root {
+    --header-height: 3rem; /* Even smaller header for very small screens */
   }
-}
-
-/* Root container for all game content */
-#root {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.game-container {
-  width: 100%;
-  max-width: 1000px;
-  min-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-.embed-wrapper {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-@media (max-width: 850px) {
-  .game-container {
-    min-width: 95%;
-    max-width: 95%;
-  }
-}
-
-@media (max-width: 768px) {
-  .header-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-/* Add to your CSS file */
-.home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.home-header {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.game-filter {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.filter-btn {
-  background-color: #e0e0e0;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: #444;
-  font-weight: 500;
-}
-
-.filter-btn:hover {
-  background-color: #d0d0d0;
-}
-
-.filter-btn.active {
-  background-color: var(--islamic-green);
-  color: white;
-  border: 1px solid #3e8e41;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
-}
-
-.game-card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.game-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.game-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.game-icon.wordScramble {
-  background-color: #FFE0B2;
-}
-
-.game-icon.wordSearch {
-  background-color: #C8E6C9;
-}
-
-.game-icon.jigsaw {
-  background-color: #BBDEFB;
-}
-
-.game-info {
-  text-align: center;
-}
-
-.game-info h3 {
-  margin: 0.5rem 0;
-  color: #333;
-}
-
-.game-type {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.no-games {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-/* Ensure the app container is structured properly */
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Add padding to the body to prevent content from being hidden behind the fixed header */
-body {
-  padding-top: 75px; /* Adjust this value to match the height of the header */
 }

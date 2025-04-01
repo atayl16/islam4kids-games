@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "title": "Muslimah BFFs Puzzle",
+    "difficulty": "medium",
+    "learningObjectives": [
+      "Improve problem-solving skills"
+    ],
+    "imageAlt": "Muslimah image"
+  },
+  "jigsawConfig": {
+    "imageSrc": "/images/muslimah-bff.png"
+  }
+}

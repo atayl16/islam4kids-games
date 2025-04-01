@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "title": "Reading Mosque Puzzle",
+    "difficulty": "medium",
+    "learningObjectives": [
+      "Improve problem-solving skills"
+    ],
+    "imageAlt": "Reading outside a mosque image"
+  },
+  "jigsawConfig": {
+    "imageSrc": "/images/read-outside.jpg"
+  }
+}

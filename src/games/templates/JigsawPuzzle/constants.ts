@@ -32,36 +32,45 @@ export const JIGSAW_DIFFICULTY_PRESETS = {
   }
 };
 
+// Maximum and minimum board dimensions
+export const MAX_BOARD_WIDTH = 800; // Maximum width in pixels
+export const MAX_BOARD_HEIGHT = 600; // Maximum height in pixels
+export const MIN_BOARD_WIDTH = 400; // Minimum width in pixels
+export const MIN_BOARD_HEIGHT = 300; // Minimum height in pixels
+
 // Minimum size constraints for better visibility
-export const MIN_PIECE_WIDTH = 80;
-export const MAX_CONTAINER_WIDTH = 900;
+export const MIN_PIECE_WIDTH = 80; // Minimum width of a puzzle piece
+export const MAX_CONTAINER_WIDTH = 900; // Maximum width of the container
 
 // Audio files
 export const AUDIO_FILES = {
-  SNAP: "/audio/snap.mp3",
-  COMPLETE: "/audio/takbir.mp3"
+  SNAP: "/audio/snap.mp3", // Sound for snapping a piece into place
+  COMPLETE: "/audio/takbir.mp3" // Sound for completing the puzzle
 };
 
 // Visual configuration
 export const VISUAL_CONFIG = {
+  VIEWPORT_WIDTH_RATIO: 0.9,
   VIEWPORT_HEIGHT_RATIO: 0.7,
-  SNAP_THRESHOLD_RATIO: 1/3,
+  SNAP_THRESHOLD_RATIO: 1.5,
+  MIN_BOARD_WIDTH: 400, // Ensure this is defined
+  MIN_BOARD_HEIGHT: 300, // Ensure this is defined
   PILE_WIDTH_RATIO: 0.8,
   PILE_HEIGHT_RATIO: 0.8
 };
 
 // Game settings
 export const GAME_SETTINGS = {
-  PIECE_TRAY_GAP: 20,
-  AUDIO_VOLUME: 0.5
+  PIECE_TRAY_GAP: 20, // Gap between the board and the piece tray
+  AUDIO_VOLUME: 0.5 // Default audio volume
 };
 
 // Z-index values for layering
 export const Z_INDEX = {
-  BOARD_BACKGROUND: 1,
-  BOARD_GRID: 2,
-  SOLVED_PIECES: 5,
-  UNSOLVED_PIECES: 10,
-  CONTROLS: 20,
-  COMPLETION_OVERLAY: 50
+  BOARD_BACKGROUND: 1, // Background layer of the board
+  BOARD_GRID: 2, // Grid layer of the board
+  SOLVED_PIECES: 5, // Layer for solved pieces
+  UNSOLVED_PIECES: 10, // Layer for unsolved pieces
+  CONTROLS: 20, // Layer for controls
+  COMPLETION_OVERLAY: 50 // Layer for the completion overlay
 };

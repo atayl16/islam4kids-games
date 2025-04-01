@@ -16,7 +16,9 @@ export const generateWordSearchGrid = (
   category: string,
   difficulty: string = "medium"
 ): WordSearchData => {
-  // Filter words from the word bank
+  console.log("Generating grid for category:", category, "with difficulty:", difficulty);
+
+  // Filter words from the word bank based on category and difficulty
   const filteredWords = wordBankData.words
     .filter(item => {
       // Check if category matches
@@ -32,68 +34,64 @@ export const generateWordSearchGrid = (
       return categoryMatch && difficultyMatch;
     })
     .map(item => item.term.toUpperCase());
-  
-  // Add fallback words if no matching words found
-  let gameWords = filteredWords;
+
+  // Add fallback words if no matching words are found
+  let selectedWords = filteredWords;
   if (filteredWords.length === 0) {
     console.warn(`No words found for category: ${category}. Using fallback words.`);
-    
-    if (category === 'islamic-terms') {
-      gameWords = ['QURAN', 'ISLAM', 'SALAH', 'DEEN', 'HAJJ', 'ZAKAT', 'SAWM'];
-    } else if (category === 'prophets') {
-      gameWords = ['MUHAMMAD', 'ADAM', 'IBRAHIM', 'MUSA', 'ISA', 'NUH'];
-    } else if (category === 'ramadan') {
-      gameWords = ['FASTING', 'IFTAR', 'SUHOOR', 'TARAWEEH', 'EID'];
-    } else {
-      gameWords = ['MASJID', 'PRAYER', 'FAITH', 'PEACE', 'KINDNESS'];
-    }
+    selectedWords = ["ISLAM", "QURAN", "PRAYER", "FAITH", "PEACE"];
   }
-  
-  // Select random subset of words
+
+  // Select a random subset of words based on difficulty
   const wordCount = 
     difficulty === "easy" ? 5 : 
     difficulty === "medium" ? 8 : 12;
-  
-  const shuffled = [...gameWords].sort(() => 0.5 - Math.random());
-  const selectedWords = shuffled.slice(0, Math.min(wordCount, gameWords.length));
-  
-  // Grid size based on difficulty
+  selectedWords = selectedWords.slice(0, Math.min(wordCount, selectedWords.length));
+
+  // Determine grid size based on difficulty
   const size = 
     difficulty === "easy" ? 8 : 
     difficulty === "medium" ? 10 : 12;
-  
-  // Generate the actual grid
-  const { grid, wordPlacements } = createWordSearchGrid(selectedWords, size);
-  
+
+  // Generate the grid and word placements
+  const { grid, wordPlacements } = createWordSearchGrid(selectedWords, size, difficulty);
+
+  console.log("Generated grid:", grid);
   return {
     title: `${category.charAt(0).toUpperCase() + category.slice(1)} Word Search`,
-    meta: {
-      title: `${category.charAt(0).toUpperCase() + category.slice(1)} Word Search`,
-      instructions: "Find all the hidden words in the grid",
-      difficulty: difficulty as "medium" | "easy" | "hard",
-      learningObjectives: ["Vocabulary recognition", "Visual scanning"],
-    },
     grid,
     words: selectedWords.map(word => ({
       word,
       hint: "", // Could add hints if available in word bank
     })),
     wordPlacements,
+    meta: {
+      title: `${category.charAt(0).toUpperCase() + category.slice(1)} Word Search`,
+      instructions: "Find all the hidden words in the grid",
+      difficulty: difficulty as "easy" | "medium" | "hard",
+      learningObjectives: ["Vocabulary recognition", "Visual scanning"],
+    },
   };
 };
 
 const createWordSearchGrid = (
   words: string[],
-  size: number
+  size: number,
+  difficulty: string
 ): { grid: string[][], wordPlacements: WordPlacement[] } => {
   // Initialize empty grid
   let grid: string[][] = Array(size).fill(0).map(() => Array(size).fill(""));
   
   // Directions: horizontal, vertical, diagonal down, diagonal up
-  const directions = [
-    { row: 0, col: 1 }, { row: 1, col: 0 },
-    { row: 1, col: 1 }, { row: 1, col: -1 }
-  ];
+  const directions = difficulty === "easy"
+    ? [ // No diagonals for Easy
+        { row: 0, col: 1 }, // horizontal
+        { row: 1, col: 0 }  // vertical
+      ]
+    : [ // Include diagonals for Medium and Hard
+        { row: 0, col: 1 }, { row: 1, col: 0 },
+        { row: 1, col: 1 }, { row: 1, col: -1 }
+      ];
 
   // Word placements to track where words are in the grid
   const wordPlacements: WordPlacement[] = [];

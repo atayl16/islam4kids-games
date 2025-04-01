@@ -1,0 +1,200 @@
+/* General Puzzle Controls Styling */
+.puzzle-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.difficulty-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  justify-content: center;
+}
+
+.difficulty-selector label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.difficulty-selector select {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #2c3e50;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.difficulty-selector select:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.4);
+}
+
+/* Common styles for buttons and progress indicator */
+.scramble-button,
+.hint-toggle-button,
+.progress {
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 42px;
+  min-width: 140px;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  padding: 0 1.5rem;
+  margin: 0;
+  line-height: 42px; /* Match the height */
+}
+
+/* Button-specific styles */
+.scramble-button,
+.hint-toggle-button {
+  color: white;
+  background: #3498db;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.scramble-button:hover,
+.hint-toggle-button:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Alternate style for hint buttons */
+.hint-toggle-button {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.hint-toggle-button:hover {
+  background: #bdc3c7;
+}
+
+/* Progress-specific styles */
+.progress {
+  color: #2c3e50;
+  background: #f0f3f5;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+  align-self: center; /* Ensure vertical centering */
+}
+
+.progress span {
+  font-weight: 700;
+  color: #3498db;
+}
+
+/* Error Box Styling */
+.errorBox {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 5px;
+  border-left: 4px solid #dc3545;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .puzzle-controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .difficulty-selector,
+  .scramble-button,
+  .hint-toggle-button,
+  .progress {
+    width: 100%;
+    min-width: 0;
+    max-width: 280px;
+  }
+  
+  .difficulty-selector select {
+    width: 100%;
+  }
+}
+
+/* Overlay background styling */
+.completion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Adjusted to a darker overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Overlay content styling */
+.completion-overlay-content {
+  position: relative;
+  background: rgba(43, 88, 12, 0.9);
+  color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 90%;
+}
+
+/* Close button styling */
+.completion-overlay-content .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.completion-overlay-content .close-button:hover {
+  transform: scale(1.2);
+}
+
+/* Play Again button styling */
+.completion-overlay-content .play-again-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.completion-overlay-content .play-again-button:hover {
+  background: #2980b9;
+}

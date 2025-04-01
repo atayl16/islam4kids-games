@@ -2,33 +2,54 @@ import { useRef, useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { 
+import {
   JIGSAW_DIFFICULTY_PRESETS,
   GAME_SETTINGS,
   VISUAL_CONFIG,
-  Z_INDEX
+  Z_INDEX,
 } from "./constants";
 import { JigsawConfig } from "./types";
-import '../../../styles/jigsaw.css';
+import "../../../styles/jigsaw.css";
 
 // Import components
 import { PuzzleBoard } from "./components/PuzzleBoard";
 import { PieceTray } from "./components/PieceTray";
-import { PuzzleControls } from "./components/PuzzleControls";
-import { CompletionOverlay } from "./components/CompletionOverlay";
 import { Piece } from "./Piece";
+import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
+import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
 
 // Import hooks
 import { useBoardPosition } from "./hooks/useBoardPosition";
-import { usePuzzleDimensions } from "./hooks/usePuzzleDimensions";
 import { usePuzzlePieces } from "./hooks/usePuzzlePieces";
 
 // Import utilities
 import { validateJigsawConfig } from "./utils";
 
+// Calculate responsive board dimensions
+const calculateResponsiveBoardDimensions = () => {
+  const viewportWidth = window.innerWidth || 800; // Default to 800px if undefined
+  const viewportHeight = window.innerHeight || 600; // Default to 600px if undefined
+
+  // Type assertion to silence TypeScript errors without changing behavior
+  const visualConfig = VISUAL_CONFIG as any;
+
+  const boardWidth = Math.min(
+    viewportWidth * VISUAL_CONFIG.VIEWPORT_WIDTH_RATIO,
+    visualConfig.MAX_BOARD_WIDTH
+  ) || VISUAL_CONFIG.MIN_BOARD_WIDTH;
+
+  const boardHeight = Math.min(
+    viewportHeight * VISUAL_CONFIG.VIEWPORT_HEIGHT_RATIO,
+    visualConfig.MAX_BOARD_HEIGHT
+  ) || VISUAL_CONFIG.MIN_BOARD_HEIGHT;
+
+  return { boardWidth, boardHeight };
+};
+
 export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Validate configuration
   const validatedData = validateJigsawConfig(data);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
   // Detect mobile devices
   const [isMobile] = useState(() =>
@@ -51,21 +72,25 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     JIGSAW_DIFFICULTY_PRESETS.medium;
   const currentConfig = {
     ...validatedData.jigsawConfig,
-    rows: difficultyConfig.rows,
-    columns: difficultyConfig.columns,
+    rows: difficultyConfig.rows || 1, // Ensure rows is at least 1
+    columns: difficultyConfig.columns || 1, // Ensure columns is at least 1
   };
+
+  // Calculate responsive board dimensions
+  const { boardWidth, boardHeight } = calculateResponsiveBoardDimensions();
+
+  // Ensure board dimensions are valid
+  const validBoardWidth = boardWidth || VISUAL_CONFIG.MIN_BOARD_WIDTH;
+  const validBoardHeight = boardHeight || VISUAL_CONFIG.MIN_BOARD_HEIGHT;
 
   // Create refs
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Use custom hooks
+  // Use boardRect.width and boardRect.height instead of calculating separately
   const { boardRect, updateBoardRect } = useBoardPosition(containerRef);
-  const { calculateDimensions } = usePuzzleDimensions(
-    containerRef,
-    currentConfig.rows,
-    currentConfig.columns
-  );
+
+  // When passing to usePuzzlePieces
   const {
     pieces,
     initializePieces,
@@ -75,7 +100,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   } = usePuzzlePieces(
     currentConfig.rows,
     currentConfig.columns,
-    calculateDimensions,
+    boardRect.width > 0 ? boardRect.width : validBoardWidth,
+    boardRect.height > 0 ? boardRect.height : validBoardHeight,
     updateBoardRect
   );
 
@@ -83,23 +109,14 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   useEffect(() => {
     const updatePositions = () => {
       updateBoardRect();
+      console.log("Board position updated:", boardRect);
     };
 
-    // Initial update
-    updatePositions();
-
-    // Update on resize
     window.addEventListener("resize", updatePositions);
-
-    // Additional updates to ensure correct positioning after animations/transitions
-    const timers = [
-      setTimeout(updatePositions, 100),
-      setTimeout(updatePositions, 500),
-    ];
+    updatePositions(); // Initial update
 
     return () => {
       window.removeEventListener("resize", updatePositions);
-      timers.forEach((t) => clearTimeout(t));
     };
   }, [updateBoardRect]);
 
@@ -122,17 +139,30 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     updateBoardRect,
   ]);
 
+  // Update overlay visibility when the puzzle is solved
+  useEffect(() => {
+    if (solvedCount === totalPieces && totalPieces > 0) {
+      setIsOverlayVisible(true);
+    }
+  }, [solvedCount, totalPieces]);
+
   // Handle difficulty change
   const handleDifficultyChange = (difficulty: string) => {
     setCurrentDifficulty(difficulty as keyof typeof JIGSAW_DIFFICULTY_PRESETS);
   };
 
   // Calculate layout dimensions
-  const { containerWidth, containerHeight, pieceWidth } = calculateDimensions();
-  const fullContainerWidth = containerWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
+  const visualConfig = VISUAL_CONFIG as any;
+  const pieceWidth =
+    validBoardWidth && currentConfig.columns
+      ? validBoardWidth / currentConfig.columns
+      : visualConfig.MIN_PIECE_WIDTH;
+
+  const fullContainerWidth = validBoardWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
+
   const maxVisibleHeight = Math.max(
-    containerHeight,
-    window.innerHeight * VISUAL_CONFIG.VIEWPORT_HEIGHT_RATIO
+    validBoardHeight || VISUAL_CONFIG.MIN_BOARD_HEIGHT,
+    (window.innerHeight || 600) * VISUAL_CONFIG.VIEWPORT_HEIGHT_RATIO
   );
 
   // Custom piece drop handler with logging
@@ -140,13 +170,13 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     // Log the reported relative drop coordinates from the Piece component
     console.log(`Piece ${id} raw drop position: (${x}, ${y})`);
     console.log(`Board position: (${boardRect.left}, ${boardRect.top})`);
-    
+
     // Convert the relative coordinates into absolute coordinates
     const absX = x + boardRect.left;
     const absY = y + boardRect.top;
-    
+
     console.log(`Using absolute drop position: (${absX}, ${absY})`);
-    
+
     return handlePieceMove(id, absX, absY);
   };
 
@@ -164,11 +194,15 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           <PuzzleControls
             currentDifficulty={currentDifficulty}
             onDifficultyChange={handleDifficultyChange}
-            onScramble={() => {
-              initializePieces();
-            }}
+            onScramble={initializePieces}
             solvedCount={solvedCount}
             totalPieces={totalPieces}
+            difficultyOptions={Object.entries(JIGSAW_DIFFICULTY_PRESETS).map(
+              ([key, preset]) => ({
+                value: key,
+                label: preset.label,
+              })
+            )}
           />
 
           <div
@@ -182,8 +216,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           >
             {/* Puzzle Board */}
             <PuzzleBoard
-              containerWidth={containerWidth}
-              containerHeight={containerHeight}
+              containerWidth={validBoardWidth}
+              containerHeight={validBoardHeight}
               pieceWidth={pieceWidth}
               currentConfig={currentConfig}
               pieces={pieces}
@@ -193,8 +227,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
             {/* Piece Tray/Pile */}
             <PieceTray
-              containerWidth={containerWidth}
-              containerHeight={containerHeight}
+              containerWidth={validBoardWidth}
+              containerHeight={validBoardHeight}
             />
           </div>
 
@@ -233,8 +267,15 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
           {/* Completion Overlay */}
           <CompletionOverlay
-            isVisible={solvedCount === totalPieces && totalPieces > 0}
-            totalPieces={totalPieces}
+            isVisible={isOverlayVisible}
+            setIsVisible={setIsOverlayVisible}
+            title="Mashallah! Puzzle Complete!"
+            message={`You've completed all ${totalPieces} pieces of the puzzle!`}
+            onPlayAgain={() => {
+              initializePieces();
+              setIsOverlayVisible(false); // Close overlay after restarting
+            }}
+            soundEffect="/audio/takbir.mp3"
           />
         </div>
       </div>

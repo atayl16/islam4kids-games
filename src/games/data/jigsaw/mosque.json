@@ -1,0 +1,13 @@
+{
+  "meta": {
+    "title": "Mosque Puzzle",
+    "difficulty": "medium",
+    "learningObjectives": [
+      "Improve problem-solving skills"
+    ],
+    "imageAlt": "Mosque image"
+  },
+  "jigsawConfig": {
+    "imageSrc": "/images/mosque.jpg"
+  }
+}
