@@ -7,7 +7,6 @@ import {
   GAME_SETTINGS,
   VISUAL_CONFIG,
   Z_INDEX,
-  MIN_PIECE_WIDTH,
 } from "./constants";
 import { JigsawConfig } from "./types";
 import "../../../styles/jigsaw.css";
@@ -26,17 +25,15 @@ import { usePuzzlePieces } from "./hooks/usePuzzlePieces";
 // Import utilities
 import { validateJigsawConfig } from "./utils";
 
-// Calculate responsive board dimensions
+// Calculate responsive board dimensions preserving aspect ratio
 const calculateResponsiveBoardDimensions = () => {
-  const viewportWidth = window.innerWidth || 800; // Default to 800px if undefined
-  const viewportHeight = window.innerHeight || 600; // Default to 600px if undefined
+  const viewportWidth = window.innerWidth || 800;
+  const viewportHeight = window.innerHeight || 600;
 
   // Type assertion to silence TypeScript errors without changing behavior
   const visualConfig = VISUAL_CONFIG as any;
   
   // Calculate max width considering both board and piece tray need to fit side by side
-  // The full container width is boardWidth * 2 + gap, so each board can only use 
-  // slightly less than half the viewport width
   const totalAvailableWidth = viewportWidth * 0.9; // Use 90% of viewport width
   const singleBoardMaxWidth = (totalAvailableWidth - GAME_SETTINGS.PIECE_TRAY_GAP) / 2;
   
@@ -46,12 +43,12 @@ const calculateResponsiveBoardDimensions = () => {
   // Calculate dimensions with constraints
   const maxAllowedWidth = Math.min(
     singleBoardMaxWidth,
-    visualConfig.MAX_BOARD_WIDTH || 800 // Reduced max width
+    visualConfig.MAX_BOARD_WIDTH || 800
   );
   
   const maxAllowedHeight = Math.min(
     viewportHeight * heightRatio, 
-    visualConfig.MAX_BOARD_HEIGHT || 600 // Reduced max height
+    visualConfig.MAX_BOARD_HEIGHT || 600
   );
 
   const boardWidth = Math.max(maxAllowedWidth, visualConfig.MIN_BOARD_WIDTH);
@@ -70,6 +67,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Validate configuration
   const validatedData = validateJigsawConfig(data);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [imageAspectRatio, setImageAspectRatio] = useState(1); // Default to square
 
   // Detect mobile devices
   const [isMobile] = useState(() =>
@@ -92,8 +90,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     JIGSAW_DIFFICULTY_PRESETS.medium;
   const currentConfig = {
     ...validatedData.jigsawConfig,
-    rows: difficultyConfig.rows || 1, // Ensure rows is at least 1
-    columns: difficultyConfig.columns || 1, // Ensure columns is at least 1
+    rows: difficultyConfig.rows || 1,
+    columns: difficultyConfig.columns || 1,
   };
 
   // Calculate responsive board dimensions
@@ -110,6 +108,46 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Use boardRect.width and boardRect.height instead of calculating separately
   const { boardRect, updateBoardRect } = useBoardPosition(containerRef);
 
+  // Load image and get its aspect ratio
+  useEffect(() => {
+    const img = new Image();
+    img.src = currentConfig.imageSrc;
+
+    img.onload = () => {
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      setImageAspectRatio(aspectRatio);
+      console.log("Image loaded with aspect ratio:", aspectRatio);
+      
+      // Initialize pieces after image loads
+      initializePieces();
+
+      // Update board position after pieces are initialized
+      setTimeout(updateBoardRect, 50);
+    };
+  }, [currentConfig.imageSrc, currentDifficulty]);
+
+  // Calculate actual puzzle dimensions that preserve the image aspect ratio
+  const puzzleWidth = Math.min(validBoardWidth, validBoardHeight * imageAspectRatio);
+  const puzzleHeight = puzzleWidth / imageAspectRatio;
+
+  // Calculate piece size based on the aspect ratio-preserved puzzle dimensions
+  const pieceWidth = puzzleWidth / currentConfig.columns;
+  const pieceHeight = puzzleHeight / currentConfig.rows;
+  
+  // Calculate horizontal offset to center the puzzle horizontally, but top align vertically
+  const horizontalOffset = Math.max(0, (validBoardWidth - puzzleWidth) / 2);
+  const verticalOffset = 0; // Top align the puzzle instead of centering vertically
+  
+  console.log("Aspect ratio preserved dimensions:", {
+    puzzleWidth,
+    puzzleHeight,
+    pieceWidth,
+    pieceHeight,
+    imageAspectRatio,
+    horizontalOffset,
+    verticalOffset
+  });
+
   // When passing to usePuzzlePieces
   const {
     pieces,
@@ -120,8 +158,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   } = usePuzzlePieces(
     currentConfig.rows,
     currentConfig.columns,
-    boardRect.width > 0 ? boardRect.width : validBoardWidth,
-    boardRect.height > 0 ? boardRect.height : validBoardHeight,
+    puzzleWidth,
+    puzzleHeight,
     updateBoardRect
   );
 
@@ -140,25 +178,6 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     };
   }, [updateBoardRect]);
 
-  // Load image and initialize pieces when difficulty or image changes
-  useEffect(() => {
-    const img = new Image();
-    img.src = currentConfig.imageSrc;
-
-    img.onload = () => {
-      // Initialize pieces after image loads
-      initializePieces();
-
-      // Update board position after pieces are initialized
-      setTimeout(updateBoardRect, 50);
-    };
-  }, [
-    currentConfig.imageSrc,
-    currentDifficulty,
-    initializePieces,
-    updateBoardRect,
-  ]);
-
   // Update overlay visibility when the puzzle is solved
   useEffect(() => {
     if (solvedCount === totalPieces && totalPieces > 0) {
@@ -171,32 +190,51 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     setCurrentDifficulty(difficulty as keyof typeof JIGSAW_DIFFICULTY_PRESETS);
   };
   
-  // Calculate pieceWidth based on the new board dimensions
-  const pieceWidth =
-    validBoardWidth && currentConfig.columns
-      ? validBoardWidth / currentConfig.columns
-      : MIN_PIECE_WIDTH; // Use the standalone constant instead of VISUAL_CONFIG.MIN_PIECE_WIDTH
-  
   const fullContainerWidth = validBoardWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
 
   const maxVisibleHeight = Math.min(
     validBoardHeight || VISUAL_CONFIG.MIN_BOARD_HEIGHT,
     (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
-
+  
   // Custom piece drop handler with logging
   const handlePieceDrop = (id: number, x: number, y: number) => {
     // Log the reported relative drop coordinates from the Piece component
     console.log(`Piece ${id} raw drop position: (${x}, ${y})`);
     console.log(`Board position: (${boardRect.left}, ${boardRect.top})`);
 
-    // Convert the relative coordinates into absolute coordinates
-    const absX = x + boardRect.left;
-    const absY = y + boardRect.top;
+    // Calculate target positions within the grid using piece dimensions
+    const col = id % currentConfig.columns;
+    const row = Math.floor(id / currentConfig.columns);
+    
+    const targetX = horizontalOffset + (col * pieceWidth);
+    const targetY = verticalOffset + (row * pieceHeight);
+    
+    // Calculate where the piece was actually dropped
+    const dropX = x;
+    const dropY = y;
+    
+    console.log(`Target position: (${targetX}, ${targetY})`);
+    console.log(`Actual drop position: (${dropX}, ${dropY})`);
 
-    console.log(`Using absolute drop position: (${absX}, ${absY})`);
-
-    return handlePieceMove(id, absX, absY);
+    // Calculate the distance between drop position and target position
+    const diffX = Math.abs(dropX - targetX);
+    const diffY = Math.abs(dropY - targetY);
+    
+    // Use generous thresholds for snapping
+    const snapThresholdX = pieceWidth * 0.9;
+    const snapThresholdY = pieceHeight * 0.9;
+    
+    // Determine if the piece should snap
+    const shouldSnap = diffX <= snapThresholdX && diffY <= snapThresholdY;
+    
+    if (shouldSnap) {
+      // If it should snap, use the exact target position
+      return handlePieceMove(id, targetX, targetY);
+    } else {
+      // Otherwise use the actual drop position
+      return handlePieceMove(id, dropX, dropY);
+    }
   };
 
   return (
@@ -230,7 +268,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
               height: maxVisibleHeight,
               display: "flex",
               position: "relative",
-              alignItems: "flex-start",
+              alignItems: "flex-start", // Ensure top alignment
             }}
           >
             {/* Puzzle Board */}
@@ -238,10 +276,13 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
               containerWidth={validBoardWidth}
               containerHeight={validBoardHeight}
               pieceWidth={pieceWidth}
+              pieceHeight={pieceHeight}
               currentConfig={currentConfig}
               pieces={pieces}
               onDrop={handlePieceDrop}
               boardRef={containerRef}
+              horizontalOffset={horizontalOffset}
+              verticalOffset={verticalOffset}
             />
 
             {/* Piece Tray/Pile */}
@@ -273,7 +314,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
                   image={currentConfig.imageSrc}
                   rows={currentConfig.rows}
                   columns={currentConfig.columns}
-                  size={pieceWidth}
+                  width={pieceWidth}
+                  height={pieceHeight}
                   initialX={piece.x}
                   initialY={piece.y}
                   isSolved={false}
@@ -294,7 +336,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
               initializePieces();
               setIsOverlayVisible(false); // Close overlay after restarting
             }}
-            soundEffect="/audio/takbir.mp3"
+            soundEffect="/audio/success.mp3"
           />
         </div>
       </div>

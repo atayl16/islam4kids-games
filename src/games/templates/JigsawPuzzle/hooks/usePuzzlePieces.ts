@@ -70,33 +70,37 @@ export const usePuzzlePieces = (
 
     updateBoardRect();
 
-    // Make sure we have valid values for all dimensions
-    const pieceWidth = columns > 0 ? validBoardWidth / columns : 80;
-    const pieceHeight = rows > 0 ? validBoardHeight / rows : 80;
+    // We're using the pre-calculated boardWidth and boardHeight which already preserve aspect ratio
+    // from the parent component, so we can directly calculate piece dimensions
+    const pieceWidth = validBoardWidth / columns;
+    const pieceHeight = validBoardHeight / rows;
+    
+    console.log("Piece dimensions from aspect-ratio preserved board:", {
+      pieceWidth,
+      pieceHeight,
+      aspectRatio: pieceWidth / pieceHeight,
+      boardWidth: validBoardWidth,
+      boardHeight: validBoardHeight
+    });
+    
+    // Use fixed positioning for the pile to ensure it appears in the tray area
+    const pileLeft = validBoardWidth + 20; // Fixed offset from the board
+    const pileWidth = Math.min(validBoardWidth * 0.8, 300); // Limit max width
+    const pileHeight = validBoardHeight * 0.8;
+    const pileTop = 180; // Increased to position pieces lower, below the text
 
-    const pileWidth = validBoardWidth * 0.8; // Fallback if VISUAL_CONFIG.PILE_WIDTH_RATIO is undefined
-    const pileHeight = validBoardHeight * 0.8; // Fallback if VISUAL_CONFIG.PILE_HEIGHT_RATIO is undefined
-
-    const pileLeft = validBoardWidth + 40;
-    const pileTop = 150;
-
-    console.log("Debugging initializePieces:");
-    console.log("validBoardWidth:", validBoardWidth);
-    console.log("validBoardHeight:", validBoardHeight);
-    console.log("columns:", columns);
-    console.log("rows:", rows);
-    console.log("pieceWidth:", pieceWidth);
-    console.log("pieceHeight:", pieceHeight);
-    console.log("pileWidth:", pileWidth);
-    console.log("pileHeight:", pileHeight);
+    console.log("Pile positioning:", {
+      pileLeft,
+      pileWidth,
+      totalSpace: pileLeft + pileWidth,
+      viewportWidth: window.innerWidth
+    });
 
     const shuffledIds = shuffleArray(Array.from({ length: totalPieces }, (_, i) => i));
 
     const initialPieces = shuffledIds.map((id) => {
       const randomX = pileLeft + Math.random() * Math.max(0, pileWidth - pieceWidth);
       const randomY = pileTop + Math.random() * Math.max(0, pileHeight - pieceHeight);
-
-      console.log(`Piece ${id}: randomX=${randomX}, randomY=${randomY}`);
 
       return {
         id,
@@ -109,35 +113,55 @@ export const usePuzzlePieces = (
     console.log(`Created ${initialPieces.length} puzzle pieces`);
     setPieces(initialPieces);
   }, [columns, rows, validBoardWidth, validBoardHeight, updateBoardRect, totalPieces]);
-
+  
   // Handle piece movement and snapping
   const handlePieceMove = useCallback((id: number, x: number, y: number) => {
-    const pieceWidth = columns > 0 ? validBoardWidth / columns : 80;
-    const pieceHeight = rows > 0 ? validBoardHeight / rows : 80;
+    // Use the pre-calculated boardWidth and boardHeight which already preserve aspect ratio
+    const pieceWidth = validBoardWidth / columns;
+    const pieceHeight = validBoardHeight / rows;
 
+    // Calculate the actual puzzle dimensions
+    const actualPuzzleWidth = pieceWidth * columns;
+    const actualPuzzleHeight = pieceHeight * rows;
+    
+    // Calculate centering offsets to position puzzle in the middle of the container
+    // Use the actual container dimensions, not the minimum dimensions
+    const horizontalOffset = Math.max(0, (500 - actualPuzzleWidth) / 2);
+    const verticalOffset = Math.max(0, (600 - actualPuzzleHeight) / 2);
+    
     const col = id % columns;
     const row = Math.floor(id / columns);
 
-    const targetX = col * pieceWidth;
-    const targetY = row * pieceHeight;
+    // Include offsets in target position calculation
+    const targetX = col * pieceWidth; // Remove offset from target calculation
+    const targetY = row * pieceHeight; // Remove offset from target calculation
 
-    // Use a safe value for snapThreshold
-    const snapThreshold = Math.max(pieceWidth, pieceHeight, 80) * 
-                          (typeof VISUAL_CONFIG.SNAP_THRESHOLD_RATIO === 'number' ? 
-                           VISUAL_CONFIG.SNAP_THRESHOLD_RATIO : 1.5);
+    // Use proportionally sized thresholds for width and height
+    // Make snap thresholds more generous for better snapping
+    const snapThresholdX = pieceWidth * 0.8; // Increased from 0.6
+    const snapThresholdY = pieceHeight * 0.8; // Increased from 0.6
 
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
 
-    console.log("Debugging handlePieceMove:");
-    console.log("id:", id);
-    console.log("x:", x, "y:", y);
-    console.log("pieceWidth:", pieceWidth, "pieceHeight:", pieceHeight);
-    console.log("targetX:", targetX, "targetY:", targetY);
-    console.log("diffX:", diffX, "diffY:", diffY);
-    console.log("snapThreshold:", snapThreshold);
+    console.log("Debugging handlePieceMove:", {
+      id,
+      x,
+      y,
+      pieceWidth,
+      pieceHeight,
+      horizontalOffset,
+      verticalOffset,
+      targetX,
+      targetY,
+      diffX,
+      diffY,
+      snapThresholdX,
+      snapThresholdY
+    });
 
-    const isSolved = diffX <= snapThreshold && diffY <= snapThreshold;
+    // A piece is solved if it's close enough to its target position
+    const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
 
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {
@@ -154,7 +178,7 @@ export const usePuzzlePieces = (
     );
 
     return isSolved;
-  }, [columns, validBoardWidth, validBoardHeight]);
+  }, [columns, rows, validBoardWidth, validBoardHeight]);
 
   return {
     pieces,

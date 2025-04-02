@@ -45,7 +45,7 @@ export const MAX_CONTAINER_WIDTH = 900; // Maximum width of the container
 // Audio files
 export const AUDIO_FILES = {
   SNAP: "/audio/snap.mp3", // Sound for snapping a piece into place
-  COMPLETE: "/audio/takbir.mp3" // Sound for completing the puzzle
+  COMPLETE: "/audio/success.mp3" // Sound for completing the puzzle
 };
 
 // Visual configuration

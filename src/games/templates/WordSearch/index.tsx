@@ -242,7 +242,7 @@
           title="Mashallah! Word Finder!"
           message={`You've found all ${gameData.words.length} words!`}
           onPlayAgain={resetGame}
-          soundEffect="/audio/takbir.mp3"
+          soundEffect="/audio/success.mp3"
         />
       </div>
     );

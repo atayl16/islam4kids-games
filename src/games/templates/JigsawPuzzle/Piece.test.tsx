@@ -15,12 +15,14 @@ describe("Piece Component", () => {
     image: "test-image.jpg",
     rows: 3,
     columns: 3,
-    size: 100,
+    width: 100,
+    height: 100,
     initialX: 50,
     initialY: 50,
     isSolved: false,
     onDrop: jest.fn(),
-    checkPosition: jest.fn()
+    boardPosition: { top: 0, left: 0, width: 300, height: 300, right: 300, bottom: 300 },
+    style: {}
   };
 
   it("renders with correct styles when not solved", () => {
@@ -41,8 +43,8 @@ describe("Piece Component", () => {
     
     const piece = document.querySelector(".piece") as HTMLElement;
     expect(piece).toBeInTheDocument();
-    expect(piece.style.left).toBe("100px"); // col * size = 1 * 100
-    expect(piece.style.top).toBe("0px");    // row * size = 0 * 100
+    expect(piece.style.left).toBe("100px"); // col * width = 1 * 100
+    expect(piece.style.top).toBe("0px");    // row * height = 0 * 100
     expect(piece.style.cursor).toBe("default");
     expect(piece.className).toContain("solved");
   });
@@ -51,7 +53,7 @@ describe("Piece Component", () => {
     render(<Piece {...mockProps} />);
     
     const piece = document.querySelector(".piece") as HTMLElement;
-    // Background position should be -col * size and -row * size
+    // Background position should be -col * width and -row * height
     // For id=1, col=1, row=0 in a 3x3 grid
     expect(piece.style.backgroundPosition).toBe("-100px 0px");
     expect(piece.style.backgroundSize).toBe("300px 300px");

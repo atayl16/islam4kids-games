@@ -226,7 +226,7 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
           title="Mashallah! Word Master!"
           message={`You've unscrambled all ${filteredWords.length} words!`}
           onPlayAgain={resetGame}
-          soundEffect="/audio/takbir.mp3"
+          soundEffect="/audio/success.mp3"
         />
       </div>
     </DndProvider>

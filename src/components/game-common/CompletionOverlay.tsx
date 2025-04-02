@@ -18,7 +18,7 @@ export const CompletionOverlay: React.FC<CompletionOverlayProps> = ({
   title = "Mashallah! Well Done!",
   message = "You've completed the game!",
   onPlayAgain,
-  soundEffect = "/audio/takbir.mp3",
+  soundEffect = "/audio/success.mp3",
   children,
   setIsVisible
 }) => {
