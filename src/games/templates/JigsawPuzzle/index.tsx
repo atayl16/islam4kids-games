@@ -170,9 +170,6 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   const handleDifficultyChange = (difficulty: string) => {
     setCurrentDifficulty(difficulty as keyof typeof JIGSAW_DIFFICULTY_PRESETS);
   };
-
-  // Calculate layout dimensions
-  const visualConfig = VISUAL_CONFIG as any;
   
   // Calculate pieceWidth based on the new board dimensions
   const pieceWidth =
