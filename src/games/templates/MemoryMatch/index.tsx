@@ -175,7 +175,7 @@ export const MemoryMatch = ({ words }: Props) => {
         title="Mashallah! Great Memory!"
         message={`You found all ${totalPairs} matches in ${moves} moves!`}
         onPlayAgain={resetGame}
-        soundEffect="/audio/takbir.mp3"
+        soundEffect="/audio/success.mp3"
       />
     </div>
   );

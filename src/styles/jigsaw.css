@@ -38,9 +38,6 @@
 /* Piece tray */
 .piece-tray {
   position: relative;
-  border: 0.125rem dashed #ddd; /* Converted 2px to rem */
-  border-radius: 0.25rem; /* Converted 4px to rem */
-  background-color: #f9f9f9;
   box-sizing: border-box;
   flex-shrink: 0;
 }

@@ -6,7 +6,8 @@ type PieceProps = {
   image: string;
   rows: number;
   columns: number;
-  size: number;
+  width: number;
+  height: number;
   initialX: number;
   initialY: number;
   isSolved: boolean;
@@ -20,7 +21,8 @@ export const Piece = ({
   image,
   rows,
   columns,
-  size,
+  width,
+  height,
   initialX,
   initialY,
   isSolved,
@@ -38,8 +40,8 @@ export const Piece = ({
 
   // Log size changes to debug scaling issues
   useEffect(() => {
-    console.log(`Piece ${id} size: ${size}px`);
-  }, [id, size]);
+    console.log(`Piece ${id} dimensions: ${width}px × ${height}px`);
+  }, [id, width, height]);
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
@@ -77,12 +79,12 @@ export const Piece = ({
   // Background position calculations
   const col = id % columns;
   const row = Math.floor(id / columns);
-  const backgroundPositionX = -col * size;
-  const backgroundPositionY = -row * size;
+  const backgroundPositionX = -col * width;
+  const backgroundPositionY = -row * height;
 
   // Position on board or at initialX/Y
-  const positionLeft = isSolved ? col * size : initialX;
-  const positionTop = isSolved ? row * size : initialY;
+  const positionLeft = isSolved ? col * width : initialX;
+  const positionTop = isSolved ? row * height : initialY;
 
   return (
     <div
@@ -95,14 +97,14 @@ export const Piece = ({
         position: "absolute",
         left: positionLeft,
         top: positionTop,
-        width: size,
-        height: size,
+        width,
+        height,
         opacity: isDragging ? 0.5 : 1,
         cursor: isSolved ? "default" : "move",
         transition: isSolved ? "all 0.3s ease" : "opacity 0.1s ease",
         backgroundImage: `url(${image})`,
         backgroundPosition: `${backgroundPositionX}px ${backgroundPositionY}px`,
-        backgroundSize: `${columns * size}px ${rows * size}px`,
+        backgroundSize: `${columns * width}px ${rows * height}px`,
         zIndex: isSolved ? 10 : 20,
         boxShadow: isSolved
           ? "0 2px 4px rgba(0,0,0,0.2)"

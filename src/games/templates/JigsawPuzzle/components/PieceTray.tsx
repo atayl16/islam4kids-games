@@ -1,24 +1,29 @@
 // Renders the tray where unsolved pieces are initially placed
-
 interface PieceTrayProps {
   containerWidth: number;
   containerHeight: number;
+  actualPuzzleWidth?: number; // Add this prop to match puzzle dimensions
+  actualPuzzleHeight?: number; // Add this prop to match puzzle dimensions
 }
 
 export const PieceTray = ({
   containerWidth,
-  containerHeight
+  containerHeight,
+  actualPuzzleWidth,
+  actualPuzzleHeight
 }: PieceTrayProps) => {
+  // Use actualPuzzleWidth/Height if provided, otherwise fall back to containerWidth/Height
+  const trayWidth = actualPuzzleWidth || containerWidth;
+  const trayHeight = actualPuzzleHeight || containerHeight;
+  
   return (
     <div
       className="piece-tray"
       style={{
-        width: containerWidth,
-        height: containerHeight,
+        width: trayWidth,
+        height: trayHeight,
         position: "relative",
         marginLeft: "20px",
-        border: "1px dashed #ccc",
-        borderRadius: "4px",
         flex: "0 0 auto",
       }}
     >
