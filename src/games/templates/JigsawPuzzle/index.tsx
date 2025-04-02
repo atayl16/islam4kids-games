@@ -201,25 +201,24 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   const handlePieceDrop = (id: number, x: number, y: number) => {
     // Calculate target positions within the grid using piece dimensions
     const col = id % currentConfig.columns;
-    const row = Math.floor(id / currentConfig.rows);
+    const row = Math.floor(id / currentConfig.columns);
     
+    // Target position calculation
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
     
-    // Calculate where the piece was actually dropped
-    const dropX = x;
-    const dropY = y;
-    
+    console.log(`Piece ${id} raw drop position: (${x}, ${y})`);
+    console.log(`Board position: (${boardRect.left}, ${boardRect.top})`);
     console.log(`Target position: (${targetX}, ${targetY})`);
-    console.log(`Actual drop position: (${dropX}, ${dropY})`);
+    console.log(`Actual drop position: (${x}, ${y})`);
   
     // Calculate the distance between drop position and target position
-    const diffX = Math.abs(dropX - targetX);
-    const diffY = Math.abs(dropY - targetY);
+    const diffX = Math.abs(x - targetX);
+    const diffY = Math.abs(y - targetY);
     
     // Use VERY generous thresholds for snapping
-    const snapThresholdX = pieceWidth * 1.5;
-    const snapThresholdY = pieceHeight * 1.5;
+    const snapThresholdX = pieceWidth * 2.5; // 250% of piece width
+    const snapThresholdY = pieceHeight * 2.5; // 250% of piece height
     
     // Determine if the piece should snap
     const shouldSnap = diffX <= snapThresholdX && diffY <= snapThresholdY;
@@ -229,7 +228,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
       return handlePieceMove(id, targetX, targetY);
     } else {
       // Otherwise use the actual drop position
-      return handlePieceMove(id, dropX, dropY);
+      return handlePieceMove(id, x, y);
     }
   };
 

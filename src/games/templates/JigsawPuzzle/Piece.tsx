@@ -50,21 +50,19 @@ export const Piece = ({
       canDrag: !isSolved, // Prevent dragging solved pieces
       end: (_, monitor) => {
         const offset = monitor.getDifferenceFromInitialOffset();
-
+        
         if (offset) {
           // Calculate new position
           const x = initialPosition.current.x + offset.x;
           const y = initialPosition.current.y + offset.y;
-
-          // Adjust position relative to board
-          const relativeX = x - boardPosition.left;
-          const relativeY = y - boardPosition.top;
-
-          console.log(
-            `Piece ${id} dropped at: abs(${x}, ${y}) rel(${relativeX}, ${relativeY})`
-          );
-
-          // Pass to onDrop which will handle snapping and solving
+          
+          // Get position relative to board
+          const relativeX = x;
+          const relativeY = y;
+          
+          console.log(`Piece ${id} dropped at: abs(${x + boardPosition.left}, ${y + boardPosition.top}) rel(${relativeX}, ${relativeY})`);
+          
+          // Use the relative position with the board
           const result = onDrop(id, relativeX, relativeY);
           console.log(`Piece ${id} snapping result: ${result}`);
         }

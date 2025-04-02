@@ -116,36 +116,33 @@ export const usePuzzlePieces = (
   
   // Handle piece movement and snapping
   const handlePieceMove = useCallback((id: number, x: number, y: number) => {
-    // Use the pre-calculated boardWidth and boardHeight which already preserve aspect ratio
+    // Pre-calculated dimensions
     const pieceWidth = validBoardWidth / columns;
     const pieceHeight = validBoardHeight / rows;
     
-    // Calculate position within the grid
+    // Calculate position within grid
     const col = id % columns;
     const row = Math.floor(id / columns);
   
-    // Target should be calculated using the same logic as in index.tsx
+    // EXACTLY the same target calculation as in index.tsx
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
   
-    // Use much more generous thresholds for snapping
-    const snapThresholdX = pieceWidth * 1.5; // 150% of piece width
-    const snapThresholdY = pieceHeight * 1.5; // 150% of piece height
+    // Debug all coordinates
+    console.log("Debugging handlePieceMove:", {
+      id, x, y, pieceWidth, pieceHeight,
+      targetX, targetY,
+      col, row
+    });
+  
+    // EXTRA generous thresholds - matching index.tsx
+    const snapThresholdX = pieceWidth * 2;
+    const snapThresholdY = pieceHeight * 2;
   
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
   
-    console.log("Piece movement details:", {
-      id,
-      dropPosition: { x, y },
-      targetPosition: { x: targetX, y: targetY },
-      diffX,
-      diffY,
-      snapThresholdX,
-      snapThresholdY
-    });
-  
-    // A piece is solved if it's close enough to its target position
+    // A piece is solved if it's close enough
     const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
   
     setPieces((prevPieces) =>
