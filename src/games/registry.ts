@@ -1,5 +1,4 @@
 import { validateWordScrambleData, WordScrambleData } from "./templates/WordScramble/utils";
-import { validateJigsawConfig } from "./templates/JigsawPuzzle/utils";
 import { validateMemoryMatchData } from "./templates/MemoryMatch/utils";
 import { 
   WordSearchData,
@@ -7,8 +6,6 @@ import {
 } from "./templates/WordSearch";
 import wordBankData from "./data/word-bank/words.json";
 import { MemoryMatchData } from "./templates/MemoryMatch/types";
-import fs from 'fs';
-import path from 'path';
 
 // Initialize empty puzzle registries that will be populated dynamically
 export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
@@ -26,17 +23,6 @@ export const getAvailablePuzzles = () => ({
 
 // Re-export the WordScrambleData and WordSearchData types
 export type { WordScrambleData, WordSearchData, MemoryMatchData };
-
-// Helper function to load puzzles with error handling
-const loadPuzzle = async (importFn: () => Promise<{ default: any }>, validator: (data: any) => any) => {
-  try {
-    const module = await importFn();
-    return validator(module.default);
-  } catch (error) {
-    console.error("Error loading puzzle:", error);
-    throw error;
-  }
-};
 
 // Helper function to count words for a given category
 const getWordCountForCategory = (category: string): number => {

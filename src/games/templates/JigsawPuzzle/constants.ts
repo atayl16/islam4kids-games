@@ -33,8 +33,8 @@ export const JIGSAW_DIFFICULTY_PRESETS = {
 };
 
 // Maximum and minimum board dimensions
-export const MAX_BOARD_WIDTH = 800; // Maximum width in pixels
-export const MAX_BOARD_HEIGHT = 600; // Maximum height in pixels
+export const MAX_BOARD_WIDTH = 1200; // Maximum width in pixels
+export const MAX_BOARD_HEIGHT = 800; // Maximum height in pixels
 export const MIN_BOARD_WIDTH = 400; // Minimum width in pixels
 export const MIN_BOARD_HEIGHT = 300; // Minimum height in pixels
 
@@ -50,8 +50,8 @@ export const AUDIO_FILES = {
 
 // Visual configuration
 export const VISUAL_CONFIG = {
-  VIEWPORT_WIDTH_RATIO: 0.9,
-  VIEWPORT_HEIGHT_RATIO: 0.7,
+  VIEWPORT_WIDTH_RATIO: 1.0,
+  VIEWPORT_HEIGHT_RATIO: 0.9,
   SNAP_THRESHOLD_RATIO: 1.5,
   MIN_BOARD_WIDTH: 400, // Ensure this is defined
   MIN_BOARD_HEIGHT: 300, // Ensure this is defined

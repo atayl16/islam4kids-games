@@ -7,6 +7,7 @@ import {
   GAME_SETTINGS,
   VISUAL_CONFIG,
   Z_INDEX,
+  MIN_PIECE_WIDTH,
 } from "./constants";
 import { JigsawConfig } from "./types";
 import "../../../styles/jigsaw.css";
@@ -32,16 +33,35 @@ const calculateResponsiveBoardDimensions = () => {
 
   // Type assertion to silence TypeScript errors without changing behavior
   const visualConfig = VISUAL_CONFIG as any;
+  
+  // Calculate max width considering both board and piece tray need to fit side by side
+  // The full container width is boardWidth * 2 + gap, so each board can only use 
+  // slightly less than half the viewport width
+  const totalAvailableWidth = viewportWidth * 0.9; // Use 90% of viewport width
+  const singleBoardMaxWidth = (totalAvailableWidth - GAME_SETTINGS.PIECE_TRAY_GAP) / 2;
+  
+  // Use fallback values if VISUAL_CONFIG properties are undefined
+  const heightRatio = visualConfig.VIEWPORT_HEIGHT_RATIO ?? 0.6; // Reduced to 60%
 
-  const boardWidth = Math.min(
-    viewportWidth * VISUAL_CONFIG.VIEWPORT_WIDTH_RATIO,
-    visualConfig.MAX_BOARD_WIDTH
-  ) || VISUAL_CONFIG.MIN_BOARD_WIDTH;
+  // Calculate dimensions with constraints
+  const maxAllowedWidth = Math.min(
+    singleBoardMaxWidth,
+    visualConfig.MAX_BOARD_WIDTH || 800 // Reduced max width
+  );
+  
+  const maxAllowedHeight = Math.min(
+    viewportHeight * heightRatio, 
+    visualConfig.MAX_BOARD_HEIGHT || 600 // Reduced max height
+  );
 
-  const boardHeight = Math.min(
-    viewportHeight * VISUAL_CONFIG.VIEWPORT_HEIGHT_RATIO,
-    visualConfig.MAX_BOARD_HEIGHT
-  ) || VISUAL_CONFIG.MIN_BOARD_HEIGHT;
+  const boardWidth = Math.max(maxAllowedWidth, visualConfig.MIN_BOARD_WIDTH);
+  const boardHeight = Math.max(maxAllowedHeight, visualConfig.MIN_BOARD_HEIGHT);
+
+  // Log the calculated dimensions for debugging
+  console.log("Viewport Dimensions:", { viewportWidth, viewportHeight });
+  console.log("Single Board Max Width:", singleBoardMaxWidth);
+  console.log("Max Allowed Dimensions:", { maxAllowedWidth, maxAllowedHeight });
+  console.log("Calculated Board Dimensions:", { boardWidth, boardHeight });
 
   return { boardWidth, boardHeight };
 };
@@ -153,16 +173,18 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
   // Calculate layout dimensions
   const visualConfig = VISUAL_CONFIG as any;
+  
+  // Calculate pieceWidth based on the new board dimensions
   const pieceWidth =
     validBoardWidth && currentConfig.columns
       ? validBoardWidth / currentConfig.columns
-      : visualConfig.MIN_PIECE_WIDTH;
-
+      : MIN_PIECE_WIDTH; // Use the standalone constant instead of VISUAL_CONFIG.MIN_PIECE_WIDTH
+  
   const fullContainerWidth = validBoardWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
 
-  const maxVisibleHeight = Math.max(
+  const maxVisibleHeight = Math.min(
     validBoardHeight || VISUAL_CONFIG.MIN_BOARD_HEIGHT,
-    (window.innerHeight || 600) * VISUAL_CONFIG.VIEWPORT_HEIGHT_RATIO
+    (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
 
   // Custom piece drop handler with logging

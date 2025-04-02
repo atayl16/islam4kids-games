@@ -36,6 +36,11 @@ export const Piece = ({
     initialPosition.current = { x: initialX, y: initialY };
   }, [initialX, initialY]);
 
+  // Log size changes to debug scaling issues
+  useEffect(() => {
+    console.log(`Piece ${id} size: ${size}px`);
+  }, [id, size]);
+
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "puzzle-piece",
