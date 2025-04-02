@@ -119,64 +119,50 @@ export const usePuzzlePieces = (
     // Use the pre-calculated boardWidth and boardHeight which already preserve aspect ratio
     const pieceWidth = validBoardWidth / columns;
     const pieceHeight = validBoardHeight / rows;
-
-    // Calculate the actual puzzle dimensions
-    const actualPuzzleWidth = pieceWidth * columns;
-    const actualPuzzleHeight = pieceHeight * rows;
     
-    // Calculate centering offsets to position puzzle in the middle of the container
-    // Use the actual container dimensions, not the minimum dimensions
-    const horizontalOffset = Math.max(0, (500 - actualPuzzleWidth) / 2);
-    const verticalOffset = Math.max(0, (600 - actualPuzzleHeight) / 2);
-    
+    // Calculate position within the grid
     const col = id % columns;
     const row = Math.floor(id / columns);
-
-    // Include offsets in target position calculation
-    const targetX = col * pieceWidth; // Remove offset from target calculation
-    const targetY = row * pieceHeight; // Remove offset from target calculation
-
-    // Use proportionally sized thresholds for width and height
-    // Make snap thresholds more generous for better snapping
-    const snapThresholdX = pieceWidth * 0.8; // Increased from 0.6
-    const snapThresholdY = pieceHeight * 0.8; // Increased from 0.6
-
+  
+    // Target should be calculated using the same logic as in index.tsx
+    const targetX = col * pieceWidth;
+    const targetY = row * pieceHeight;
+  
+    // Use much more generous thresholds for snapping
+    const snapThresholdX = pieceWidth * 1.5; // 150% of piece width
+    const snapThresholdY = pieceHeight * 1.5; // 150% of piece height
+  
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
-
-    console.log("Debugging handlePieceMove:", {
+  
+    console.log("Piece movement details:", {
       id,
-      x,
-      y,
-      pieceWidth,
-      pieceHeight,
-      horizontalOffset,
-      verticalOffset,
-      targetX,
-      targetY,
+      dropPosition: { x, y },
+      targetPosition: { x: targetX, y: targetY },
       diffX,
       diffY,
       snapThresholdX,
       snapThresholdY
     });
-
+  
     // A piece is solved if it's close enough to its target position
     const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
-
+  
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {
         if (piece.id !== id) return piece;
-
+  
         if (isSolved) {
-          console.log(`Piece ${id} snapped to position (${targetX}, ${targetY})`);
+          console.log(`✅ Piece ${id} snapped to position (${targetX}, ${targetY})`);
           playSnapSound();
           return { ...piece, x: targetX, y: targetY, solved: true };
         }
-
+  
+        console.log(`❌ Piece ${id} did not snap - too far from target`);
         return { ...piece, x, y, solved: false };
       })
     );
-
+  
     return isSolved;
   }, [columns, rows, validBoardWidth, validBoardHeight]);
 
