@@ -11,24 +11,48 @@ const formatName = (slug: string) => {
 };
 
 // Game card component
-const GameCard = ({ title, type, path }: { title: string; type: string; slug: string; path: string }) => {
+const GameCard = ({ title, type, slug, path }: { title: string; type: string; slug: string; path: string }) => {
+  // Get thumbnail image for jigsaw puzzles
+  const thumbnailSrc = type === "jigsaw" 
+    ? `/images/jigsaw/${slug}.jpg` // Try jpg first
+    : undefined;
+  
+  // Fallback to png if needed
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    if (type === "jigsaw") {
+      (e.target as HTMLImageElement).src = `/images/jigsaw/${slug}.png`;
+    }
+  };
+
   return (
     <Link to={path} className="game-card">
-      <div className={`game-icon ${type}`}>
-        {type === "wordScramble" && "🔤"}
-        {type === "wordSearch" && "🔍"}
-        {type === "jigsaw" && "🧩"}
-        {type === "memoryMatch" && "🃏"}
-      </div>
+      {type === "jigsaw" ? (
+        <div className="game-thumbnail-container large">
+          <img
+            src={thumbnailSrc}
+            alt={title}
+            className="game-thumbnail"
+            onError={handleImageError}
+          />
+        </div>
+      ) : (
+        <div className={`game-icon ${type}`}>
+          {type === "wordScramble" && "🔤"}
+          {type === "wordSearch" && "🔍"}
+          {type === "jigsaw" && "🧩"}
+          {type === "memoryMatchIcon" && "🔄"}
+        </div>
+      )}
       <div className="game-info">
-        <h3>{title}</h3>
+        {/* Only show title for non-jigsaw games */}
+        {type !== "jigsaw" && <h3>{title}</h3>}
         <span className="game-type">
           {type === "wordScramble"
             ? "Word Scramble"
             : type === "wordSearch"
             ? "Word Search"
             : type === "jigsaw"
-            ? "Jigsaw"
+            ? "Jigsaw Puzzle"
             : "Memory Match"}
         </span>
       </div>
@@ -63,7 +87,7 @@ export const HomePage = () => {
     ...memoryMatch.map(slug => ({ 
       slug, 
       title: `${formatName(slug)} Memory Match`,
-      type: "memoryMatch",
+      type: "memoryMatchIcon",
       path: `/memorymatch/${slug}`
     }))
   ];
