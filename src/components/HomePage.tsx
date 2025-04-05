@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { getAvailablePuzzles } from "../games/registry";
 
 // Format the slug for display
@@ -12,12 +12,12 @@ const formatName = (slug: string) => {
 
 // Game card component
 const GameCard = ({ title, type, slug, path }: { title: string; type: string; slug: string; path: string }) => {
-  // Get thumbnail image for jigsaw puzzles - set to undefined instead of null to match the expected type
+  // Get thumbnail image for jigsaw puzzles
   const thumbnailSrc = type === "jigsaw" 
     ? `/images/jigsaw/${slug}.jpg` // Try jpg first
-    : undefined; // Changed from null to undefined
+    : undefined;
   
-  // Fallback to png if needed (handle both file formats)
+  // Fallback to png if needed
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (type === "jigsaw") {
       (e.target as HTMLImageElement).src = `/images/jigsaw/${slug}.png`;
@@ -27,7 +27,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
   return (
     <Link to={path} className="game-card">
       {type === "jigsaw" ? (
-        <div className="game-thumbnail-container">
+        <div className="game-thumbnail-container large">
           <img
             src={thumbnailSrc}
             alt={title}
@@ -44,7 +44,8 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
         </div>
       )}
       <div className="game-info">
-        <h3>{title}</h3>
+        {/* Only show title for non-jigsaw games */}
+        {type !== "jigsaw" && <h3>{title}</h3>}
         <span className="game-type">
           {type === "wordScramble"
             ? "Word Scramble"
@@ -60,8 +61,15 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
 };
 
 export const HomePage = () => {
-  const { wordScramble, jigsaw, wordSearch, memoryMatch } = getAvailablePuzzles(); // Include memoryMatch
-  const [activeTab, setActiveTab] = useState<string>("all");
+  const { wordScramble, jigsaw, wordSearch, memoryMatch } = getAvailablePuzzles();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  
+  // Get the filter value from URL or default to "all"
+  const filterParam = searchParams.get("filter") || "all";
+  
+  // Set the initial active tab based on URL parameter
+  const [activeTab, setActiveTab] = useState<string>(filterParam);
   
   // Create an array of all games with their types
   const allGames = [
@@ -91,6 +99,30 @@ export const HomePage = () => {
     }))
   ];
   
+  // Function to handle tab changes
+  const handleTabChange = (tabName: string) => {
+    setActiveTab(tabName);
+    
+    // Update URL parameter
+    if (tabName === "all") {
+      // Remove parameter for "all" to keep URL clean
+      setSearchParams({});
+    } else {
+      setSearchParams({ filter: tabName });
+    }
+  };
+  
+  // Validate the URL parameter when component mounts
+  useEffect(() => {
+    // Valid filter values
+    const validFilters = ["all", "wordScramble", "wordSearch", "jigsaw", "memoryMatchIcon"];
+    
+    // If filter parameter is invalid, redirect to the homepage with no filter
+    if (filterParam !== "all" && !validFilters.includes(filterParam)) {
+      navigate("/", { replace: true });
+    }
+  }, [filterParam, navigate]);
+  
   // Filter games based on active tab
   const filteredGames = activeTab === "all" 
     ? allGames
@@ -108,14 +140,14 @@ export const HomePage = () => {
       <div className="game-filter">
         <button 
           className={`filter-btn ${activeTab === "all" ? "active" : ""}`}
-          onClick={() => setActiveTab("all")}
+          onClick={() => handleTabChange("all")}
         >
           All Games
         </button>
         {wordScramble.length > 0 && (
           <button 
             className={`filter-btn ${activeTab === "wordScramble" ? "active" : ""}`}
-            onClick={() => setActiveTab("wordScramble")}
+            onClick={() => handleTabChange("wordScramble")}
           >
             Word Scrambles
           </button>
@@ -123,7 +155,7 @@ export const HomePage = () => {
         {wordSearch.length > 0 && (
           <button 
             className={`filter-btn ${activeTab === "wordSearch" ? "active" : ""}`}
-            onClick={() => setActiveTab("wordSearch")}
+            onClick={() => handleTabChange("wordSearch")}
           >
             Word Searches
           </button>
@@ -131,7 +163,7 @@ export const HomePage = () => {
         {jigsaw.length > 0 && (
           <button 
             className={`filter-btn ${activeTab === "jigsaw" ? "active" : ""}`}
-            onClick={() => setActiveTab("jigsaw")}
+            onClick={() => handleTabChange("jigsaw")}
           >
             Jigsaw Puzzles
           </button>
@@ -139,7 +171,7 @@ export const HomePage = () => {
         {memoryMatch.length > 0 && (
           <button 
             className={`filter-btn ${activeTab === "memoryMatch" ? "active" : ""}`}
-            onClick={() => setActiveTab("memoryMatchIcon")}
+            onClick={() => handleTabChange("memoryMatchIcon")}
           >
             Memory Match
           </button>
