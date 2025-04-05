@@ -12,12 +12,12 @@ const formatName = (slug: string) => {
 
 // Game card component
 const GameCard = ({ title, type, slug, path }: { title: string; type: string; slug: string; path: string }) => {
-  // Get thumbnail image for jigsaw puzzles
+  // Get thumbnail image for jigsaw puzzles - set to undefined instead of null to match the expected type
   const thumbnailSrc = type === "jigsaw" 
     ? `/images/jigsaw/${slug}.jpg` // Try jpg first
-    : undefined;
+    : undefined; // Changed from null to undefined
   
-  // Fallback to png if needed
+  // Fallback to png if needed (handle both file formats)
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     if (type === "jigsaw") {
       (e.target as HTMLImageElement).src = `/images/jigsaw/${slug}.png`;
@@ -27,7 +27,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
   return (
     <Link to={path} className="game-card">
       {type === "jigsaw" ? (
-        <div className="game-thumbnail-container large">
+        <div className="game-thumbnail-container">
           <img
             src={thumbnailSrc}
             alt={title}
@@ -44,8 +44,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
         </div>
       )}
       <div className="game-info">
-        {/* Only show title for non-jigsaw games */}
-        {type !== "jigsaw" && <h3>{title}</h3>}
+        <h3>{title}</h3>
         <span className="game-type">
           {type === "wordScramble"
             ? "Word Scramble"
@@ -140,7 +139,7 @@ export const HomePage = () => {
         {memoryMatch.length > 0 && (
           <button 
             className={`filter-btn ${activeTab === "memoryMatch" ? "active" : ""}`}
-            onClick={() => setActiveTab("memoryMatch")}
+            onClick={() => setActiveTab("memoryMatchIcon")}
           >
             Memory Match
           </button>
