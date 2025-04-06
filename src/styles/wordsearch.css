@@ -112,6 +112,19 @@
   font-size: 0.9rem;
 }
 
+.word-item .translation {
+  font-weight: normal;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+  margin-left: 0.5rem;
+}
+
+.word-item.found .translation {
+  text-decoration: line-through;
+  color: var(--accent-green);
+}
+
 .completion-message {
   margin-top: 2rem;
   text-align: center;

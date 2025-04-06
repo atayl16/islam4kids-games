@@ -160,9 +160,12 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <div className="word-scramble">
-        <h2 className="scramble-title">{data.meta?.title || "Word Scramble"}</h2>
+        <h2 className="scramble-title">
+          {data.meta?.title || "Word Scramble"}
+        </h2>
         <p className="scramble-instructions">
-          {data.meta?.instructions || "Rearrange the letters to form the correct word."}
+          {data.meta?.instructions ||
+            "Rearrange the letters to form the correct word."}
         </p>
 
         <PuzzleControls
@@ -202,32 +205,45 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
           ))}
 
           {correctSolution && (
-            <div className="solution-correct-overlay" aria-label="Correct solution">
+            <div
+              className="solution-correct-overlay"
+              aria-label="Correct solution"
+            >
               <div className="checkmark">✓</div>
             </div>
           )}
+
+          {showHint && filteredWords[currentWordIndex] && (
+            <div className="hint-box">
+              <h3>Hint:</h3>
+              <p>
+                {filteredWords[currentWordIndex].hint || "No hint available"}
+              </p>
+              {filteredWords[currentWordIndex].reference && (
+                <p className="reference">
+                  Reference: {filteredWords[currentWordIndex].reference}
+                </p>
+              )}
+            </div>
+          )}
+
+          <CompletionOverlay
+            isVisible={isOverlayVisible}
+            setIsVisible={setIsOverlayVisible} // Pass setIsVisible to allow closing
+            title="Mashallah! Word Master!"
+            message={`You've unscrambled all ${filteredWords.length} words!`}
+            onPlayAgain={resetGame}
+            soundEffect="/audio/success.mp3"
+          />
         </div>
 
-        {showHint && filteredWords[currentWordIndex] && (
-          <div className="hint-box">
-            <h3>Hint:</h3>
-            <p>{filteredWords[currentWordIndex].hint || "No hint available"}</p>
-            {filteredWords[currentWordIndex].reference && (
-              <p className="reference">
-                Reference: {filteredWords[currentWordIndex].reference}
-              </p>
-            )}
+        {filteredWords[currentWordIndex] && (
+          <div className="word-translation">
+            <p>
+              <i>{filteredWords[currentWordIndex].reference}</i>
+            </p>
           </div>
         )}
-
-        <CompletionOverlay
-          isVisible={isOverlayVisible}
-          setIsVisible={setIsOverlayVisible} // Pass setIsVisible to allow closing
-          title="Mashallah! Word Master!"
-          message={`You've unscrambled all ${filteredWords.length} words!`}
-          onPlayAgain={resetGame}
-          soundEffect="/audio/success.mp3"
-        />
       </div>
     </DndProvider>
   );
