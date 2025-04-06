@@ -127,6 +127,24 @@
   box-sizing: border-box;
 }
 
+.word-translation {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-medium);
+}
+
+.word-translation p {
+  margin: 0;
+}
+
+.reference {
+  margin-top: 0.625rem;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-medium);
+}
+
 @media (max-width: 53.125rem) { /* Converted 850px to rem */
   .word-scramble,
   .game-container {

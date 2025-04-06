@@ -229,6 +229,9 @@
                   }`}
                 >
                   <span className="word">{wordData.word}</span>
+                  {wordData.hint && (
+                    <span className="translation"> <i>({wordData.hint})</i></span>
+                  )}
                 </div>
               ))}
             </div>

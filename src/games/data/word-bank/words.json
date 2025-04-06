@@ -78,7 +78,7 @@
     {
       "id": "tawheed-6",
       "term": "Tawheed",
-      "translation": "Oneness of God",
+      "translation": "Oneness of Allah",
       "arabic": "التوحيد",
       "categories": ["Beliefs"],
       "hints": ["Belief in one God", "First part of Shahada", "Quran 112:1"],
@@ -423,7 +423,7 @@
     {
       "id": "taqwa-29",
       "term": "Taqwa",
-      "translation": "God-consciousness",
+      "translation": "Awareness of Allah",
       "arabic": "تقوى",
       "categories": ["General"],
       "hints": ["Awareness of Allah", "Fear and love of Allah", "Protection against sin"],

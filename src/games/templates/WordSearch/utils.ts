@@ -60,10 +60,16 @@ export const generateWordSearchGrid = (
   return {
     title: `${category.charAt(0).toUpperCase() + category.slice(1)} Word Search`,
     grid,
-    words: selectedWords.map(word => ({
-      word,
-      hint: "", // Could add hints if available in word bank
-    })),
+    words: selectedWords.map(word => {
+      const originalWord = wordBankData.words.find(w => 
+        w.term.toUpperCase() === word
+      );
+      
+      return {
+        word,
+        hint: originalWord?.translation || "", // Use translation as hint
+      };
+    }),
     wordPlacements,
     meta: {
       title: `${category.charAt(0).toUpperCase() + category.slice(1)} Word Search`,
