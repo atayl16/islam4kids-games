@@ -41,6 +41,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
           {type === "wordSearch" && "🔍"}
           {type === "jigsaw" && "🧩"}
           {type === "memoryMatchIcon" && "🔄"}
+          {type === "quizGame" && "❓"}
         </div>
       )}
       <div className="game-info">
@@ -48,11 +49,15 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
         {type !== "jigsaw" && <h3>{title}</h3>}
         <span className="game-type">
           {type === "wordScramble"
-            ? "Word Scramble"
+              ? "Word Scramble"
             : type === "wordSearch"
-            ? "Word Search"
+              ? "Word Search"
             : type === "jigsaw"
-            ? "Jigsaw Puzzle"
+              ? "Jigsaw Puzzle"
+            : type === "quizGame"
+              ? "Quiz Game"
+            : type === "memoryMatchIcon"
+              ? "Memory Match"
             : "Memory Match"}
         </span>
       </div>
@@ -61,7 +66,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
 };
 
 export const HomePage = () => {
-  const { wordScramble, jigsaw, wordSearch, memoryMatch } = getAvailablePuzzles();
+  const { wordScramble, jigsaw, wordSearch, memoryMatch, quizGame } = getAvailablePuzzles();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   
@@ -96,6 +101,12 @@ export const HomePage = () => {
       title: `${formatName(slug)} Memory Match`,
       type: "memoryMatchIcon",
       path: `/memorymatch/${slug}`
+    })),
+    ...quizGame.map(slug => ({
+      slug,
+      title: `${formatName(slug)} Quiz Game`,
+      type: "quizGame",
+      path: `/quiz/${slug}`
     }))
   ];
   
@@ -115,7 +126,7 @@ export const HomePage = () => {
   // Validate the URL parameter when component mounts
   useEffect(() => {
     // Valid filter values
-    const validFilters = ["all", "wordScramble", "wordSearch", "jigsaw", "memoryMatchIcon"];
+    const validFilters = ["all", "wordScramble", "wordSearch", "jigsaw", "memoryMatchIcon", "quizGame"];
     
     // If filter parameter is invalid, redirect to the homepage with no filter
     if (filterParam !== "all" && !validFilters.includes(filterParam)) {
@@ -174,6 +185,14 @@ export const HomePage = () => {
             onClick={() => handleTabChange("memoryMatchIcon")}
           >
             Memory Match
+          </button>
+        )}
+        {quizGame.length > 0 && (
+          <button
+            className={`filter-btn ${activeTab === "quizGame" ? "active" : ""}`}
+            onClick={() => handleTabChange("quizGame")}
+          >
+            Quiz Games
           </button>
         )}
       </div>

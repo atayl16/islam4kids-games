@@ -5,7 +5,8 @@ import { HomePage } from "./components/HomePage";
 import { WordScrambleContainer } from "./games/containers/WordScrambleContainer";
 import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer";
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
-import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer"; // Import MemoryMatchContainer
+import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer";
+import { QuizGameContainer } from "./games/containers/QuizGameContainer";
 import "./styles/base.css";
 import "./styles/header.css";
 import "./styles/homepage.css";
@@ -14,6 +15,7 @@ import "./styles/memorymatch.css";
 import "./styles/shared.css";
 import "./styles/wordscramble.css";
 import "./styles/wordsearch.css";
+import "./styles/quizgame.css";
 
 export default function App() {
   return (
@@ -70,7 +72,6 @@ export default function App() {
               } 
             />
 
-            {/* Add Memory Match routes */}
             <Route 
               path="/memorymatch/:categorySlug" 
               element={
@@ -88,6 +89,24 @@ export default function App() {
                 </div>
               } 
             />
+
+            <Route 
+              path="/quiz/:quizSlug" 
+              element={
+                <div className="game-container">
+                  <QuizGameContainer />
+                </div>
+              }
+            />
+
+            <Route
+              path="/embed/quiz/:quizSlug"
+              element={
+                <div className="embed-wrapper">
+                  <QuizGameContainer />
+                </div>
+              }
+            /> 
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
