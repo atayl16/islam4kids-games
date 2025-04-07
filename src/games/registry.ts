@@ -1,4 +1,4 @@
-import { validateWordScrambleData, WordScrambleData } from "./templates/WordScramble/utils";
+import { WordScrambleData } from "./templates/WordScramble/utils";
 import { validateMemoryMatchData } from "./templates/MemoryMatch/utils";
 import { 
   WordSearchData,
@@ -6,6 +6,8 @@ import {
 } from "./templates/WordSearch";
 import wordBankData from "./data/word-bank/words.json";
 import { MemoryMatchData } from "./templates/MemoryMatch/types";
+import { shuffleArray } from "./templates/QuizGame/utils";
+import { WordBankEntry } from "../types/WordBank";
 
 // Initialize empty puzzle registries that will be populated dynamically
 export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
@@ -16,9 +18,10 @@ export let memoryMatchPuzzles: { [key: string]: () => Promise<any> } = {};
 // Update getAvailablePuzzles to always return the current puzzles
 export const getAvailablePuzzles = () => ({
   wordScramble: Object.keys(wordScramblePuzzles),
-  jigsaw: Object.keys(jigsawPuzzles),
   wordSearch: Object.keys(wordSearchPuzzles),
-  memoryMatch: Object.keys(memoryMatchPuzzles)
+  memoryMatch: Object.keys(memoryMatchPuzzles),
+  jigsaw: Object.keys(jigsawPuzzles),
+  quizGame: Object.keys(quizGamePuzzles),
 });
 
 // Re-export the WordScrambleData and WordSearchData types
@@ -31,30 +34,25 @@ const getWordCountForCategory = (category: string): number => {
   ).length;
 };
 
-// Extract all unique categories from the word bank that have enough words
 const getWordBankCategories = (): string[] => {
   try {
     const categoryMap = new Map<string, number>();
-    
+
     // Count words per category
-    wordBankData.words.forEach(word => {
+    wordBankData.words.forEach((word) => {
       if (word.categories) {
-        word.categories.forEach(category => {
+        word.categories.forEach((category) => {
           const currentCount = categoryMap.get(category) || 0;
           categoryMap.set(category, currentCount + 1);
         });
       }
     });
-    
-    // Filter categories with enough words (at least 4 for a reasonable puzzle)
-    const MIN_WORDS_FOR_PUZZLE = 4;
-    const validCategories = Array.from(categoryMap.entries())
-      .filter(([category, count]) => {
-        return count >= MIN_WORDS_FOR_PUZZLE && category !== "General";
-      })
+
+    // Filter categories with enough words (e.g., at least 4 words for a quiz)
+    const MIN_WORDS_FOR_QUIZ = 4;
+    return Array.from(categoryMap.entries())
+      .filter(([_, count]) => count >= MIN_WORDS_FOR_QUIZ)
       .map(([category]) => category);
-    
-    return validCategories;
   } catch (error) {
     console.error("Error processing word bank categories:", error);
     return [];
@@ -62,30 +60,47 @@ const getWordBankCategories = (): string[] => {
 };
 
 // Function to load word bank and filter by category
-const loadWordBankByCategory = async (category: string) => {
+const loadWordBankByCategory = async (category: string): Promise<WordBankEntry[]> => {
   try {
-    const filteredWords = wordBankData.words.filter(word => 
+    const filteredWords = wordBankData.words.filter(word =>
       word.categories.includes(category)
     );
-    
+
     if (filteredWords.length === 0) {
       throw new Error(`No words found for category: ${category}`);
     }
+
+    return filteredWords.map(word => ({
+      ...word,
+      references: (word as any).references || [],
+      games: (word as any).games || []
+    }));
+  } catch (error) {
+    console.error(`Error loading words for category ${category}:`, error);
+    throw error;
+  }
+};
+
+const loadWordScrambleByCategory = async (category: string): Promise<WordScrambleData> => {
+  try {
+    const filteredWords = await loadWordBankByCategory(category);
     
     // Transform to the format expected by WordScramble component
-    return validateWordScrambleData({
+    return {
       meta: {
         title: `${category} Word Scramble`,
-        instructions: `Unscramble these ${category} terms by dragging the letters into the correct order.`
+        difficulty: "medium", // Default difficulty
+        learningObjectives: ["Vocabulary recognition", "Spelling practice"],
+        instructions: `Rearrange the letters to form ${category.toLowerCase()} terms`
       },
       words: filteredWords.map(word => ({
         solution: word.term,
-        hint: word.hints?.[0] || `This is a ${category} term`,
-        reference: word.translation
+        hint: word.hints[0] || word.translation || "No hint available",
+        reference: word.references[0] || ""
       }))
-    });
+    };
   } catch (error) {
-    console.error(`Error loading words for category ${category}:`, error);
+    console.error(`Error loading Word Scramble for category ${category}:`, error);
     throw error;
   }
 };
@@ -173,6 +188,75 @@ const initializeJigsawPuzzles = () => {
   }
 };
 
+export const quizGamePuzzles: { [key: string]: () => Promise<any> } = {};
+
+// Update the quiz game initialization in registry.ts
+const initializeQuizGamePuzzles = () => {
+  const validCategories = getWordBankCategories();
+  validCategories.forEach((category) => {
+    const slug = categoryToSlug(category);
+    quizGamePuzzles[slug] = async () => {
+      try {
+        const words = await loadWordBankByCategory(category);
+        
+        // Filter out any entries with missing terms or translations
+        const validWords = words.filter(word => 
+          word.term && word.translation && word.term.trim() !== "" && word.translation.trim() !== ""
+        );
+        
+        if (validWords.length < 4) {
+          throw new Error(`Not enough valid words found for category: ${category}`);
+        }
+        
+        return validWords.map((word) => {
+          // Randomly decide if we ask for term or translation
+          const questionType = Math.random() < 0.5 ? "translation" : "term";
+          
+          // Generate incorrect options from other words
+          const otherWords = validWords.filter(w => w.id !== word.id);
+          const incorrectOptions = shuffleArray(otherWords).slice(0, 3);
+          
+          if (questionType === "translation") {
+            return {
+              id: word.id,
+              question: `What is the translation for "${word.term}"?`,
+              correctAnswer: word.translation,
+              options: shuffleArray([
+                word.translation,
+                ...incorrectOptions.map(w => w.translation)
+              ]).slice(0, 4), // Ensure only 4 options
+              term: word.term,
+              translation: word.translation,
+              hint: word.hints?.[0] || "No hint available"
+            };
+          } else {
+            return {
+              id: word.id,
+              question: `What is the term for "${word.translation}"?`,
+              correctAnswer: word.term,
+              options: shuffleArray([
+                word.term,
+                ...incorrectOptions.map(w => w.term)
+              ]).slice(0, 4), // Ensure only 4 options
+              term: word.term,
+              translation: word.translation,
+              hint: word.hints?.[0] || "No hint available"
+            };
+          }
+        });
+      } catch (error) {
+        console.error(`Error creating quiz for category ${category}:`, error);
+        throw error;
+      }
+    };
+  });
+  
+  console.log(`Initialized quiz games for categories: ${validCategories.join(", ")}`);
+};
+
+// Initialize quiz games
+initializeQuizGamePuzzles();
+
 // Function to initialize all puzzles
 const initializePuzzles = () => {
   const validCategories = getWordBankCategories();
@@ -188,8 +272,8 @@ const initializePuzzles = () => {
     const slug = categoryToSlug(category);
     
     // Add word scramble puzzle
-    wordScramblePuzzles[slug] = () => loadWordBankByCategory(category);
-    
+    wordScramblePuzzles[slug] = () => loadWordScrambleByCategory(category);
+
     // Add word search puzzle
     wordSearchPuzzles[slug] = () => loadWordSearchByCategory(category);
 
@@ -202,7 +286,7 @@ const initializePuzzles = () => {
   // Add general category if it has enough words
   if (getWordCountForCategory("General") >= 5) {
     const generalSlug = categoryToSlug("General");
-    wordScramblePuzzles[generalSlug] = () => loadWordBankByCategory("General");
+    wordScramblePuzzles[generalSlug] = () => loadWordScrambleByCategory("General");
     wordSearchPuzzles[generalSlug] = () => loadWordSearchByCategory("General");
     console.log(`Added puzzles for General category`);
   }

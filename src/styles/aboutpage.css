@@ -1,0 +1,68 @@
+.about-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-page h1 {
+  color: #2c6e49;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.about-page h2 {
+  color: #4d908e;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.beta-notice {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.feedback-section {
+  background-color: #e8f4f8;
+  border-left: 4px solid #4d908e;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.contact-email {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.contact-email a {
+  color: #2c6e49;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.contact-email a:hover {
+  text-decoration: underline;
+}
+
+.goals-section ul {
+  margin-left: 1.5rem;
+  line-height: 1.6;
+}
+
+.coming-soon {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
