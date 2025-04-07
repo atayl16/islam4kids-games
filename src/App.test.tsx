@@ -11,6 +11,10 @@ jest.mock('./components/Header', () => ({
   Header: () => <div data-testid="mock-header" />
 }));
 
+jest.mock("./components/AboutPage", () => ({
+  AboutPage: () => <div data-testid="mock-about-page" />,
+}));
+
 jest.mock('./components/HomePage', () => ({
   HomePage: () => <div data-testid="mock-home-page" />
 }));
@@ -55,6 +59,7 @@ jest.mock('./components/Header', () => ({
 
 // Import the components we need to use directly in our test
 import { HomePage } from './components/HomePage';
+import { AboutPage } from './components/AboutPage';
 import { WordScrambleContainer } from './games/containers/WordScrambleContainer';
 import { JigsawPuzzleContainer } from './games/containers/JigsawPuzzleContainer';
 import { WordSearchContainer } from './games/containers/WordSearchContainer';
@@ -74,6 +79,7 @@ const renderWithRouter = (initialEntries = ['']) => {
         <main className="content">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
             
             {/* Game routes */}
             <Route path="/wordscramble/:id" element={<WordScrambleContainer />} />
@@ -125,6 +131,13 @@ describe('App', () => {
   it('renders the home page by default', () => {
     renderWithRouter(['/']);
     expect(screen.getByTestId('mock-home-page')).toBeInTheDocument();
+  });
+
+  it("renders the about page when on /about route", () => {
+    renderWithRouter(["/about"]);
+
+    expect(screen.queryByTestId("mock-home-page")).not.toBeInTheDocument();
+    expect(screen.getByTestId("mock-about-page")).toBeInTheDocument();
   });
 
   it('renders the correct route for wordscramble', () => {
