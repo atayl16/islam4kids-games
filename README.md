@@ -17,7 +17,7 @@ A growing collection of Islamic educational web games for children. Built for a 
 - Keep gameplay light, fun, and educational
 
 ## Try It Live
-[islam4kids.netlify.app](https://islam4kids.netlify.app) *(URL placeholder — confirm live link before sharing)*
+[islam4kids.netlify.app](https://islam4kids.netlify.app)
 
 ## Author
 Alisha Taylor — Engineer, Educator, and Mom
