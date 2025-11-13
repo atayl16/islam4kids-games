@@ -41,9 +41,8 @@ export const playSound = (soundFile: string, volume = 0.5) => {
   try {
     const audio = new Audio(soundFile);
     audio.volume = volume;
-    audio.play().catch(error => {
+    audio.play().catch(() => {
       // Silent catch for browsers that block autoplay
-      console.log(`Audio playback failed: ${error.message}`);
     });
   } catch (error) {
     console.error('Error playing sound:', error);

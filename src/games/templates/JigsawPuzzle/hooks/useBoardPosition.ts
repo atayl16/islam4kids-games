@@ -41,27 +41,8 @@ export const useBoardPosition = (
         right: rect.right,
         bottom: rect.bottom
       };
-      
+
       setBoardRect(updatedRect);
-      
-      console.log("Board position updated:", {
-        absolutePosition: {
-          top: rect.top,
-          left: rect.left
-        },
-        relativePosition: {
-          top: relativeTop,
-          left: relativeLeft
-        },
-        dimensions: {
-          width: rect.width,
-          height: rect.height
-        },
-        parentPosition: {
-          top: parentRect.top,
-          left: parentRect.left
-        }
-      });
     }
   }, [containerRef]);
 

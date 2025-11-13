@@ -54,12 +54,6 @@ const calculateResponsiveBoardDimensions = () => {
   const boardWidth = Math.max(maxAllowedWidth, visualConfig.MIN_BOARD_WIDTH);
   const boardHeight = Math.max(maxAllowedHeight, visualConfig.MIN_BOARD_HEIGHT);
 
-  // Log the calculated dimensions for debugging
-  console.log("Viewport Dimensions:", { viewportWidth, viewportHeight });
-  console.log("Single Board Max Width:", singleBoardMaxWidth);
-  console.log("Max Allowed Dimensions:", { maxAllowedWidth, maxAllowedHeight });
-  console.log("Calculated Board Dimensions:", { boardWidth, boardHeight });
-
   return { boardWidth, boardHeight };
 };
 
@@ -68,6 +62,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   const validatedData = validateJigsawConfig(data);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [imageAspectRatio, setImageAspectRatio] = useState(1); // Default to square
+  const [imageError, setImageError] = useState<string | null>(null);
 
   // Detect mobile devices
   const [isMobile] = useState(() =>
@@ -116,13 +111,17 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     img.onload = () => {
       const aspectRatio = img.naturalWidth / img.naturalHeight;
       setImageAspectRatio(aspectRatio);
-      console.log("Image loaded with aspect ratio:", aspectRatio);
-      
+      setImageError(null);
+
       // Initialize pieces after image loads
       initializePieces();
 
       // Update board position after pieces are initialized
       setTimeout(updateBoardRect, 50);
+    };
+
+    img.onerror = () => {
+      setImageError(`Failed to load puzzle image: ${currentConfig.imageSrc}`);
     };
   }, [currentConfig.imageSrc, currentDifficulty]);
 
@@ -137,16 +136,6 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Calculate horizontal offset to center the puzzle horizontally, but top align vertically
   const horizontalOffset = Math.max(0, (validBoardWidth - puzzleWidth) / 2);
   const verticalOffset = 0; // Top align the puzzle instead of centering vertically
-  
-  console.log("Aspect ratio preserved dimensions:", {
-    puzzleWidth,
-    puzzleHeight,
-    pieceWidth,
-    pieceHeight,
-    imageAspectRatio,
-    horizontalOffset,
-    verticalOffset
-  });
 
   // When passing to usePuzzlePieces
   const {
@@ -167,7 +156,6 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   useEffect(() => {
     const updatePositions = () => {
       updateBoardRect();
-      console.log("Board position updated:", boardRect);
     };
 
     window.addEventListener("resize", updatePositions);
@@ -197,21 +185,16 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
   
-  // Custom piece drop handler with logging
+  // Custom piece drop handler
   const handlePieceDrop = (id: number, x: number, y: number) => {
     // Calculate target positions within the grid using piece dimensions
     const col = id % currentConfig.columns;
     const row = Math.floor(id / currentConfig.columns);
-    
+
     // Target position calculation
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
-    
-    console.log(`Piece ${id} raw drop position: (${x}, ${y})`);
-    console.log(`Board position: (${boardRect.left}, ${boardRect.top})`);
-    console.log(`Target position: (${targetX}, ${targetY})`);
-    console.log(`Actual drop position: (${x}, ${y})`);
-  
+
     // Calculate the distance between drop position and target position
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
@@ -235,15 +218,30 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <div className="puzzle-wrapper" ref={wrapperRef}>
-        <div
-          className="puzzle-container"
-          style={{
-            maxWidth: fullContainerWidth,
-            position: "relative",
-          }}
-        >
-          {/* Controls section */}
-          <PuzzleControls
+        {imageError ? (
+          <div
+            style={{
+              padding: "2rem",
+              textAlign: "center",
+              backgroundColor: "#fff5f5",
+              border: "2px solid #fc8181",
+              borderRadius: "8px",
+              margin: "2rem",
+            }}
+          >
+            <h3 style={{ color: "#c53030" }}>Image Loading Error</h3>
+            <p style={{ color: "#742a2a" }}>{imageError}</p>
+          </div>
+        ) : (
+          <div
+            className="puzzle-container"
+            style={{
+              maxWidth: fullContainerWidth,
+              position: "relative",
+            }}
+          >
+            {/* Controls section */}
+            <PuzzleControls
             currentDifficulty={currentDifficulty}
             onDifficultyChange={handleDifficultyChange}
             onScramble={initializePieces}
@@ -333,7 +331,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
             }}
             soundEffect="/audio/success.mp3"
           />
-        </div>
+          </div>
+        )}
       </div>
     </DndProvider>
   );

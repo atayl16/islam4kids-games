@@ -30,9 +30,7 @@ export const CompletionOverlay: React.FC<CompletionOverlayProps> = ({
       try {
         const audio = new Audio(soundEffect);
         audio.volume = 0.7;
-        audio.play().catch(error => {
-          console.log('Audio playback failed:', error);
-        });
+        audio.play().catch(() => {});
       } catch (error) {
         console.error('Error playing completion sound:', error);
       }

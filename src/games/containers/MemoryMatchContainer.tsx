@@ -11,9 +11,13 @@ export const MemoryMatchContainer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadGameData = async () => {
-      setLoading(true);
-      setError(null);
+      if (isMounted) {
+        setLoading(true);
+        setError(null);
+      }
 
       try {
         if (!categorySlug || !memoryMatchPuzzles[categorySlug]) {
@@ -21,16 +25,26 @@ export const MemoryMatchContainer: React.FC = () => {
         }
 
         const data = await memoryMatchPuzzles[categorySlug]();
-        setGameData(data);
+        if (isMounted) {
+          setGameData(data);
+        }
       } catch (err) {
-        console.error("Error loading Memory Match game data:", err);
-        setError("Failed to load game data. Please try again later.");
+        if (isMounted) {
+          console.error("Error loading Memory Match game data:", err);
+          setError("Failed to load game data. Please try again later.");
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadGameData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [categorySlug]);
 
   if (loading) {

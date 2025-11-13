@@ -86,7 +86,6 @@ export const checkMatch = (cards: MemoryCard[], flippedIds: string[]): boolean =
 
   // Ensure both cards exist before checking for a match
   if (!firstCard || !secondCard) {
-    console.warn("One or both cards not found during match check.");
     return false;
   }
 

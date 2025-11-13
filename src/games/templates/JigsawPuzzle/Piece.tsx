@@ -38,11 +38,6 @@ export const Piece = ({
     initialPosition.current = { x: initialX, y: initialY };
   }, [initialX, initialY]);
 
-  // Log size changes to debug scaling issues
-  useEffect(() => {
-    console.log(`Piece ${id} dimensions: ${width}px × ${height}px`);
-  }, [id, width, height]);
-
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "puzzle-piece",
@@ -55,16 +50,13 @@ export const Piece = ({
           // Calculate new position
           const x = initialPosition.current.x + offset.x;
           const y = initialPosition.current.y + offset.y;
-          
+
           // Get position relative to board
           const relativeX = x;
           const relativeY = y;
-          
-          console.log(`Piece ${id} dropped at: abs(${x + boardPosition.left}, ${y + boardPosition.top}) rel(${relativeX}, ${relativeY})`);
-          
+
           // Use the relative position with the board
-          const result = onDrop(id, relativeX, relativeY);
-          console.log(`Piece ${id} snapping result: ${result}`);
+          onDrop(id, relativeX, relativeY);
         }
       },
       collect: (monitor) => ({

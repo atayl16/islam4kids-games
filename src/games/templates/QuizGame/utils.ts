@@ -65,11 +65,7 @@ export const generateOptions = (
 ): string[] => {
   // Filter out the correct answer and make sure we have enough options
   const incorrectOptions = allAnswers.filter(answer => answer !== correctAnswer);
-  
-  if (incorrectOptions.length < numOptions - 1) {
-    console.warn(`Not enough incorrect options available. Requested ${numOptions - 1} but only have ${incorrectOptions.length}`);
-  }
-  
+
   // Get up to (numOptions-1) incorrect options
   const selectedIncorrectOptions = shuffleArray(incorrectOptions).slice(0, numOptions - 1);
   

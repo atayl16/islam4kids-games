@@ -16,8 +16,6 @@ export const generateWordSearchGrid = (
   category: string,
   difficulty: string = "medium"
 ): WordSearchData => {
-  console.log("Generating grid for category:", category, "with difficulty:", difficulty);
-
   // Filter words from the word bank based on category and difficulty
   const filteredWords = wordBankData.words
     .filter(item => {
@@ -38,7 +36,6 @@ export const generateWordSearchGrid = (
   // Add fallback words if no matching words are found
   let selectedWords = filteredWords;
   if (filteredWords.length === 0) {
-    console.warn(`No words found for category: ${category}. Using fallback words.`);
     selectedWords = ["ISLAM", "QURAN", "PRAYER", "FAITH", "PEACE"];
   }
 
@@ -56,7 +53,6 @@ export const generateWordSearchGrid = (
   // Generate the grid and word placements
   const { grid, wordPlacements } = createWordSearchGrid(selectedWords, size, difficulty);
 
-  console.log("Generated grid:", grid);
   return {
     title: `${category.charAt(0).toUpperCase() + category.slice(1)} Word Search`,
     grid,
@@ -148,11 +144,6 @@ const createWordSearchGrid = (
           placed = true;
         }
       }
-    }
-    
-    // If we failed to place the word after many attempts
-    if (!placed) {
-      console.warn(`Could not place word: ${word} after 50 attempts`);
     }
   }
   

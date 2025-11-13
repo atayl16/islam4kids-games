@@ -5,17 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
+    "build:check": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
     "prepare": "husky install"
   },
   "dependencies": {
-    "@splinetool/react-spline": "^4.0.0",
     "clsx": "^2.1.1",
     "path-browserify": "^1.0.1",
-    "phaser": "^3.88.2",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

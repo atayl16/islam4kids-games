@@ -3,12 +3,18 @@ import React from 'react';
 import { Piece } from '../Piece';
 import { PieceState } from '../types';
 
+interface PuzzleBoardConfig {
+  rows: number;
+  columns: number;
+  imageSrc: string;
+}
+
 interface PuzzleBoardProps {
   containerWidth: number;
   containerHeight: number;
   pieceWidth: number;
   pieceHeight: number;
-  currentConfig: any;
+  currentConfig: PuzzleBoardConfig;
   pieces: PieceState[];
   onDrop: (id: number, x: number, y: number) => boolean;
   boardRef: React.RefObject<HTMLDivElement | null>;
@@ -34,15 +40,6 @@ export const PuzzleBoard = ({
   // Calculate the actual puzzle dimensions
   const actualPuzzleWidth = pieceWidth * currentConfig.columns;
   const actualPuzzleHeight = pieceHeight * currentConfig.rows;
-  
-  console.log("Puzzle board positioning:", {
-    containerWidth,
-    containerHeight,
-    actualPuzzleWidth,
-    actualPuzzleHeight,
-    horizontalOffset,
-    verticalOffset
-  });
 
   return (
     <div
