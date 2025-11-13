@@ -1,0 +1,139 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 2rem;
+  gap: 1.5rem;
+}
+
+.loading-spinner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner.small {
+  width: 60px;
+  height: 60px;
+}
+
+.loading-spinner.medium {
+  width: 100px;
+  height: 100px;
+}
+
+.loading-spinner.large {
+  width: 140px;
+  height: 140px;
+}
+
+.spinner-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--accent-green);
+  animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+}
+
+.loading-spinner.small .spinner-ring {
+  width: 60px;
+  height: 60px;
+}
+
+.loading-spinner.medium .spinner-ring {
+  width: 100px;
+  height: 100px;
+}
+
+.loading-spinner.large .spinner-ring {
+  width: 140px;
+  height: 140px;
+}
+
+.spinner-ring:nth-child(1) {
+  border-width: 4px;
+  animation-duration: 2s;
+  opacity: 0.4;
+}
+
+.spinner-ring:nth-child(2) {
+  border-width: 3px;
+  animation-duration: 1.5s;
+  animation-delay: -0.3s;
+  opacity: 0.6;
+  border-top-color: var(--dark-green);
+}
+
+.spinner-ring:nth-child(3) {
+  border-width: 2px;
+  animation-duration: 1s;
+  animation-delay: -0.6s;
+  opacity: 0.8;
+  border-top-color: var(--primary-gold);
+}
+
+.spinner-star {
+  font-size: 2rem;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.loading-spinner.small .spinner-star {
+  font-size: 1.25rem;
+}
+
+.loading-spinner.large .spinner-star {
+  font-size: 2.5rem;
+}
+
+.loading-message {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: center;
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .spinner-ring,
+  .spinner-star,
+  .loading-message {
+    animation: none;
+  }
+
+  .spinner-ring {
+    border-top-color: var(--accent-green);
+  }
+}
