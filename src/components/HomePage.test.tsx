@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { HomePage } from "./HomePage";
+import { ProgressProvider } from "../contexts/ProgressContext";
 
 // Mock the getAvailablePuzzles function
 jest.mock("../games/registry", () => ({
@@ -17,7 +18,9 @@ describe("HomePage Component", () => {
   it("renders the header and description", () => {
     render(
       <BrowserRouter>
+        <ProgressProvider>
         <HomePage />
+      </ProgressProvider>
       </BrowserRouter>
     );
 
@@ -30,7 +33,9 @@ describe("HomePage Component", () => {
   it("displays all games by default", () => {
     render(
       <BrowserRouter>
+        <ProgressProvider>
         <HomePage />
+      </ProgressProvider>
       </BrowserRouter>
     );
 
@@ -46,7 +51,9 @@ describe("HomePage Component", () => {
   it("filters games correctly when a tab is clicked", () => {
     render(
       <BrowserRouter>
+        <ProgressProvider>
         <HomePage />
+      </ProgressProvider>
       </BrowserRouter>
     );
 
@@ -72,7 +79,9 @@ describe("HomePage Component", () => {
   it("shows all games when 'All Games' tab is clicked", () => {
     render(
       <BrowserRouter>
+        <ProgressProvider>
         <HomePage />
+      </ProgressProvider>
       </BrowserRouter>
     );
 
