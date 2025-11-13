@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { getAvailablePuzzles } from "../games/registry";
+import { ProgressStats } from "./ProgressStats";
 
 // Format the slug for display
 const formatName = (slug: string) => {
@@ -147,7 +148,10 @@ export const HomePage = () => {
           Fun educational games to learn about Islam in an interactive way!
         </p>
       </div>
-      
+
+      {/* Progress Statistics */}
+      <ProgressStats />
+
       <div className="game-filter">
         <button 
           className={`filter-btn ${activeTab === "all" ? "active" : ""}`}
