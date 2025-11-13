@@ -121,7 +121,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     };
 
     img.onerror = () => {
-      setImageError(`Failed to load puzzle image: ${currentConfig.imageSrc}`);
+      console.error('Failed to load image:', currentConfig.imageSrc);
+      setImageError('Failed to load puzzle image. Please try again or select a different puzzle.');
     };
   }, [currentConfig.imageSrc, currentDifficulty]);
 
