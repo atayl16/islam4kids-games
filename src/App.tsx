@@ -19,15 +19,19 @@ import "./styles/shared.css";
 import "./styles/wordscramble.css";
 import "./styles/wordsearch.css";
 import "./styles/quizgame.css";
+import "./styles/accessibility.css";
 
 export default function App() {
   return (
     <ErrorBoundary>
       <HashRouter>
         <IslamicTheme />
+        <a href="#main-content" className="skip-to-main">
+          Skip to main content
+        </a>
         <div className="app">
           <Header />
-          <main className="content">
+          <main id="main-content" className="content" role="main">
             <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />{" "}
