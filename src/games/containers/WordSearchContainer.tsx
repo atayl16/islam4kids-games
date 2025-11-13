@@ -10,25 +10,39 @@ export const WordSearchContainer = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (!gameSlug || !(gameSlug in wordSearchPuzzles)) {
-      setError("Puzzle not found");
-      setLoading(false);
+      if (isMounted) {
+        setError("Puzzle not found");
+        setLoading(false);
+      }
       return;
     }
 
     const loadPuzzle = async () => {
       try {
         const data = await wordSearchPuzzles[gameSlug]();
-        setPuzzleData(data);
-        setLoading(false);
+        if (isMounted) {
+          setPuzzleData(data);
+        }
       } catch (err) {
-        console.error("Failed to load puzzle:", err);
-        setError("Failed to load puzzle");
-        setLoading(false);
+        if (isMounted) {
+          console.error("Failed to load puzzle:", err);
+          setError("Failed to load puzzle");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadPuzzle();
+
+    return () => {
+      isMounted = false;
+    };
   }, [gameSlug]);
 
   if (loading) return <div className="loading">Loading puzzle...</div>;

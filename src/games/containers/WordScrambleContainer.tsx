@@ -10,25 +10,39 @@ export const WordScrambleContainer = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (!gameSlug || !(gameSlug in wordScramblePuzzles)) {
-      setError("Puzzle not found");
-      setLoading(false);
+      if (isMounted) {
+        setError("Puzzle not found");
+        setLoading(false);
+      }
       return;
     }
 
     const loadPuzzle = async () => {
       try {
         const data = await (wordScramblePuzzles as Record<string, () => Promise<WordScrambleData>>)[gameSlug]();
-        setPuzzleData(data);
-        setLoading(false);
+        if (isMounted) {
+          setPuzzleData(data);
+        }
       } catch (err) {
-        console.error("Failed to load puzzle:", err);
-        setError("Failed to load puzzle");
-        setLoading(false);
+        if (isMounted) {
+          console.error("Failed to load puzzle:", err);
+          setError("Failed to load puzzle");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadPuzzle();
+
+    return () => {
+      isMounted = false;
+    };
   }, [gameSlug]);
 
   if (loading) {

@@ -30,12 +30,11 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
     setShowFeedback(false);
     setIsCorrect(false);
     setIsOverlayVisible(false);
-  
+
     if (!initialQuestions || initialQuestions.length === 0) {
-      console.error("No initial questions provided!");
       return;
     }
-    
+
     let formattedQuestions: QuizQuestion[] = [];
     
     if (difficulty === "hard") {
@@ -156,8 +155,7 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
         }
       });
     }
-  
-    console.log("Formatted questions:", formattedQuestions);
+
     setQuestions(formattedQuestions);
   }, [difficulty, initialQuestions]);
 
@@ -172,10 +170,7 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
     // Strict comparison to ensure correct answer recognition
     const selectedAnswerTrimmed = answer.trim();
     const correctAnswerTrimmed = currentQuestion.correctAnswer.trim();
-  
-    console.log("Selected:", selectedAnswerTrimmed);
-    console.log("Correct:", correctAnswerTrimmed);
-  
+
     const correct = selectedAnswerTrimmed === correctAnswerTrimmed;
     setIsCorrect(correct);
   

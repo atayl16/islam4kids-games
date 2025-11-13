@@ -38,29 +38,14 @@ export const usePuzzlePieces = (
                          (typeof VISUAL_CONFIG.MIN_BOARD_WIDTH === 'number' ? 
                           VISUAL_CONFIG.MIN_BOARD_WIDTH : 400);
                          
-  const validBoardHeight = typeof boardHeight === 'number' ? boardHeight : 
-                          (typeof VISUAL_CONFIG.MIN_BOARD_HEIGHT === 'number' ? 
+  const validBoardHeight = typeof boardHeight === 'number' ? boardHeight :
+                          (typeof VISUAL_CONFIG.MIN_BOARD_HEIGHT === 'number' ?
                            VISUAL_CONFIG.MIN_BOARD_HEIGHT : 300);
-
-  console.log("Board dimension check:", {
-    originalBoardWidth: boardWidth,
-    originalBoardHeight: boardHeight,
-    validBoardWidth,
-    validBoardHeight,
-    visualConfigMinWidth: VISUAL_CONFIG.MIN_BOARD_WIDTH,
-    visualConfigMinHeight: VISUAL_CONFIG.MIN_BOARD_HEIGHT
-  });
 
   // Update solvedCount whenever pieces change
   useEffect(() => {
     const newSolvedCount = pieces.filter((p) => p.solved).length;
     setSolvedCount(newSolvedCount);
-
-    console.log(`Solved pieces: ${newSolvedCount}/${totalPieces}`);
-
-    if (newSolvedCount === totalPieces && totalPieces > 0) {
-      console.log('🎉 Puzzle completed!');
-    }
   }, [pieces, totalPieces]);
 
   // Initialize pieces
@@ -74,27 +59,12 @@ export const usePuzzlePieces = (
     // from the parent component, so we can directly calculate piece dimensions
     const pieceWidth = validBoardWidth / columns;
     const pieceHeight = validBoardHeight / rows;
-    
-    console.log("Piece dimensions from aspect-ratio preserved board:", {
-      pieceWidth,
-      pieceHeight,
-      aspectRatio: pieceWidth / pieceHeight,
-      boardWidth: validBoardWidth,
-      boardHeight: validBoardHeight
-    });
-    
+
     // Use fixed positioning for the pile to ensure it appears in the tray area
     const pileLeft = validBoardWidth + 20; // Fixed offset from the board
     const pileWidth = Math.min(validBoardWidth * 0.8, 300); // Limit max width
     const pileHeight = validBoardHeight * 0.8;
     const pileTop = 180; // Increased to position pieces lower, below the text
-
-    console.log("Pile positioning:", {
-      pileLeft,
-      pileWidth,
-      totalSpace: pileLeft + pileWidth,
-      viewportWidth: window.innerWidth
-    });
 
     const shuffledIds = shuffleArray(Array.from({ length: totalPieces }, (_, i) => i));
 
@@ -110,7 +80,6 @@ export const usePuzzlePieces = (
       };
     });
 
-    console.log(`Created ${initialPieces.length} puzzle pieces`);
     setPieces(initialPieces);
   }, [columns, rows, validBoardWidth, validBoardHeight, updateBoardRect, totalPieces]);
   
@@ -127,14 +96,7 @@ export const usePuzzlePieces = (
     // EXACTLY the same target calculation as in index.tsx
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
-  
-    // Debug all coordinates
-    console.log("Debugging handlePieceMove:", {
-      id, x, y, pieceWidth, pieceHeight,
-      targetX, targetY,
-      col, row
-    });
-  
+
     // EXTRA generous thresholds - matching index.tsx
     const snapThresholdX = pieceWidth * 2;
     const snapThresholdY = pieceHeight * 2;
@@ -148,14 +110,12 @@ export const usePuzzlePieces = (
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {
         if (piece.id !== id) return piece;
-  
+
         if (isSolved) {
-          console.log(`✅ Piece ${id} snapped to position (${targetX}, ${targetY})`);
           playSnapSound();
           return { ...piece, x: targetX, y: targetY, solved: true };
         }
-  
-        console.log(`❌ Piece ${id} did not snap - too far from target`);
+
         return { ...piece, x, y, solved: false };
       })
     );

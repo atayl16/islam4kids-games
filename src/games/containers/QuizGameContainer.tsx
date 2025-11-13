@@ -6,40 +6,52 @@ import { QuizQuestion } from "../templates/QuizGame/types";
 
 export const QuizGameContainer = () => {
   const { quizSlug } = useParams<{ quizSlug: string }>();
-  const [questions, setQuestions] = useState<any[]>([]);
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadQuiz = async () => {
       try {
         if (!quizSlug || !(quizSlug in quizGamePuzzles)) {
           throw new Error(`Quiz "${quizSlug}" not found`);
         }
-        
+
         const loadedQuestions = await quizGamePuzzles[quizSlug]();
-        
+
         if (!loadedQuestions || loadedQuestions.length === 0) {
           throw new Error("No questions found for this quiz");
         }
-        
+
         // Validate questions to ensure all fields are present
         loadedQuestions.forEach((q: QuizQuestion, i: number) => {
           if (!q.question || !q.correctAnswer || !q.options || q.options.length < 2) {
-            console.warn(`Invalid question at index ${i}:`, q);
+            throw new Error(`Invalid question at index ${i}: missing required fields`);
           }
         });
-        
-        setQuestions(loadedQuestions);
+
+        if (isMounted) {
+          setQuestions(loadedQuestions);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load quiz");
-        console.error("Quiz loading error:", err);
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load quiz");
+          console.error("Quiz loading error:", err);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadQuiz();
+
+    return () => {
+      isMounted = false;
+    };
   }, [quizSlug]);
 
   if (loading) return <div className="loading">Loading quiz...</div>;

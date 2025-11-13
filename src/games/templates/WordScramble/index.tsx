@@ -38,7 +38,6 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
       });
 
       if (filtered.length === 0) {
-        console.warn(`No words available for difficulty level: ${difficulty}`);
         setFilteredWords(data.words);
       } else {
         setFilteredWords(filtered);
@@ -80,18 +79,15 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
 
   const initializeWord = () => {
     if (!filteredWords || filteredWords.length === 0) {
-      console.error("No words available for scramble game");
       return;
     }
 
     if (currentWordIndex >= filteredWords.length) {
-      console.error("Word index out of bounds");
       return;
     }
 
     const currentWord = filteredWords[currentWordIndex];
     if (!currentWord?.solution) {
-      console.error("Invalid word data at index", currentWordIndex);
       return;
     }
 

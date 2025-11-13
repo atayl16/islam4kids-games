@@ -3,25 +3,12 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { JigsawPuzzle } from "../templates/JigsawPuzzle";
 import { JIGSAW_DIFFICULTY_PRESETS } from "../templates/JigsawPuzzle/constants";
 import { jigsawPuzzles } from "../registry";
-
-// Define the expected structure of puzzle data
-interface PuzzleData {
-  meta: {
-    title: string;
-    defaultDifficulty?: string;
-    learningObjectives?: string[];
-    imageAlt?: string;
-  };
-  jigsawConfig: {
-    imageSrc: string;
-    [key: string]: any;
-  };
-}
+import { JigsawConfig } from "../templates/JigsawPuzzle/types";
 
 export const JigsawPuzzleContainer = () => {
   const { puzzleSlug } = useParams<{ puzzleSlug: string }>();
   const [searchParams] = useSearchParams();
-  const [puzzleData, setPuzzleData] = useState<PuzzleData | null>(null);
+  const [puzzleData, setPuzzleData] = useState<JigsawConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,9 +17,13 @@ export const JigsawPuzzleContainer = () => {
   const isValidDifficulty = difficultyParam && Object.keys(JIGSAW_DIFFICULTY_PRESETS).includes(difficultyParam);
 
   useEffect(() => {
+    let isMounted = true;
+
     if (!puzzleSlug || !(puzzleSlug in jigsawPuzzles)) {
-      setError("Puzzle not found");
-      setLoading(false);
+      if (isMounted) {
+        setError("Puzzle not found");
+        setLoading(false);
+      }
       return;
     }
 
@@ -40,19 +31,29 @@ export const JigsawPuzzleContainer = () => {
       try {
         // Get the puzzle function
         const puzzleFunction = jigsawPuzzles[puzzleSlug as keyof typeof jigsawPuzzles];
-        
+
         // Call the puzzle loader function
         const data = await puzzleFunction();
-        setPuzzleData(data);
-        setLoading(false);
+        if (isMounted) {
+          setPuzzleData(data);
+        }
       } catch (err) {
-        console.error("Failed to load puzzle:", err);
-        setError("Failed to load puzzle");
-        setLoading(false);
+        if (isMounted) {
+          console.error("Failed to load puzzle:", err);
+          setError("Failed to load puzzle");
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadPuzzle();
+
+    return () => {
+      isMounted = false;
+    };
   }, [puzzleSlug, difficultyParam, isValidDifficulty]);
 
   if (loading) {

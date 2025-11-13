@@ -44,13 +44,10 @@
     const [isOverlayVisible, setIsOverlayVisible] = useState(false); // State for overlay visibility
   
     useEffect(() => {
-      console.log("Difficulty changed to:", difficulty);
-      console.log("Category:", category);
-  
       // Regenerate the grid with the new difficulty
       const newData = generateWordSearchGrid(category, difficulty);
       setGameData(newData);
-  
+
       // Reset game state
       setFoundWords([]);
       setSelectedCells([]);
@@ -132,9 +129,9 @@
           // Word found!
           setFoundWords([...foundWords, wordData.word]);
           try {
-            new Audio('/audio/success.mp3').play().catch(e => console.log('Audio play failed', e));
+            new Audio('/audio/success.mp3').play().catch(() => {});
           } catch (error) {
-            console.log('Audio playback error:', error);
+            // Silent catch for audio errors
           }
   
           // Clear selection after a short delay
@@ -194,7 +191,6 @@
             { value: "hard", label: "Hard (12×12 grid, more diagonals)" },
           ]}
           onDifficultyChange={(newDifficulty) => {
-            console.log("Difficulty changed to:", newDifficulty);
             setDifficulty(newDifficulty);
           }}
         />

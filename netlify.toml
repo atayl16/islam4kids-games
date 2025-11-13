@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "npm run build:check"
   publish = "dist"
 
 [[redirects]]
@@ -10,7 +10,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "default-src 'self' *.islam4kids.org; img-src 'self' data:; frame-ancestors 'self' *.islam4kids.org;"
-    X-Frame-Options = "ALLOW-FROM https://www.islam4kids.org"
+    Content-Security-Policy = "default-src 'self' *.islam4kids.org; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; frame-ancestors 'self' *.islam4kids.org;"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    X-XSS-Protection = "1; mode=block"

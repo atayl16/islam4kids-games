@@ -1,19 +1,21 @@
 import { WordScrambleData } from "./templates/WordScramble/utils";
 import { validateMemoryMatchData } from "./templates/MemoryMatch/utils";
-import { 
+import {
   WordSearchData,
-  generateWordSearchGrid 
+  generateWordSearchGrid
 } from "./templates/WordSearch";
 import wordBankData from "./data/word-bank/words.json";
 import { MemoryMatchData } from "./templates/MemoryMatch/types";
 import { shuffleArray } from "./templates/QuizGame/utils";
 import { WordBankEntry } from "../types/WordBank";
+import { JigsawConfig } from "./templates/JigsawPuzzle/types";
+import { QuizQuestion } from "./templates/QuizGame/types";
 
 // Initialize empty puzzle registries that will be populated dynamically
 export let wordScramblePuzzles: { [key: string]: () => Promise<WordScrambleData> } = {};
 export let wordSearchPuzzles: { [key: string]: () => Promise<WordSearchData> } = {};
-export let jigsawPuzzles: { [key: string]: () => Promise<any> } = {};
-export let memoryMatchPuzzles: { [key: string]: () => Promise<any> } = {};
+export let jigsawPuzzles: { [key: string]: () => Promise<JigsawConfig> } = {};
+export let memoryMatchPuzzles: { [key: string]: () => Promise<MemoryMatchData> } = {};
 
 // Update getAvailablePuzzles to always return the current puzzles
 export const getAvailablePuzzles = () => ({
@@ -180,15 +182,13 @@ const initializeJigsawPuzzles = () => {
           defaultDifficulty: "medium", // Default difficulty
         },
       });
-
-      console.log(`Added jigsaw puzzle: ${puzzleTitle} (key: ${puzzleKey})`);
     });
   } catch (error) {
     console.error("Error initializing jigsaw puzzles:", error);
   }
 };
 
-export const quizGamePuzzles: { [key: string]: () => Promise<any> } = {};
+export const quizGamePuzzles: { [key: string]: () => Promise<QuizQuestion[]> } = {};
 
 // Update the quiz game initialization in registry.ts
 const initializeQuizGamePuzzles = () => {
@@ -250,8 +250,6 @@ const initializeQuizGamePuzzles = () => {
       }
     };
   });
-  
-  console.log(`Initialized quiz games for categories: ${validCategories.join(", ")}`);
 };
 
 // Initialize quiz games
@@ -260,8 +258,7 @@ initializeQuizGamePuzzles();
 // Function to initialize all puzzles
 const initializePuzzles = () => {
   const validCategories = getWordBankCategories();
-  console.log(`Found ${validCategories.length} categories with enough words:`, validCategories);
-  
+
   // Reset puzzles
   wordScramblePuzzles = {};
   wordSearchPuzzles = {};
@@ -279,8 +276,6 @@ const initializePuzzles = () => {
 
     // Add memory match puzzle
     memoryMatchPuzzles[slug] = () => loadMemoryMatchByCategory(category);
-    
-    console.log(`Added puzzles for category: ${category} (slug: ${slug})`);
   });
   
   // Add general category if it has enough words
@@ -288,7 +283,6 @@ const initializePuzzles = () => {
     const generalSlug = categoryToSlug("General");
     wordScramblePuzzles[generalSlug] = () => loadWordScrambleByCategory("General");
     wordSearchPuzzles[generalSlug] = () => loadWordSearchByCategory("General");
-    console.log(`Added puzzles for General category`);
   }
   
   // Initialize jigsaw puzzles
