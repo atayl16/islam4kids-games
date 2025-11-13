@@ -30,7 +30,7 @@ const defaultProgress: GameProgress = {
   totalScore: 0,
   highScores: {},
   completionTimes: {},
-  lastPlayed: new Date().toISOString(),
+  lastPlayed: new Date(0).toISOString(), // Unix epoch - indicates never played
   streak: 0,
   achievements: [],
 };
@@ -40,7 +40,42 @@ function loadProgress(): GameProgress {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      return { ...defaultProgress, ...parsed };
+
+      // Validate that parsed data has the expected structure
+      if (typeof parsed === 'object' && parsed !== null) {
+        // Ensure numeric fields are valid numbers
+        const gamesPlayed = typeof parsed.gamesPlayed === 'number' ? parsed.gamesPlayed : defaultProgress.gamesPlayed;
+        const gamesCompleted = typeof parsed.gamesCompleted === 'number' ? parsed.gamesCompleted : defaultProgress.gamesCompleted;
+        const totalScore = typeof parsed.totalScore === 'number' ? parsed.totalScore : defaultProgress.totalScore;
+        const streak = typeof parsed.streak === 'number' ? parsed.streak : defaultProgress.streak;
+
+        // Ensure object fields are valid objects
+        const highScores = typeof parsed.highScores === 'object' && parsed.highScores !== null ? parsed.highScores : defaultProgress.highScores;
+        const completionTimes = typeof parsed.completionTimes === 'object' && parsed.completionTimes !== null ? parsed.completionTimes : defaultProgress.completionTimes;
+
+        // Ensure array fields are valid arrays
+        const achievements = Array.isArray(parsed.achievements) ? parsed.achievements : defaultProgress.achievements;
+
+        // Validate lastPlayed is a valid ISO date string
+        let lastPlayed = defaultProgress.lastPlayed;
+        if (typeof parsed.lastPlayed === 'string') {
+          const date = new Date(parsed.lastPlayed);
+          if (!isNaN(date.getTime())) {
+            lastPlayed = parsed.lastPlayed;
+          }
+        }
+
+        return {
+          gamesPlayed,
+          gamesCompleted,
+          totalScore,
+          highScores,
+          completionTimes,
+          lastPlayed,
+          streak,
+          achievements,
+        };
+      }
     }
   } catch (error) {
     console.error('Error loading progress:', error);
@@ -52,7 +87,22 @@ function saveProgress(progress: GameProgress): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   } catch (error) {
-    console.error('Error saving progress:', error);
+    // Check if error is due to quota exceeded
+    if (error instanceof DOMException && (
+      error.name === 'QuotaExceededError' ||
+      error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+    )) {
+      console.error('localStorage quota exceeded. Progress cannot be saved.');
+      // Attempt to clear old data and retry
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      } catch (retryError) {
+        console.error('Failed to save progress even after clearing:', retryError);
+      }
+    } else {
+      console.error('Error saving progress:', error);
+    }
   }
 }
 
@@ -66,13 +116,26 @@ function calculateStreak(lastPlayed: string): number {
 
   const diffDays = Math.floor((now.getTime() - last.getTime()) / (1000 * 60 * 60 * 24));
 
-  // If played today or yesterday, maintain streak
-  if (diffDays <= 1) {
-    const storedStreak = localStorage.getItem(STREAK_KEY);
-    return storedStreak ? parseInt(storedStreak, 10) : 1;
+  const storedStreak = localStorage.getItem(STREAK_KEY);
+  const currentStreak = storedStreak ? parseInt(storedStreak, 10) : 0;
+
+  // Validate parsed streak value
+  if (isNaN(currentStreak)) {
+    console.warn('Invalid streak value in localStorage, resetting to 1');
+    return 1;
   }
 
-  // Streak broken
+  // Same day - maintain current streak
+  if (diffDays === 0) {
+    return Math.max(currentStreak, 1);
+  }
+
+  // Consecutive day - increment streak
+  if (diffDays === 1) {
+    return currentStreak + 1;
+  }
+
+  // Streak broken - reset to 1
   return 1;
 }
 
