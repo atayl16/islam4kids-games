@@ -35,7 +35,7 @@ describe("WordScrambleContainer", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Loading puzzle.../i)).toBeInTheDocument();
+    expect(screen.getByText(/Loading Word Scramble.../i)).toBeInTheDocument();
   });
 
   it("displays an error message if the puzzle slug is invalid", () => {
