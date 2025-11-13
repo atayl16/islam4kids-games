@@ -1,13 +1,5 @@
-import { useEffect } from "react";
-
 export const IslamicTheme = () => {
-  useEffect(() => {
-    // Load Arabic font
-    const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Amiri&display=swap";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-  }, []);
-
+  // Font is now loaded via Tailwind CSS (Nunito Sans)
+  // This component can be used for future theme customizations if needed
   return null;
 };
