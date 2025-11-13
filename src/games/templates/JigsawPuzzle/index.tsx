@@ -267,8 +267,6 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           >
             {/* Puzzle Board */}
             <PuzzleBoard
-              containerWidth={validBoardWidth}
-              containerHeight={validBoardHeight}
               pieceWidth={pieceWidth}
               pieceHeight={pieceHeight}
               currentConfig={currentConfig}

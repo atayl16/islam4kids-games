@@ -23,16 +23,7 @@ export const useBoardPosition = (
   const updateBoardRect = useCallback(() => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      
-      // Get the parent container's position if it exists
-      const parentRect = containerRef.current.parentElement 
-        ? containerRef.current.parentElement.getBoundingClientRect() 
-        : { top: 0, left: 0 };
-      
-      // Calculate position relative to parent container
-      const relativeTop = rect.top - parentRect.top;
-      const relativeLeft = rect.left - parentRect.left;
-      
+
       const updatedRect = {
         top: rect.top,
         left: rect.left,

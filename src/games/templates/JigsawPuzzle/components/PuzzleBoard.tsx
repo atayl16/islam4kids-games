@@ -10,8 +10,6 @@ interface PuzzleBoardConfig {
 }
 
 interface PuzzleBoardProps {
-  containerWidth: number;
-  containerHeight: number;
   pieceWidth: number;
   pieceHeight: number;
   currentConfig: PuzzleBoardConfig;
@@ -23,8 +21,6 @@ interface PuzzleBoardProps {
 }
 
 export const PuzzleBoard = ({
-  containerWidth,
-  containerHeight,
   pieceWidth,
   pieceHeight,
   currentConfig,
