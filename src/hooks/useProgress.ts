@@ -158,7 +158,7 @@ export function useProgress() {
 
       // Update high score if better
       const currentHigh = prev.highScores[gameKey] || 0;
-      const newHighScores = session.score > currentHigh
+      const newHighScores = session.score >= currentHigh
         ? { ...prev.highScores, [gameKey]: session.score }
         : prev.highScores;
 
