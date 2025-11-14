@@ -24,19 +24,39 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
     }
   };
 
+  const gameTypeName = type === "wordScramble"
+      ? "Word Scramble"
+    : type === "wordSearch"
+      ? "Word Search"
+    : type === "jigsaw"
+      ? "Jigsaw Puzzle"
+    : type === "quizGame"
+      ? "Quiz Game"
+    : type === "memoryMatchIcon"
+      ? "Memory Match"
+    : "Memory Match";
+
   return (
-    <Link to={path} className="game-card">
+    <Link
+      to={path}
+      className="game-card"
+      aria-label={`Play ${title} - ${gameTypeName}`}
+    >
       {type === "jigsaw" ? (
         <div className="game-thumbnail-container large">
           <img
             src={thumbnailSrc}
-            alt={title}
+            alt={`${title} puzzle preview`}
             className="game-thumbnail"
             onError={handleImageError}
           />
         </div>
       ) : (
-        <div className={`game-icon ${type}`}>
+        <div
+          className={`game-icon ${type}`}
+          role="img"
+          aria-label={`${gameTypeName} icon`}
+        >
           {type === "wordScramble" && "🔤"}
           {type === "wordSearch" && "🔍"}
           {type === "jigsaw" && "🧩"}
@@ -47,19 +67,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
       <div className="game-info">
         {/* Only show title for non-jigsaw games */}
         {type !== "jigsaw" && <h3>{title}</h3>}
-        <span className="game-type">
-          {type === "wordScramble"
-              ? "Word Scramble"
-            : type === "wordSearch"
-              ? "Word Search"
-            : type === "jigsaw"
-              ? "Jigsaw Puzzle"
-            : type === "quizGame"
-              ? "Quiz Game"
-            : type === "memoryMatchIcon"
-              ? "Memory Match"
-            : "Memory Match"}
-        </span>
+        <span className="game-type">{gameTypeName}</span>
       </div>
     </Link>
   );
@@ -148,41 +156,56 @@ export const HomePage = () => {
         </p>
       </div>
       
-      <div className="game-filter">
-        <button 
+      <div className="game-filter" role="tablist" aria-label="Filter games by type">
+        <button
           className={`filter-btn ${activeTab === "all" ? "active" : ""}`}
           onClick={() => handleTabChange("all")}
+          role="tab"
+          aria-selected={activeTab === "all"}
+          aria-controls="games-grid"
         >
           All Games
         </button>
         {wordScramble.length > 0 && (
-          <button 
+          <button
             className={`filter-btn ${activeTab === "wordScramble" ? "active" : ""}`}
             onClick={() => handleTabChange("wordScramble")}
+            role="tab"
+            aria-selected={activeTab === "wordScramble"}
+            aria-controls="games-grid"
           >
             Word Scrambles
           </button>
         )}
         {wordSearch.length > 0 && (
-          <button 
+          <button
             className={`filter-btn ${activeTab === "wordSearch" ? "active" : ""}`}
             onClick={() => handleTabChange("wordSearch")}
+            role="tab"
+            aria-selected={activeTab === "wordSearch"}
+            aria-controls="games-grid"
           >
             Word Searches
           </button>
         )}
         {jigsaw.length > 0 && (
-          <button 
+          <button
             className={`filter-btn ${activeTab === "jigsaw" ? "active" : ""}`}
             onClick={() => handleTabChange("jigsaw")}
+            role="tab"
+            aria-selected={activeTab === "jigsaw"}
+            aria-controls="games-grid"
           >
             Jigsaw Puzzles
           </button>
         )}
         {memoryMatch.length > 0 && (
-          <button 
-            className={`filter-btn ${activeTab === "memoryMatch" ? "active" : ""}`}
+          <button
+            className={`filter-btn ${activeTab === "memoryMatchIcon" ? "active" : ""}`}
             onClick={() => handleTabChange("memoryMatchIcon")}
+            role="tab"
+            aria-selected={activeTab === "memoryMatchIcon"}
+            aria-controls="games-grid"
           >
             Memory Match
           </button>
@@ -191,6 +214,9 @@ export const HomePage = () => {
           <button
             className={`filter-btn ${activeTab === "quizGame" ? "active" : ""}`}
             onClick={() => handleTabChange("quizGame")}
+            role="tab"
+            aria-selected={activeTab === "quizGame"}
+            aria-controls="games-grid"
           >
             Quiz Games
           </button>
