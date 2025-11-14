@@ -1,2 +1,2 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+/* Using system fonts for COPPA compliance - no external font loading that would expose children's IP addresses */
 @import "tailwindcss";

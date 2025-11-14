@@ -17,11 +17,15 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
     ? `/images/jigsaw/${slug}.jpg`
     : undefined;
 
-  // Fallback to png if needed
+  // Fallback to png if needed (with guard to prevent infinite loop)
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (type === "jigsaw") {
-      (e.target as HTMLImageElement).src = `/images/jigsaw/${slug}.png`;
-    }
+    if (type !== "jigsaw") return;
+
+    const img = e.target as HTMLImageElement;
+    if (img.dataset.fallbackApplied === "true") return;
+
+    img.dataset.fallbackApplied = "true";
+    img.src = `/images/jigsaw/${slug}.png`;
   };
 
   // Get game type display name and gradient colors
