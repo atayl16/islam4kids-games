@@ -9,7 +9,6 @@ import {
   Z_INDEX,
 } from "./constants";
 import { JigsawConfig } from "./types";
-import "../../../styles/jigsaw.css";
 
 // Import components
 import { PuzzleBoard } from "./components/PuzzleBoard";
