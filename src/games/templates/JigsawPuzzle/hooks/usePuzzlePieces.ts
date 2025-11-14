@@ -105,8 +105,13 @@ export const usePuzzlePieces = (
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
 
+    // DEBUG: Log snap detection details
+    console.log(`Piece ${id}: dropped at (${x.toFixed(1)}, ${y.toFixed(1)}), target (${targetX.toFixed(1)}, ${targetY.toFixed(1)}), diff (${diffX.toFixed(1)}, ${diffY.toFixed(1)}), threshold (${snapThresholdX.toFixed(1)}, ${snapThresholdY.toFixed(1)})`);
+
     // A piece is solved ONLY if it's within the threshold of its CORRECT position
     const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
+
+    console.log(`Piece ${id}: isSolved = ${isSolved}`);
   
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {

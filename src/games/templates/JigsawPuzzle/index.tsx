@@ -188,10 +188,15 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   
   // Custom piece drop handler - convert coordinates from puzzle-container to board-relative
   const handlePieceDrop = (id: number, x: number, y: number) => {
+    // DEBUG: Log coordinate conversion
+    console.log(`handlePieceDrop: piece ${id} at container coords (${x.toFixed(1)}, ${y.toFixed(1)}), offsets (${horizontalOffset.toFixed(1)}, ${verticalOffset.toFixed(1)})`);
+
     // Convert from puzzle-container coordinates to board-relative coordinates
     // The board is offset from the container by (horizontalOffset, verticalOffset)
     const boardRelativeX = x - horizontalOffset;
     const boardRelativeY = y - verticalOffset;
+
+    console.log(`handlePieceDrop: converted to board-relative (${boardRelativeX.toFixed(1)}, ${boardRelativeY.toFixed(1)})`);
 
     return handlePieceMove(id, boardRelativeX, boardRelativeY);
   };
