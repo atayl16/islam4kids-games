@@ -217,27 +217,17 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <div className="puzzle-wrapper" ref={wrapperRef}>
+      <div className="w-full max-w-7xl mx-auto space-y-6" ref={wrapperRef}>
         {imageError ? (
-          <div
-            style={{
-              padding: "2rem",
-              textAlign: "center",
-              backgroundColor: "#fff5f5",
-              border: "2px solid #fc8181",
-              borderRadius: "8px",
-              margin: "2rem",
-            }}
-          >
-            <h3 style={{ color: "#c53030" }}>Image Loading Error</h3>
-            <p style={{ color: "#742a2a" }}>{imageError}</p>
+          <div className="bg-amber-50 border-2 border-amber-500 rounded-2xl p-8 text-center m-8">
+            <h3 className="text-2xl font-bold text-amber-600 mb-3">Image Loading Error</h3>
+            <p className="text-amber-700">{imageError}</p>
           </div>
         ) : (
           <div
-            className="puzzle-container"
+            className="relative"
             style={{
               maxWidth: fullContainerWidth,
-              position: "relative",
             }}
           >
             {/* Controls section */}
@@ -256,12 +246,9 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           />
 
           <div
-            className="game-area"
+            className="flex relative items-start"
             style={{
               height: maxVisibleHeight,
-              display: "flex",
-              position: "relative",
-              alignItems: "flex-start", // Ensure top alignment
             }}
           >
             {/* Puzzle Board */}
@@ -285,14 +272,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
           {/* Unsolved pieces floating layer */}
           <div
-            className="unsolved-pieces-container"
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
               zIndex: Z_INDEX.UNSOLVED_PIECES,
             }}
           >
