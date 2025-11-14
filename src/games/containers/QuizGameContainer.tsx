@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { QuizGame } from "../templates/QuizGame";
 import { quizGamePuzzles } from "../registry";
 import { QuizQuestion } from "../templates/QuizGame/types";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const QuizGameContainer = () => {
   const { quizSlug } = useParams<{ quizSlug: string }>();
@@ -54,8 +55,8 @@ export const QuizGameContainer = () => {
     };
   }, [quizSlug]);
 
-  if (loading) return <div className="loading">Loading quiz...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <LoadingSpinner message="Loading Quiz..." />;
+  if (error) return <div className="error-message">{error}</div>;
 
   return <QuizGame questions={questions} />;
 };
