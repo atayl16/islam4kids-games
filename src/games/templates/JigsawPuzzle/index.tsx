@@ -186,34 +186,33 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
   
-  // Custom piece drop handler
+  // Custom piece drop handler - convert coordinates from puzzle-container to board-relative
   const handlePieceDrop = (id: number, x: number, y: number) => {
-    // Calculate target positions within the grid using piece dimensions
-    const col = id % currentConfig.columns;
-    const row = Math.floor(id / currentConfig.columns);
+    // Get the actual position of the board within the puzzle-container
+    // The board is offset by the PuzzleControls height + any margins
+    const containerRect = wrapperRef.current?.getBoundingClientRect();
+    const boardRect = containerRef.current?.getBoundingClientRect();
 
-    // Target position calculation
-    const targetX = col * pieceWidth;
-    const targetY = row * pieceHeight;
-
-    // Calculate the distance between drop position and target position
-    const diffX = Math.abs(x - targetX);
-    const diffY = Math.abs(y - targetY);
-    
-    // Use VERY generous thresholds for snapping
-    const snapThresholdX = pieceWidth * 2.5; // 250% of piece width
-    const snapThresholdY = pieceHeight * 2.5; // 250% of piece height
-    
-    // Determine if the piece should snap
-    const shouldSnap = diffX <= snapThresholdX && diffY <= snapThresholdY;
-    
-    if (shouldSnap) {
-      // If it should snap, use the exact target position
-      return handlePieceMove(id, targetX, targetY);
-    } else {
-      // Otherwise use the actual drop position
+    if (!containerRect || !boardRect) {
+      console.log('Cannot get container or board rect');
       return handlePieceMove(id, x, y);
     }
+
+    // Calculate the board's offset within the container
+    const boardOffsetX = boardRect.left - containerRect.left;
+    const boardOffsetY = boardRect.top - containerRect.top;
+
+    // DEBUG: Log coordinate conversion
+    console.log(`handlePieceDrop: piece ${id} at container coords (${x.toFixed(1)}, ${y.toFixed(1)})`);
+    console.log(`Board offset within container: (${boardOffsetX.toFixed(1)}, ${boardOffsetY.toFixed(1)})`);
+
+    // Convert from puzzle-container coordinates to board-relative coordinates
+    const boardRelativeX = x - boardOffsetX;
+    const boardRelativeY = y - boardOffsetY;
+
+    console.log(`handlePieceDrop: converted to board-relative (${boardRelativeX.toFixed(1)}, ${boardRelativeY.toFixed(1)})`);
+
+    return handlePieceMove(id, boardRelativeX, boardRelativeY);
   };
 
   return (

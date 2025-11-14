@@ -88,24 +88,30 @@ export const usePuzzlePieces = (
     // Pre-calculated dimensions
     const pieceWidth = validBoardWidth / columns;
     const pieceHeight = validBoardHeight / rows;
-    
+
     // Calculate position within grid
     const col = id % columns;
     const row = Math.floor(id / columns);
-  
-    // EXACTLY the same target calculation as in index.tsx
+
+    // Calculate the correct target position for THIS SPECIFIC piece
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
 
-    // EXTRA generous thresholds - matching index.tsx
-    const snapThresholdX = pieceWidth * 2;
-    const snapThresholdY = pieceHeight * 2;
-  
+    // Use percentage-based snap threshold for consistent difficulty across all puzzle sizes
+    // 20% of piece size works well - tight enough to require precision, forgiving enough to be playable
+    const snapThresholdX = pieceWidth * VISUAL_CONFIG.SNAP_THRESHOLD_RATIO;
+    const snapThresholdY = pieceHeight * VISUAL_CONFIG.SNAP_THRESHOLD_RATIO;
+
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
-  
-    // A piece is solved if it's close enough
+
+    // DEBUG: Log snap detection details
+    console.log(`Piece ${id}: dropped at (${x.toFixed(1)}, ${y.toFixed(1)}), target (${targetX.toFixed(1)}, ${targetY.toFixed(1)}), diff (${diffX.toFixed(1)}, ${diffY.toFixed(1)}), threshold (${snapThresholdX.toFixed(1)}, ${snapThresholdY.toFixed(1)})`);
+
+    // A piece is solved ONLY if it's within the threshold of its CORRECT position
     const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
+
+    console.log(`Piece ${id}: isSolved = ${isSolved}`);
   
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {
