@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { HomePage } from "./components/HomePage";
 import { AboutPage } from "./components/AboutPage";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { ProgressProvider } from "./contexts/ProgressContext";
 import { WordScrambleContainer } from "./games/containers/WordScrambleContainer";
 import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer";
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
@@ -23,12 +24,13 @@ import "./styles/quizgame.css";
 export default function App() {
   return (
     <ErrorBoundary>
-      <HashRouter>
-        <IslamicTheme />
-        <div className="app">
-          <Header />
-          <main className="content">
-            <Routes>
+      <ProgressProvider>
+        <HashRouter>
+          <IslamicTheme />
+          <div className="app">
+            <Header />
+            <main className="content">
+              <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />{" "}
             {/* Add this line */}
@@ -105,10 +107,11 @@ export default function App() {
               }
             />
             <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </div>
-      </HashRouter>
+              </Routes>
+            </main>
+          </div>
+        </HashRouter>
+      </ProgressProvider>
     </ErrorBoundary>
   );
 }
