@@ -186,10 +186,14 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
   
-  // Custom piece drop handler - pass coordinates directly to handlePieceMove
-  // The snap logic is handled in usePuzzlePieces.handlePieceMove
+  // Custom piece drop handler - convert coordinates from puzzle-container to board-relative
   const handlePieceDrop = (id: number, x: number, y: number) => {
-    return handlePieceMove(id, x, y);
+    // Convert from puzzle-container coordinates to board-relative coordinates
+    // The board is offset from the container by (horizontalOffset, verticalOffset)
+    const boardRelativeX = x - horizontalOffset;
+    const boardRelativeY = y - verticalOffset;
+
+    return handlePieceMove(id, boardRelativeX, boardRelativeY);
   };
 
   return (
