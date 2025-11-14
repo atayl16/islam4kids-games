@@ -186,34 +186,10 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
   
-  // Custom piece drop handler
+  // Custom piece drop handler - pass coordinates directly to handlePieceMove
+  // The snap logic is handled in usePuzzlePieces.handlePieceMove
   const handlePieceDrop = (id: number, x: number, y: number) => {
-    // Calculate target positions within the grid using piece dimensions
-    const col = id % currentConfig.columns;
-    const row = Math.floor(id / currentConfig.columns);
-
-    // Target position calculation
-    const targetX = col * pieceWidth;
-    const targetY = row * pieceHeight;
-
-    // Calculate the distance between drop position and target position
-    const diffX = Math.abs(x - targetX);
-    const diffY = Math.abs(y - targetY);
-    
-    // Use VERY generous thresholds for snapping
-    const snapThresholdX = pieceWidth * 2.5; // 250% of piece width
-    const snapThresholdY = pieceHeight * 2.5; // 250% of piece height
-    
-    // Determine if the piece should snap
-    const shouldSnap = diffX <= snapThresholdX && diffY <= snapThresholdY;
-    
-    if (shouldSnap) {
-      // If it should snap, use the exact target position
-      return handlePieceMove(id, targetX, targetY);
-    } else {
-      // Otherwise use the actual drop position
-      return handlePieceMove(id, x, y);
-    }
+    return handlePieceMove(id, x, y);
   };
 
   return (

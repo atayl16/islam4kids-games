@@ -93,19 +93,20 @@ export const usePuzzlePieces = (
     const col = id % columns;
     const row = Math.floor(id / columns);
 
-    // Calculate the correct target position for this piece
+    // Calculate the correct target position for THIS SPECIFIC piece
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
 
-    // Use fixed pixel snap threshold (industry standard: 8-24px)
-    // This ensures pieces only snap when they're actually close to the correct position
-    const snapThreshold = VISUAL_CONFIG.SNAP_THRESHOLD_PIXELS;
+    // Use percentage-based snap threshold for consistent difficulty across all puzzle sizes
+    // 20% of piece size works well - tight enough to require precision, forgiving enough to be playable
+    const snapThresholdX = pieceWidth * VISUAL_CONFIG.SNAP_THRESHOLD_RATIO;
+    const snapThresholdY = pieceHeight * VISUAL_CONFIG.SNAP_THRESHOLD_RATIO;
 
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
 
-    // A piece is solved if it's within the snap threshold of its correct position
-    const isSolved = diffX <= snapThreshold && diffY <= snapThreshold;
+    // A piece is solved ONLY if it's within the threshold of its CORRECT position
+    const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
   
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {
