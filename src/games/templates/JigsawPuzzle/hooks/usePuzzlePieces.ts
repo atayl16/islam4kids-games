@@ -88,24 +88,24 @@ export const usePuzzlePieces = (
     // Pre-calculated dimensions
     const pieceWidth = validBoardWidth / columns;
     const pieceHeight = validBoardHeight / rows;
-    
+
     // Calculate position within grid
     const col = id % columns;
     const row = Math.floor(id / columns);
-  
-    // EXACTLY the same target calculation as in index.tsx
+
+    // Calculate the correct target position for this piece
     const targetX = col * pieceWidth;
     const targetY = row * pieceHeight;
 
-    // EXTRA generous thresholds - matching index.tsx
-    const snapThresholdX = pieceWidth * 2;
-    const snapThresholdY = pieceHeight * 2;
-  
+    // Use fixed pixel snap threshold (industry standard: 8-24px)
+    // This ensures pieces only snap when they're actually close to the correct position
+    const snapThreshold = VISUAL_CONFIG.SNAP_THRESHOLD_PIXELS;
+
     const diffX = Math.abs(x - targetX);
     const diffY = Math.abs(y - targetY);
-  
-    // A piece is solved if it's close enough
-    const isSolved = diffX <= snapThresholdX && diffY <= snapThresholdY;
+
+    // A piece is solved if it's within the snap threshold of its correct position
+    const isSolved = diffX <= snapThreshold && diffY <= snapThreshold;
   
     setPieces((prevPieces) =>
       prevPieces.map((piece) => {

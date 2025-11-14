@@ -53,6 +53,7 @@ export const VISUAL_CONFIG = {
   VIEWPORT_WIDTH_RATIO: 1.0,
   VIEWPORT_HEIGHT_RATIO: 0.9,
   SNAP_THRESHOLD_RATIO: 1.5,
+  SNAP_THRESHOLD_PIXELS: 25, // Fixed pixel snap radius (industry standard: 8-24px)
   MIN_BOARD_WIDTH: 400, // Ensure this is defined
   MIN_BOARD_HEIGHT: 300, // Ensure this is defined
   PILE_WIDTH_RATIO: 0.8,
