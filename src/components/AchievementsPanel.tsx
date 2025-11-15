@@ -20,9 +20,10 @@ export function AchievementsPanel() {
         ? unlockedAchievements
         : lockedAchievements;
 
-  const progressPercent = Math.round(
-    (unlockedAchievements.length / ACHIEVEMENTS.length) * 100
-  );
+  const progressPercent =
+    ACHIEVEMENTS.length === 0
+      ? 0
+      : Math.round((unlockedAchievements.length / ACHIEVEMENTS.length) * 100);
 
   return (
     <div className="bg-white rounded-3xl p-6 shadow-lg border-2 border-emerald-100">

@@ -24,7 +24,8 @@ const Cell = ({
   onSelectCell: (row: number, col: number) => void;
 }) => {
   return (
-    <div
+    <button
+      type="button"
       className={`
         flex items-center justify-center
         w-10 h-10 sm:w-12 sm:h-12
@@ -43,7 +44,7 @@ const Cell = ({
       aria-label={`${letter}, row ${row + 1}, column ${col + 1}`}
     >
       {letter}
-    </div>
+    </button>
   );
 };
 
