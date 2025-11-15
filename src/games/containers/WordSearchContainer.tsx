@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { WordSearch } from "../templates/WordSearch";
 import { wordSearchPuzzles, WordSearchData } from "../registry";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const WordSearchContainer = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
@@ -45,9 +46,9 @@ export const WordSearchContainer = () => {
     };
   }, [gameSlug]);
 
-  if (loading) return <div className="loading">Loading puzzle...</div>;
+  if (loading) return <LoadingSpinner message="Loading Word Search..." />;
   if (error || !puzzleData)
-    return <div className="error">{error || "Something went wrong"}</div>;
+    return <div className="error-message">{error || "Something went wrong"}</div>;
 
   // Extract the category from the puzzle data
   const category = puzzleData.words[0]?.categories?.[0] || "general";

@@ -4,6 +4,7 @@ import { JigsawPuzzle } from "../templates/JigsawPuzzle";
 import { JIGSAW_DIFFICULTY_PRESETS } from "../templates/JigsawPuzzle/constants";
 import { jigsawPuzzles } from "../registry";
 import { JigsawConfig } from "../templates/JigsawPuzzle/types";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const JigsawPuzzleContainer = () => {
   const { puzzleSlug } = useParams<{ puzzleSlug: string }>();
@@ -19,10 +20,16 @@ export const JigsawPuzzleContainer = () => {
   useEffect(() => {
     let isMounted = true;
 
+    // Reinitialize state at the start of each puzzle fetch
+    setLoading(true);
+    setError(null);
+    setPuzzleData(null);
+
     if (!puzzleSlug || !(puzzleSlug in jigsawPuzzles)) {
       if (isMounted) {
         setError("Puzzle not found");
         setLoading(false);
+        setPuzzleData(null);
       }
       return;
     }
@@ -41,6 +48,7 @@ export const JigsawPuzzleContainer = () => {
         if (isMounted) {
           console.error("Failed to load puzzle:", err);
           setError("Failed to load puzzle");
+          setPuzzleData(null);
         }
       } finally {
         if (isMounted) {
@@ -57,11 +65,11 @@ export const JigsawPuzzleContainer = () => {
   }, [puzzleSlug, difficultyParam, isValidDifficulty]);
 
   if (loading) {
-    return <div className="loading">Loading puzzle...</div>;
+    return <LoadingSpinner message="Loading Jigsaw Puzzle..." />;
   }
 
   if (error || !puzzleData) {
-    return <div className="error">{error || "Something went wrong"}</div>;
+    return <div className="error-message">{error || "Something went wrong"}</div>;
   }
 
   // If needed, merge in the difficulty from URL parameters

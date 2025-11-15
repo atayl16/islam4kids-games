@@ -6,6 +6,7 @@
       "translation": "Declaration of Faith",
       "arabic": "الشهادة",
       "categories": ["Pillars"],
+      "difficulty": "beginner",
       "hints": ["First pillar", "Includes declaration of Tawheed", "Quran 3:18"]
     },
     {
@@ -14,6 +15,7 @@
       "translation": "Prayer",
       "arabic": "الصلاة",
       "categories": ["Pillars"],
+      "difficulty": "beginner",
       "hints": ["Second pillar", "Performed five times daily", "Quran 29:45"]
     },
     {
@@ -22,6 +24,7 @@
       "translation": "Fasting",
       "arabic": "الصوم",
       "categories": ["Pillars", "Ramadan"],
+      "difficulty": "beginner",
       "hints": ["Third pillar", "During the month of Ramadan", "Quran 2:183"]
     },
     {
@@ -30,6 +33,7 @@
       "translation": "Charity",
       "arabic": "الزكاة",
       "categories": ["Pillars", "Ramadan"],
+      "difficulty": "beginner",
       "hints": ["Fourth pillar", "Obligatory charity", "Quran 2:110"]
     },
     {
@@ -38,6 +42,7 @@
       "translation": "Pilgrimage",
       "arabic": "الحج",
       "categories": ["Pillars"],
+      "difficulty": "beginner",
       "hints": ["Fifth pillar", "To Makkah", "Quran 3:97"]
     },
     {
@@ -46,6 +51,7 @@
       "translation": "Oneness of Allah",
       "arabic": "التوحيد",
       "categories": ["Beliefs"],
+      "difficulty": "intermediate",
       "hints": ["Belief in one God", "First part of Shahada", "Quran 112:1"]
     },
     {
@@ -54,6 +60,7 @@
       "translation": "Prophethood",
       "arabic": "الرسالة",
       "categories": ["Beliefs"],
+      "difficulty": "intermediate",
       "hints": ["Belief in Prophets", "Second part of Shahada", "Quran 3:144"]
     },
     {
@@ -62,6 +69,7 @@
       "translation": "Hereafter",
       "arabic": "الآخرة",
       "categories": ["Beliefs"],
+      "difficulty": "intermediate",
       "hints": ["Belief in the afterlife", "Day of Judgement", "Quran 2:197"]
     },
     {
@@ -70,6 +78,7 @@
       "translation": "Predestination",
       "arabic": "القدر",
       "categories": ["Beliefs"],
+      "difficulty": "advanced",
       "hints": ["Belief in fate", "Everything is written", "Quran 6:59"]
     },
     {
@@ -78,6 +87,7 @@
       "translation": "Recitation",
       "arabic": "القرآن",
       "categories": ["General"],
+      "difficulty": "beginner",
       "hints": ["Holy book of Islam", "Revealed to Prophet Muhammad", "Quran 2:185"]
     },
     {
@@ -86,6 +96,7 @@
       "translation": "Tradition",
       "arabic": "الحديث",
       "categories": ["General"],
+      "difficulty": "intermediate",
       "hints": ["Sayings of Prophet Muhammad", "Second source of Islamic teachings", "Sahih Bukhari"]
     },
     {
@@ -94,6 +105,7 @@
       "translation": "Practice",
       "arabic": "السنة",
       "categories": ["General"],
+      "difficulty": "intermediate",
       "hints": ["Actions of Prophet Muhammad", "Third source of Islamic teachings", "Quran 33:21"]
     },
     {
@@ -102,6 +114,7 @@
       "translation": "Praised One",
       "arabic": "محمد",
       "categories": ["Prophets"],
+      "difficulty": "beginner",
       "hints": ["Last Prophet", "Born in Makkah", "Received the Quran"]
     },
     {
@@ -110,6 +123,7 @@
       "translation": "Abraham",
       "arabic": "إبراهيم",
       "categories": ["Prophets"],
+      "difficulty": "beginner",
       "hints": ["Built the Kaaba", "Father of Ismail", "Friend of Allah"]
     },
     {
@@ -118,6 +132,7 @@
       "translation": "Moses",
       "arabic": "موسى",
       "categories": ["Prophets"],
+      "difficulty": "beginner",
       "hints": ["Received the Torah", "Spoke to Allah directly", "Led the Children of Israel"]
     },
     {
@@ -126,6 +141,7 @@
       "translation": "Jesus",
       "arabic": "عيسى",
       "categories": ["Prophets"],
+      "difficulty": "beginner",
       "hints": ["Born to Maryam", "Performed miracles", "Will return before Day of Judgment"]
     },
     {
@@ -134,6 +150,7 @@
       "translation": "Noah",
       "arabic": "نوح",
       "categories": ["Prophets"],
+      "difficulty": "beginner",
       "hints": ["Built an ark", "Great flood", "Preached for many years"]
     },
     {
@@ -142,6 +159,7 @@
       "translation": "First human",
       "arabic": "آدم",
       "categories": ["Prophets"],
+      "difficulty": "beginner",
       "hints": ["First Prophet", "Created from clay", "Taught all names"]
     },
     {
@@ -150,6 +168,7 @@
       "translation": "Joseph",
       "arabic": "يوسف",
       "categories": ["Prophets"],
+      "difficulty": "intermediate",
       "hints": ["Son of Yaqub", "Dream interpreter", "Ruler in Egypt"]
     },
     {
@@ -158,6 +177,7 @@
       "translation": "Solomon",
       "arabic": "سليمان",
       "categories": ["Prophets"],
+      "difficulty": "intermediate",
       "hints": ["Son of Dawud", "Could speak to animals", "Great king with wisdom"]
     },
     {
@@ -166,6 +186,7 @@
       "translation": "Breaking fast",
       "arabic": "إفطار",
       "categories": ["Ramadan"],
+      "difficulty": "beginner",
       "hints": ["After sunset", "First meal after fasting", "Often starts with dates"]
     },
     {
@@ -174,6 +195,7 @@
       "translation": "Pre-dawn meal",
       "arabic": "سحور",
       "categories": ["Ramadan"],
+      "difficulty": "beginner",
       "hints": ["Before Fajr", "Last meal before fasting", "Important for strength during fast"]
     },
     {
@@ -182,6 +204,7 @@
       "translation": "Night prayers",
       "arabic": "تراويح",
       "categories": ["Ramadan"],
+      "difficulty": "intermediate",
       "hints": ["Special Ramadan prayers", "After Isha", "Usually in congregation"]
     },
     {
@@ -190,6 +213,7 @@
       "translation": "Night of Power",
       "arabic": "ليلة القدر",
       "categories": ["Ramadan"],
+      "difficulty": "intermediate",
       "hints": ["Better than 1000 months", "Quran was revealed", "In the last 10 days of Ramadan"]
     },
     {
@@ -198,6 +222,7 @@
       "translation": "Festival",
       "arabic": "عيد",
       "categories": ["Ramadan"],
+      "difficulty": "beginner",
       "hints": ["Celebration after Ramadan", "Special prayer", "Giving gifts"]
     },
     {
@@ -206,6 +231,7 @@
       "translation": "Mosque",
       "arabic": "مسجد",
       "categories": ["General"],
+      "difficulty": "beginner",
       "hints": ["Place of worship", "Where Muslims pray", "Has a mihrab and minbar"]
     },
     {
@@ -213,7 +239,8 @@
       "term": "Wudu",
       "translation": "Ablution",
       "arabic": "وضوء",
-      "categories": ["General"],
+      "categories": ["General", "Daily Practices"],
+      "difficulty": "beginner",
       "hints": ["Ritual washing", "Before prayer", "Cleanses body and mind"]
     },
     {
@@ -221,7 +248,8 @@
       "term": "Ihsan",
       "translation": "Excellence",
       "arabic": "إحسان",
-      "categories": ["General"],
+      "categories": ["General", "Manners"],
+      "difficulty": "advanced",
       "hints": ["Doing good", "Worship as if you see Allah", "Best level of faith"]
     },
     {
@@ -229,7 +257,8 @@
       "term": "Taqwa",
       "translation": "Awareness of Allah",
       "arabic": "تقوى",
-      "categories": ["General"],
+      "categories": ["General", "Manners"],
+      "difficulty": "intermediate",
       "hints": ["Awareness of Allah", "Fear and love of Allah", "Protection against sin"]
     },
     {
@@ -237,7 +266,8 @@
       "term": "Jannah",
       "translation": "Paradise",
       "arabic": "جنة",
-      "categories": ["General"],
+      "categories": ["General", "Beliefs"],
+      "difficulty": "beginner",
       "hints": ["Reward for believers", "Gardens with rivers", "Eternal happiness"]
     },
     {
@@ -245,7 +275,8 @@
       "term": "Dua",
       "translation": "Supplication",
       "arabic": "دعاء",
-      "categories": ["General"],
+      "categories": ["General", "Daily Practices"],
+      "difficulty": "beginner",
       "hints": ["Asking Allah", "Personal prayer", "Direct communication with Allah"]
     },
     {
@@ -254,6 +285,7 @@
       "translation": "Faith",
       "arabic": "إيمان",
       "categories": ["Beliefs"],
+      "difficulty": "beginner",
       "hints": ["Belief in heart", "Trust in Allah", "Six articles of faith"]
     },
     {
@@ -262,6 +294,7 @@
       "translation": "Permissible",
       "arabic": "حلال",
       "categories": ["General"],
+      "difficulty": "beginner",
       "hints": ["Allowed in Islam", "Opposite of haram", "Lawful food and actions"]
     },
     {
@@ -270,6 +303,7 @@
       "translation": "Jurisprudence",
       "arabic": "فقه",
       "categories": ["General"],
+      "difficulty": "advanced",
       "hints": ["Understanding of Islamic law", "Rules for worship and daily life", "Different schools"]
     },
     {
@@ -278,6 +312,7 @@
       "translation": "Community",
       "arabic": "أمة",
       "categories": ["General"],
+      "difficulty": "intermediate",
       "hints": ["Global Muslim community", "Brotherhood and sisterhood", "United by faith"]
     },
     {
@@ -285,7 +320,8 @@
       "term": "Sadaqah",
       "translation": "Voluntary charity",
       "arabic": "صدقة",
-      "categories": ["General"],
+      "categories": ["General", "Manners"],
+      "difficulty": "intermediate",
       "hints": ["Giving to the needy", "Not obligatory", "Form of worship"]
     },
     {
@@ -294,7 +330,629 @@
       "translation": "Struggle",
       "arabic": "جهاد",
       "categories": ["General"],
+      "difficulty": "advanced",
       "hints": ["Striving in the way of Allah", "Inner spiritual struggle", "Effort against evil"]
+    },
+    {
+      "id": "abu-bakr-38",
+      "term": "Abu Bakr",
+      "translation": "Father of the young camel",
+      "arabic": "أبو بكر",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["First Caliph", "Best friend of Prophet", "Father of Aisha"]
+    },
+    {
+      "id": "umar-39",
+      "term": "Umar",
+      "translation": "Life, living",
+      "arabic": "عمر",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["Second Caliph", "Known for justice", "Conquered Jerusalem"]
+    },
+    {
+      "id": "uthman-40",
+      "term": "Uthman",
+      "translation": "Young of a bird",
+      "arabic": "عثمان",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["Third Caliph", "Compiled the Quran", "Married two daughters of Prophet"]
+    },
+    {
+      "id": "ali-41",
+      "term": "Ali",
+      "translation": "Exalted, noble",
+      "arabic": "علي",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["Fourth Caliph", "Cousin of Prophet", "Married to Fatimah"]
+    },
+    {
+      "id": "khadijah-42",
+      "term": "Khadijah",
+      "translation": "Premature child",
+      "arabic": "خديجة",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["First wife of Prophet", "First Muslim", "Mother of Fatimah"]
+    },
+    {
+      "id": "aisha-43",
+      "term": "Aisha",
+      "translation": "Living, prosperous",
+      "arabic": "عائشة",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["Wife of Prophet", "Daughter of Abu Bakr", "Great scholar"]
+    },
+    {
+      "id": "fatimah-44",
+      "term": "Fatimah",
+      "translation": "Weaned",
+      "arabic": "فاطمة",
+      "categories": ["Companions"],
+      "difficulty": "beginner",
+      "hints": ["Daughter of Prophet", "Wife of Ali", "Mother of Hassan and Hussain"]
+    },
+    {
+      "id": "bilal-45",
+      "term": "Bilal",
+      "translation": "Water, moisture",
+      "arabic": "بلال",
+      "categories": ["Companions"],
+      "difficulty": "intermediate",
+      "hints": ["First muezzin", "Former slave", "Beautiful voice"]
+    },
+    {
+      "id": "hamza-46",
+      "term": "Hamza",
+      "translation": "Lion",
+      "arabic": "حمزة",
+      "categories": ["Companions"],
+      "difficulty": "intermediate",
+      "hints": ["Uncle of Prophet", "Lion of Allah", "Martyred at Uhud"]
+    },
+    {
+      "id": "salman-47",
+      "term": "Salman Al-Farsi",
+      "translation": "Safe, peaceful",
+      "arabic": "سلمان الفارسي",
+      "categories": ["Companions"],
+      "difficulty": "intermediate",
+      "hints": ["From Persia", "Suggested trench strategy", "Searched for truth"]
+    },
+    {
+      "id": "sabr-48",
+      "term": "Sabr",
+      "translation": "Patience",
+      "arabic": "صبر",
+      "categories": ["Manners"],
+      "difficulty": "beginner",
+      "hints": ["Enduring hardship", "Beautiful patience", "Quran 2:153"]
+    },
+    {
+      "id": "shukr-49",
+      "term": "Shukr",
+      "translation": "Gratitude",
+      "arabic": "شكر",
+      "categories": ["Manners"],
+      "difficulty": "beginner",
+      "hints": ["Being thankful", "Appreciating blessings", "Increases blessings"]
+    },
+    {
+      "id": "tawakkul-50",
+      "term": "Tawakkul",
+      "translation": "Trust in Allah",
+      "arabic": "توكل",
+      "categories": ["Manners"],
+      "difficulty": "intermediate",
+      "hints": ["Reliance on Allah", "Tie your camel", "Faith and action"]
+    },
+    {
+      "id": "rahmah-51",
+      "term": "Rahmah",
+      "translation": "Mercy",
+      "arabic": "رحمة",
+      "categories": ["Manners"],
+      "difficulty": "beginner",
+      "hints": ["Compassion", "Kindness to all", "Allah is Most Merciful"]
+    },
+    {
+      "id": "adl-52",
+      "term": "Adl",
+      "translation": "Justice",
+      "arabic": "عدل",
+      "categories": ["Manners"],
+      "difficulty": "intermediate",
+      "hints": ["Fairness", "Even with enemies", "Stand for justice"]
+    },
+    {
+      "id": "amanah-53",
+      "term": "Amanah",
+      "translation": "Trustworthiness",
+      "arabic": "أمانة",
+      "categories": ["Manners"],
+      "difficulty": "intermediate",
+      "hints": ["Being honest", "Fulfilling promises", "Prophet known as Al-Amin"]
+    },
+    {
+      "id": "haya-54",
+      "term": "Haya",
+      "translation": "Modesty",
+      "arabic": "حياء",
+      "categories": ["Manners"],
+      "difficulty": "intermediate",
+      "hints": ["Shyness from wrong", "Part of faith", "Leads to good"]
+    },
+    {
+      "id": "hilm-55",
+      "term": "Hilm",
+      "translation": "Forbearance",
+      "arabic": "حلم",
+      "categories": ["Manners"],
+      "difficulty": "advanced",
+      "hints": ["Gentleness", "Controlling anger", "Overlooking faults"]
+    },
+    {
+      "id": "ithar-56",
+      "term": "Ithar",
+      "translation": "Altruism",
+      "arabic": "إيثار",
+      "categories": ["Manners"],
+      "difficulty": "advanced",
+      "hints": ["Preferring others", "Selflessness", "Giving despite need"]
+    },
+    {
+      "id": "silat-rahm-57",
+      "term": "Silat al-Rahm",
+      "translation": "Maintaining family ties",
+      "arabic": "صلة الرحم",
+      "categories": ["Manners"],
+      "difficulty": "intermediate",
+      "hints": ["Keeping family bonds", "Visiting relatives", "Increases lifespan"]
+    },
+    {
+      "id": "hijrah-58",
+      "term": "Hijrah",
+      "translation": "Migration",
+      "arabic": "الهجرة",
+      "categories": ["Islamic History"],
+      "difficulty": "beginner",
+      "hints": ["From Makkah to Madinah", "Year 622 CE", "Marks start of Islamic calendar"]
+    },
+    {
+      "id": "badr-59",
+      "term": "Badr",
+      "translation": "Full moon",
+      "arabic": "بدر",
+      "categories": ["Islamic History"],
+      "difficulty": "intermediate",
+      "hints": ["First major battle", "Muslims were outnumbered", "Angels helped"]
+    },
+    {
+      "id": "uhud-60",
+      "term": "Uhud",
+      "translation": "Mountain name",
+      "arabic": "أحد",
+      "categories": ["Islamic History"],
+      "difficulty": "intermediate",
+      "hints": ["Second major battle", "Near Madinah", "Hamza was martyred"]
+    },
+    {
+      "id": "kaaba-61",
+      "term": "Kaaba",
+      "translation": "Cube",
+      "arabic": "الكعبة",
+      "categories": ["Islamic History", "General"],
+      "difficulty": "beginner",
+      "hints": ["House of Allah", "Built by Ibrahim", "Direction of prayer"]
+    },
+    {
+      "id": "madinah-62",
+      "term": "Madinah",
+      "translation": "The city",
+      "arabic": "المدينة",
+      "categories": ["Islamic History"],
+      "difficulty": "beginner",
+      "hints": ["City of Prophet", "First Islamic state", "Masjid an-Nabawi"]
+    },
+    {
+      "id": "makkah-63",
+      "term": "Makkah",
+      "translation": "Blessed city",
+      "arabic": "مكة",
+      "categories": ["Islamic History"],
+      "difficulty": "beginner",
+      "hints": ["Birthplace of Prophet", "Contains Kaaba", "Holiest city"]
+    },
+    {
+      "id": "conquest-makkah-64",
+      "term": "Fath Makkah",
+      "translation": "Conquest of Makkah",
+      "arabic": "فتح مكة",
+      "categories": ["Islamic History"],
+      "difficulty": "intermediate",
+      "hints": ["Peaceful conquest", "Year 8 AH", "Prophet forgave enemies"]
+    },
+    {
+      "id": "farewell-sermon-65",
+      "term": "Farewell Sermon",
+      "translation": "Last sermon",
+      "arabic": "خطبة الوداع",
+      "categories": ["Islamic History"],
+      "difficulty": "intermediate",
+      "hints": ["At Arafat", "During last Hajj", "Equal rights message"]
+    },
+    {
+      "id": "jibreel-66",
+      "term": "Jibreel",
+      "translation": "Gabriel",
+      "arabic": "جبريل",
+      "categories": ["Angels"],
+      "difficulty": "beginner",
+      "hints": ["Brought revelation", "Appeared to Prophet", "Chief angel"]
+    },
+    {
+      "id": "mikael-67",
+      "term": "Mikael",
+      "translation": "Michael",
+      "arabic": "ميكائيل",
+      "categories": ["Angels"],
+      "difficulty": "intermediate",
+      "hints": ["Angel of provision", "Controls weather", "Brings rain"]
+    },
+    {
+      "id": "israfil-68",
+      "term": "Israfil",
+      "translation": "Raphael",
+      "arabic": "إسرافيل",
+      "categories": ["Angels"],
+      "difficulty": "intermediate",
+      "hints": ["Will blow trumpet", "Day of Judgment", "Announces resurrection"]
+    },
+    {
+      "id": "izrael-69",
+      "term": "Azrael",
+      "translation": "Angel of Death",
+      "arabic": "عزرائيل",
+      "categories": ["Angels"],
+      "difficulty": "intermediate",
+      "hints": ["Takes souls", "At time of death", "Malak al-Maut"]
+    },
+    {
+      "id": "munkar-nakir-70",
+      "term": "Munkar and Nakir",
+      "translation": "Questioners",
+      "arabic": "منكر ونكير",
+      "categories": ["Angels"],
+      "difficulty": "advanced",
+      "hints": ["Question in grave", "Three questions", "Test in barzakh"]
+    },
+    {
+      "id": "tawrat-71",
+      "term": "Tawrat",
+      "translation": "Torah",
+      "arabic": "التوراة",
+      "categories": ["Books"],
+      "difficulty": "beginner",
+      "hints": ["Revealed to Musa", "Given on Mount Sinai", "Book of guidance"]
+    },
+    {
+      "id": "zabur-72",
+      "term": "Zabur",
+      "translation": "Psalms",
+      "arabic": "الزبور",
+      "categories": ["Books"],
+      "difficulty": "intermediate",
+      "hints": ["Revealed to Dawud", "Book of songs", "Praises to Allah"]
+    },
+    {
+      "id": "injeel-73",
+      "term": "Injeel",
+      "translation": "Gospel",
+      "arabic": "الإنجيل",
+      "categories": ["Books"],
+      "difficulty": "beginner",
+      "hints": ["Revealed to Isa", "Message of love", "Original Gospel"]
+    },
+    {
+      "id": "scrolls-74",
+      "term": "Suhuf",
+      "translation": "Scrolls",
+      "arabic": "الصحف",
+      "categories": ["Books"],
+      "difficulty": "advanced",
+      "hints": ["Given to Ibrahim and Musa", "Earlier revelations", "Lost scriptures"]
+    },
+    {
+      "id": "adhan-75",
+      "term": "Adhan",
+      "translation": "Call to prayer",
+      "arabic": "الأذان",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Five times a day", "Bilal first called", "Allahu Akbar"]
+    },
+    {
+      "id": "iqamah-76",
+      "term": "Iqamah",
+      "translation": "Call before prayer",
+      "arabic": "الإقامة",
+      "categories": ["Daily Practices"],
+      "difficulty": "intermediate",
+      "hints": ["Just before salah", "Similar to adhan", "Qad qamatis-salah"]
+    },
+    {
+      "id": "ruku-77",
+      "term": "Ruku",
+      "translation": "Bowing",
+      "arabic": "الركوع",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Part of prayer", "Bending position", "Subhana Rabbiyal Azeem"]
+    },
+    {
+      "id": "sujud-78",
+      "term": "Sujud",
+      "translation": "Prostration",
+      "arabic": "السجود",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Forehead on ground", "Closest to Allah", "Most important position"]
+    },
+    {
+      "id": "tashahhud-79",
+      "term": "Tashahhud",
+      "translation": "Testimony",
+      "arabic": "التشهد",
+      "categories": ["Daily Practices"],
+      "difficulty": "intermediate",
+      "hints": ["Said while sitting", "At-tahiyyatu lillah", "Part of prayer"]
+    },
+    {
+      "id": "tasleem-80",
+      "term": "Tasleem",
+      "translation": "Salutation",
+      "arabic": "التسليم",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Ends prayer", "Assalamu alaikum", "Turn to both sides"]
+    },
+    {
+      "id": "bismillah-81",
+      "term": "Bismillah",
+      "translation": "In the name of Allah",
+      "arabic": "بسم الله",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Before eating", "Before any action", "Basmala"]
+    },
+    {
+      "id": "alhamdulillah-82",
+      "term": "Alhamdulillah",
+      "translation": "All praise to Allah",
+      "arabic": "الحمد لله",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["After eating", "Expression of gratitude", "Opens Al-Fatiha"]
+    },
+    {
+      "id": "subhanallah-83",
+      "term": "SubhanAllah",
+      "translation": "Glory to Allah",
+      "arabic": "سبحان الله",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Expression of wonder", "Part of dhikr", "Glorification"]
+    },
+    {
+      "id": "inshallah-84",
+      "term": "InshaAllah",
+      "translation": "If Allah wills",
+      "arabic": "إن شاء الله",
+      "categories": ["Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["About future plans", "Submission to Allah's will", "Quran 18:24"]
+    },
+    {
+      "id": "dawud-85",
+      "term": "Dawud",
+      "translation": "David",
+      "arabic": "داود",
+      "categories": ["Prophets"],
+      "difficulty": "intermediate",
+      "hints": ["Received Zabur", "Beautiful voice", "Defeated Jalut"]
+    },
+    {
+      "id": "zakariya-86",
+      "term": "Zakariya",
+      "translation": "Zechariah",
+      "arabic": "زكريا",
+      "categories": ["Prophets"],
+      "difficulty": "intermediate",
+      "hints": ["Father of Yahya", "Guardian of Maryam", "Prayer answered in old age"]
+    },
+    {
+      "id": "yahya-87",
+      "term": "Yahya",
+      "translation": "John",
+      "arabic": "يحيى",
+      "categories": ["Prophets"],
+      "difficulty": "intermediate",
+      "hints": ["Son of Zakariya", "Contemporary of Isa", "Name means alive"]
+    },
+    {
+      "id": "ayub-88",
+      "term": "Ayub",
+      "translation": "Job",
+      "arabic": "أيوب",
+      "categories": ["Prophets"],
+      "difficulty": "intermediate",
+      "hints": ["Known for patience", "Tested with illness", "Never lost faith"]
+    },
+    {
+      "id": "yunus-89",
+      "term": "Yunus",
+      "translation": "Jonah",
+      "arabic": "يونس",
+      "categories": ["Prophets"],
+      "difficulty": "intermediate",
+      "hints": ["Swallowed by whale", "People of Nineveh", "Made special dua"]
+    },
+    {
+      "id": "lut-90",
+      "term": "Lut",
+      "translation": "Lot",
+      "arabic": "لوط",
+      "categories": ["Prophets"],
+      "difficulty": "intermediate",
+      "hints": ["Nephew of Ibrahim", "Warned his people", "City destroyed"]
+    },
+    {
+      "id": "ismail-91",
+      "term": "Ismail",
+      "translation": "Ishmael",
+      "arabic": "إسماعيل",
+      "categories": ["Prophets"],
+      "difficulty": "beginner",
+      "hints": ["Son of Ibrahim", "Helped build Kaaba", "Sacrifice story"]
+    },
+    {
+      "id": "haram-92",
+      "term": "Haram",
+      "translation": "Forbidden",
+      "arabic": "حرام",
+      "categories": ["General"],
+      "difficulty": "beginner",
+      "hints": ["Prohibited in Islam", "Opposite of halal", "Sinful actions"]
+    },
+    {
+      "id": "makruh-93",
+      "term": "Makruh",
+      "translation": "Disliked",
+      "arabic": "مكروه",
+      "categories": ["General"],
+      "difficulty": "advanced",
+      "hints": ["Better to avoid", "Not sinful", "Between halal and haram"]
+    },
+    {
+      "id": "mustahabb-94",
+      "term": "Mustahabb",
+      "translation": "Recommended",
+      "arabic": "مستحب",
+      "categories": ["General"],
+      "difficulty": "advanced",
+      "hints": ["Praiseworthy action", "Rewarded if done", "Not obligatory"]
+    },
+    {
+      "id": "khutbah-95",
+      "term": "Khutbah",
+      "translation": "Sermon",
+      "arabic": "خطبة",
+      "categories": ["General"],
+      "difficulty": "intermediate",
+      "hints": ["Friday speech", "Before Jumu'ah prayer", "Reminds and teaches"]
+    },
+    {
+      "id": "jumuah-96",
+      "term": "Jumuah",
+      "translation": "Friday",
+      "arabic": "الجمعة",
+      "categories": ["General"],
+      "difficulty": "beginner",
+      "hints": ["Best day of week", "Congregational prayer", "Special blessings"]
+    },
+    {
+      "id": "qibla-97",
+      "term": "Qibla",
+      "translation": "Direction",
+      "arabic": "القبلة",
+      "categories": ["General"],
+      "difficulty": "beginner",
+      "hints": ["Direction of prayer", "Towards Kaaba", "Faces Makkah"]
+    },
+    {
+      "id": "miswak-98",
+      "term": "Miswak",
+      "translation": "Tooth stick",
+      "arabic": "المسواك",
+      "categories": ["General", "Daily Practices"],
+      "difficulty": "intermediate",
+      "hints": ["Sunnah of Prophet", "Natural toothbrush", "Before prayer"]
+    },
+    {
+      "id": "baraka-99",
+      "term": "Barakah",
+      "translation": "Blessing",
+      "arabic": "بركة",
+      "categories": ["General"],
+      "difficulty": "beginner",
+      "hints": ["Divine blessing", "Increase in goodness", "Seeking Allah's favor"]
+    },
+    {
+      "id": "dhikr-100",
+      "term": "Dhikr",
+      "translation": "Remembrance",
+      "arabic": "ذكر",
+      "categories": ["General", "Daily Practices"],
+      "difficulty": "beginner",
+      "hints": ["Remembering Allah", "Saying tasbih", "Morning and evening"]
+    },
+    {
+      "id": "istighfar-101",
+      "term": "Istighfar",
+      "translation": "Seeking forgiveness",
+      "arabic": "الاستغفار",
+      "categories": ["General", "Daily Practices"],
+      "difficulty": "intermediate",
+      "hints": ["Astaghfirullah", "Asking Allah's pardon", "Repentance"]
+    },
+    {
+      "id": "tawbah-102",
+      "term": "Tawbah",
+      "translation": "Repentance",
+      "arabic": "التوبة",
+      "categories": ["General", "Manners"],
+      "difficulty": "intermediate",
+      "hints": ["Returning to Allah", "Sincere regret", "Stopping sin"]
+    },
+    {
+      "id": "qiyam-layl-103",
+      "term": "Qiyam al-Layl",
+      "translation": "Night prayer",
+      "arabic": "قيام الليل",
+      "categories": ["Daily Practices"],
+      "difficulty": "intermediate",
+      "hints": ["Voluntary night prayer", "Last third of night", "Special time for dua"]
+    },
+    {
+      "id": "tahajjud-104",
+      "term": "Tahajjud",
+      "translation": "Night vigil prayer",
+      "arabic": "التهجد",
+      "categories": ["Daily Practices"],
+      "difficulty": "intermediate",
+      "hints": ["After sleeping", "Before Fajr", "Prophet never missed"]
+    },
+    {
+      "id": "fitrah-105",
+      "term": "Fitrah",
+      "translation": "Natural disposition",
+      "arabic": "الفطرة",
+      "categories": ["Beliefs"],
+      "difficulty": "advanced",
+      "hints": ["Born with faith", "Natural state", "Innate goodness"]
+    },
+    {
+      "id": "barzakh-106",
+      "term": "Barzakh",
+      "translation": "Barrier",
+      "arabic": "البرزخ",
+      "categories": ["Beliefs"],
+      "difficulty": "advanced",
+      "hints": ["Life in grave", "Between death and judgment", "Waiting period"]
     }
   ]
 }

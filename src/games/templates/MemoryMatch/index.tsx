@@ -102,19 +102,40 @@ export const MemoryMatch = ({ words }: Props) => {
     }
   }, [isGameComplete]);
 
-  return (
-    <div className="memoryMatch">
-      <h2 className="title">Memory Match</h2>
-      <p className="instructions">
-        Match all the cards to complete the game. Select a difficulty to start.
-      </p>
+  // Get grid columns based on difficulty
+  const getGridCols = () => {
+    switch (difficulty) {
+      case "easy":
+        return "grid-cols-3 sm:grid-cols-4";
+      case "medium":
+        return "grid-cols-4 sm:grid-cols-5 md:grid-cols-6";
+      case "hard":
+        return "grid-cols-4 sm:grid-cols-6 md:grid-cols-8";
+      default:
+        return "grid-cols-4";
+    }
+  };
 
+  return (
+    <div className="max-w-7xl mx-auto space-y-6">
+      {/* Title */}
+      <div className="text-center">
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-500 to-violet-500 bg-clip-text text-transparent mb-3">
+          Memory Match
+        </h2>
+        <p className="text-lg md:text-xl text-slate-600">
+          Match all the cards to complete the game. Select a difficulty to start.
+        </p>
+      </div>
+
+      {/* Error Message */}
       {error && (
-        <div className="errorBox">
-          <p>{error}</p>
+        <div className="bg-amber-50 border-2 border-amber-500 rounded-2xl p-6 text-center">
+          <p className="text-amber-600 font-medium text-lg">{error}</p>
         </div>
       )}
 
+      {/* Controls */}
       <PuzzleControls
         currentDifficulty={difficulty}
         onDifficultyChange={(difficulty: string) => {
@@ -133,21 +154,23 @@ export const MemoryMatch = ({ words }: Props) => {
         hintButton={
           <button
             onClick={() => setShowHint(!showHint)}
-            className="hint-toggle-button"
+            className="px-5 py-2.5 rounded-xl font-medium bg-white text-emerald-600 border-2 border-emerald-500 hover:bg-emerald-50 transition-all duration-200 hover:shadow-lg"
           >
             {showHint ? "Hide Hint" : "Show Hint"}
           </button>
         }
       />
 
+      {/* Hint Box */}
       {showHint && (
-        <div className="hintBox">
-          <h3>Hint:</h3>
-          <p>Try to remember the positions of the cards!</p>
+        <div className="bg-violet-50 border-2 border-violet-500 rounded-2xl p-6">
+          <h3 className="text-xl font-bold text-violet-700 mb-2">Hint:</h3>
+          <p className="text-violet-600">Try to remember the positions of the cards!</p>
         </div>
       )}
 
-      <div className={`grid ${difficulty} cards-${cards.length}`}>
+      {/* Cards Grid */}
+      <div className={`grid ${getGridCols()} gap-3 md:gap-4 justify-items-center`}>
         {cards.map((card) => (
           <MemoryCardComponent
             key={card.id}
@@ -162,16 +185,16 @@ export const MemoryMatch = ({ words }: Props) => {
         ))}
       </div>
 
-      <div className="status">
-        <p>Moves: {moves}</p>
-        <p>
-          Matches: {matchedCards} / {totalPairs}
-        </p>
+      {/* Status */}
+      <div className="flex justify-center gap-8 text-lg font-medium text-slate-700">
+        <p>Moves: <span className="text-emerald-600 font-bold">{moves}</span></p>
+        <p>Matches: <span className="text-violet-600 font-bold">{matchedCards / 2} / {totalPairs}</span></p>
       </div>
+
       {/* Completion Overlay */}
       <CompletionOverlay
         isVisible={isOverlayVisible}
-        setIsVisible={setIsOverlayVisible} // Pass setIsVisible to allow closing
+        setIsVisible={setIsOverlayVisible}
         title="Mashallah! Great Memory!"
         message={`You found all ${totalPairs} matches in ${moves} moves!`}
         onPlayAgain={resetGame}

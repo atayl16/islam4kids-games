@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { QuizGame } from "../templates/QuizGame";
 import { quizGamePuzzles } from "../registry";
 import { QuizQuestion } from "../templates/QuizGame/types";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const QuizGameContainer = () => {
   const { quizSlug } = useParams<{ quizSlug: string }>();
@@ -12,6 +13,11 @@ export const QuizGameContainer = () => {
 
   useEffect(() => {
     let isMounted = true;
+
+    // Reset loading/error and clear stale questions when quizSlug changes
+    setLoading(true);
+    setError(null);
+    setQuestions([]);
 
     const loadQuiz = async () => {
       try {
@@ -37,6 +43,7 @@ export const QuizGameContainer = () => {
         }
       } catch (err) {
         if (isMounted) {
+          setQuestions([]);
           setError(err instanceof Error ? err.message : "Failed to load quiz");
           console.error("Quiz loading error:", err);
         }
@@ -54,8 +61,8 @@ export const QuizGameContainer = () => {
     };
   }, [quizSlug]);
 
-  if (loading) return <div className="loading">Loading quiz...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) return <LoadingSpinner message="Loading Quiz..." />;
+  if (error) return <div className="error-message">{error}</div>;
 
   return <QuizGame questions={questions} />;
 };
