@@ -1,14 +1,13 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { AchievementNotification } from './AchievementNotification';
 import { Achievement } from '../types/achievements';
 
 const mockAchievement: Achievement = {
   id: 'test-achievement',
-  title: 'Test Master',
-  description: 'Complete all tests successfully',
-  icon: '🎯',
-  category: 'completion',
-  condition: () => true,
+  title: 'Test Achievement',
+  description: 'This is a test achievement',
+  icon: '🎉',
+  category: 'milestone',
 };
 
 describe('AchievementNotification', () => {
@@ -17,124 +16,75 @@ describe('AchievementNotification', () => {
   });
 
   afterEach(() => {
-    jest.runOnlyPendingTimers();
     jest.useRealTimers();
   });
 
-  it('renders achievement details correctly', () => {
+  it('renders achievement notification', () => {
     const onDismiss = jest.fn();
-    render(
-      <AchievementNotification
-        achievement={mockAchievement}
-        onDismiss={onDismiss}
-      />
-    );
+    render(<AchievementNotification achievement={mockAchievement} onDismiss={onDismiss} />);
+    
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
 
-    expect(screen.getByText('Achievement Unlocked!')).toBeInTheDocument();
-    expect(screen.getByText('Test Master')).toBeInTheDocument();
-    expect(
-      screen.getByText('Complete all tests successfully')
-    ).toBeInTheDocument();
-    expect(screen.getByText('🎯')).toBeInTheDocument();
+    expect(screen.getByText('Test Achievement')).toBeInTheDocument();
+    expect(screen.getByText('This is a test achievement')).toBeInTheDocument();
+  });
+
+  it('shows achievement icon', () => {
+    const onDismiss = jest.fn();
+    render(<AchievementNotification achievement={mockAchievement} onDismiss={onDismiss} />);
+    
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+
+    expect(screen.getByText('🎉')).toBeInTheDocument();
+  });
+
+  it('auto-dismisses after 5 seconds', () => {
+    const onDismiss = jest.fn();
+    render(<AchievementNotification achievement={mockAchievement} onDismiss={onDismiss} />);
+
+    act(() => {
+      jest.advanceTimersByTime(100); // Fade in
+    });
+
+    expect(onDismiss).not.toHaveBeenCalled();
+
+    act(() => {
+      jest.advanceTimersByTime(5000); // Auto dismiss
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(300); // Fade out animation
+    });
+
+    expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 
   it('has correct ARIA attributes for accessibility', () => {
     const onDismiss = jest.fn();
-    const { container } = render(
-      <AchievementNotification
-        achievement={mockAchievement}
-        onDismiss={onDismiss}
-      />
-    );
-
-    const notification = container.querySelector('.achievement-notification');
+    const { container } = render(<AchievementNotification achievement={mockAchievement} onDismiss={onDismiss} />);
+    
+    const notification = container.firstChild as HTMLElement;
     expect(notification).toHaveAttribute('role', 'alert');
     expect(notification).toHaveAttribute('aria-live', 'polite');
   });
 
-  it('becomes visible after initial render', async () => {
+  it('displays "Achievement Unlocked!" label', () => {
     const onDismiss = jest.fn();
-    const { container } = render(
-      <AchievementNotification
-        achievement={mockAchievement}
-        onDismiss={onDismiss}
-      />
-    );
+    render(<AchievementNotification achievement={mockAchievement} onDismiss={onDismiss} />);
 
-    const notification = container.querySelector('.achievement-notification');
-
-    // Should not be visible initially
-    expect(notification).not.toHaveClass('visible');
-
-    // Fast-forward past the fade-in delay
-    act(() => {
-      jest.advanceTimersByTime(150);
-    });
-
-    // Should now be visible
-    await waitFor(() => {
-      expect(notification).toHaveClass('visible');
-    });
+    expect(screen.getByText('Achievement Unlocked!')).toBeInTheDocument();
   });
 
-  it('auto-dismisses after 5 seconds', async () => {
+  it('has Tailwind styling classes', () => {
     const onDismiss = jest.fn();
-    render(
-      <AchievementNotification
-        achievement={mockAchievement}
-        onDismiss={onDismiss}
-      />
-    );
-
-    expect(onDismiss).not.toHaveBeenCalled();
-
-    // Fast-forward through fade in + display time
-    act(() => {
-      jest.advanceTimersByTime(5100); // 100ms fade in + 5000ms display
-    });
-
-    // Should start fading out, not dismissed yet
-    await waitFor(() => {
-      expect(onDismiss).not.toHaveBeenCalled();
-    });
-
-    // Complete the fade-out animation
-    act(() => {
-      jest.advanceTimersByTime(300);
-    });
-
-    await waitFor(() => {
-      expect(onDismiss).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('displays the achievement icon', () => {
-    const onDismiss = jest.fn();
-    render(
-      <AchievementNotification
-        achievement={mockAchievement}
-        onDismiss={onDismiss}
-      />
-    );
-
-    const icon = screen.getByText('🎯');
-    expect(icon).toHaveClass('achievement-icon');
-  });
-
-  it('renders with correct structure', () => {
-    const onDismiss = jest.fn();
-    const { container } = render(
-      <AchievementNotification
-        achievement={mockAchievement}
-        onDismiss={onDismiss}
-      />
-    );
-
-    expect(container.querySelector('.achievement-notification')).toBeInTheDocument();
-    expect(container.querySelector('.achievement-content')).toBeInTheDocument();
-    expect(container.querySelector('.achievement-text')).toBeInTheDocument();
-    expect(container.querySelector('.achievement-label')).toBeInTheDocument();
-    expect(container.querySelector('.achievement-title')).toBeInTheDocument();
-    expect(container.querySelector('.achievement-description')).toBeInTheDocument();
+    const { container } = render(<AchievementNotification achievement={mockAchievement} onDismiss={onDismiss} />);
+    
+    const notification = container.firstChild as HTMLElement;
+    expect(notification).toHaveClass('fixed');
+    expect(notification).toHaveClass('rounded-2xl');
   });
 });

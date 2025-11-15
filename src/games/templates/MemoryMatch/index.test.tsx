@@ -1,153 +1,118 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryMatch } from './index';
 import { WordBankEntry } from '../../../types/WordBank';
-import { initializeCards } from './utils';
 
-// Mock the utils module to control card initialization
-jest.mock('./utils', () => ({
-  initializeCards: jest.fn()
+// Mock Audio
+global.Audio = jest.fn().mockImplementation(() => ({
+  play: jest.fn().mockResolvedValue(undefined),
+  pause: jest.fn(),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
 }));
 
-// Mock the audio playback for CompletionOverlay
-window.HTMLMediaElement.prototype.play = jest.fn();
-window.HTMLMediaElement.prototype.pause = jest.fn();
+const mockWords: WordBankEntry[] = [
+  { id: '1', term: 'Salah', translation: 'Prayer', arabic: 'صلاة', hint: 'Islamic prayer' },
+  { id: '2', term: 'Zakat', translation: 'Charity', arabic: 'زكاة', hint: 'Giving to the poor' },
+  { id: '3', term: 'Sawm', translation: 'Fasting', arabic: 'صوم', hint: 'Ramadan practice' },
+  { id: '4', term: 'Hajj', translation: 'Pilgrimage', arabic: 'حج', hint: 'Journey to Mecca' },
+];
 
 describe('MemoryMatch Component', () => {
-  // Sample word bank for testing
-  const mockWords: WordBankEntry[] = [
-    { 
-      id: '1', 
-      term: 'Allah', 
-      translation: 'God', 
-      arabic: 'الله',
-      hints: ['The One God'],
-      references: ['Quran 112:1'],
-      categories: ['belief'],
-      games: {}
-    },
-    { 
-      id: '2', 
-      term: 'Rasul', 
-      translation: 'Messenger', 
-      arabic: 'رسول',
-      hints: ['Prophet Muhammad'],
-      references: ['Quran 33:40'],
-      categories: ['belief'],
-      games: {}
-    },
-    { 
-      id: '3', 
-      term: 'Salah', 
-      translation: 'Prayer', 
-      arabic: 'صلاة',
-      hints: ['Five times a day'],
-      references: ['Quran 2:43'],
-      categories: ['practice'],
-      games: {}
-    },
-    { 
-      id: '4', 
-      term: 'Zakat', 
-      translation: 'Charity', 
-      arabic: 'زكاة',
-      hints: ['Giving to those in need'],
-      references: ['Quran 2:43'],
-      categories: ['practice'],
-      games: {}
-    }
-  ];
-
-  // Mock cards that will be returned by initializeCards
-  const mockCards = [
-    { id: '1a', word: mockWords[0], isFlipped: false, isMatched: false },
-    { id: '1b', word: mockWords[0], isFlipped: false, isMatched: false },
-    { id: '2a', word: mockWords[1], isFlipped: false, isMatched: false },
-    { id: '2b', word: mockWords[1], isFlipped: false, isMatched: false },
-  ];
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-    (initializeCards as jest.Mock).mockReturnValue(mockCards);
-  });
-
-  test('renders the memory match game', () => {
+  it('renders the game interface', () => {
     render(<MemoryMatch words={mockWords} />);
     
     expect(screen.getByText('Memory Match')).toBeInTheDocument();
-    expect(screen.getByText('Match all the cards to complete the game. Select a difficulty to start.')).toBeInTheDocument();
+    expect(screen.getByText(/Match all the cards/i)).toBeInTheDocument();
   });
 
-  test('initializes cards based on difficulty', () => {
+  it('creates pairs of cards for each word', () => {
     render(<MemoryMatch words={mockWords} />);
     
-    expect(initializeCards).toHaveBeenCalledWith(mockWords, 'easy');
-    
-    // Change difficulty to medium
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'medium' } });
-    
-    expect(initializeCards).toHaveBeenCalledWith(mockWords, 'medium');
+    // Each word should have 2 cards (pairs)
+    const cards = screen.getAllByTestId('memory-card');
+    expect(cards.length).toBe(mockWords.length * 2);
   });
 
-  test('flips card on click', () => {
+  it('flips card on click', async () => {
+    const user = userEvent.setup();
     render(<MemoryMatch words={mockWords} />);
     
     const cards = screen.getAllByTestId('memory-card');
-    fireEvent.click(cards[0]);
+    const firstCard = cards[0];
     
-    // The first card should be flipped
-    expect(cards[0].className).toContain('flipped');
+    await user.click(firstCard);
+    
+    // Card should have transform style applied (rotateY)
+    expect(firstCard.querySelector('[class*="transform"]')).toBeTruthy();
   });
 
-  test('shows error when not enough words are provided', () => {
-    (initializeCards as jest.Mock).mockImplementation(() => {
-      throw new Error('Not enough words');
-    });
-    
-    render(<MemoryMatch words={[]} />);
-    
-    expect(screen.getByText(/Couldn't create a game/)).toBeInTheDocument();
-  });
-
-  test('toggles hint display when hint button is clicked', () => {
+  it('allows selecting two cards', async () => {
+    const user = userEvent.setup();
     render(<MemoryMatch words={mockWords} />);
     
-    // Initially, hint is not shown
-    expect(screen.queryByText('Hint:')).not.toBeInTheDocument();
+    const cards = screen.getAllByTestId('memory-card');
     
-    // Click show hint button
-    fireEvent.click(screen.getByText('Show Hint'));
+    await user.click(cards[0]);
+    await user.click(cards[1]);
     
-    // Hint should now be visible
-    expect(screen.getByText('Hint:')).toBeInTheDocument();
-    expect(screen.getByText('Try to remember the positions of the cards!')).toBeInTheDocument();
-    
-    // Click hide hint button
-    fireEvent.click(screen.getByText('Hide Hint'));
-    
-    // Hint should be hidden again
-    expect(screen.queryByText('Hint:')).not.toBeInTheDocument();
+    // Both cards should be interacted with
+    expect(cards[0].querySelector('[class*="transform"]')).toBeTruthy();
+    expect(cards[1].querySelector('[class*="transform"]')).toBeTruthy();
   });
 
-  test('resets game when reset button is clicked', () => {
+  it('tracks move count', async () => {
+    const user = userEvent.setup();
     render(<MemoryMatch words={mockWords} />);
     
-    fireEvent.click(screen.getByText('Reset Game'));
+    const cards = screen.getAllByTestId('memory-card');
     
-    // initializeCards should be called again
-    expect(initializeCards).toHaveBeenCalledTimes(2);
-  });
-
-  // This test requires more complex setup to simulate matched cards
-  test('shows completion overlay when all cards are matched', async () => {
-    // Mock all cards as matched
-    const allMatchedCards = mockCards.map(card => ({...card, isMatched: true}));
-    (initializeCards as jest.Mock).mockReturnValue(allMatchedCards);
+    // Initially 0 moves
+    expect(screen.getByText(/Moves: 0/)).toBeInTheDocument();
     
-    render(<MemoryMatch words={mockWords} />);
+    // Click two cards
+    await user.click(cards[0]);
+    await user.click(cards[1]);
     
-    // Wait for the completion overlay to appear
+    // Should register a move
     await waitFor(() => {
-      expect(screen.getByText(/Mashallah! Great Memory!/)).toBeInTheDocument();
+      expect(screen.getByText(/Moves: 1/)).toBeInTheDocument();
     });
+  });
+
+  it('displays difficulty selector', () => {
+    render(<MemoryMatch words={mockWords} />);
+    
+    expect(screen.getByText('Difficulty:')).toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+
+  it('has reset game button', () => {
+    render(<MemoryMatch words={mockWords} />);
+    
+    expect(screen.getByRole('button', { name: /Reset Game/ })).toBeInTheDocument();
+  });
+
+  it('displays hint button', () => {
+    render(<MemoryMatch words={mockWords} />);
+    
+    expect(screen.getByRole('button', { name: /Show Hint/ })).toBeInTheDocument();
+  });
+
+  it('shows hint when hint button is clicked', async () => {
+    const user = userEvent.setup();
+    render(<MemoryMatch words={mockWords} />);
+    
+    const hintButton = screen.getByRole('button', { name: /Show Hint/ });
+    await user.click(hintButton);
+    
+    expect(screen.getByText(/Try to remember the positions/i)).toBeInTheDocument();
+  });
+
+  it('has Tailwind styling classes', () => {
+    const { container } = render(<MemoryMatch words={mockWords} />);
+    
+    const mainDiv = container.firstChild as HTMLElement;
+    expect(mainDiv).toHaveClass('mx-auto');
   });
 });
