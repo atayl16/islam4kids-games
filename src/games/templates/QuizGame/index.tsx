@@ -210,21 +210,29 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
 
   if (!currentQuestion) {
     return (
-      <div className="error">No questions available. Please try again.</div>
+      <div className="bg-amber-50 border-2 border-amber-500 rounded-2xl p-8 text-center">
+        <p className="text-amber-600 font-medium text-lg">No questions available. Please try again.</p>
+      </div>
     );
   }
 
   return (
-    <div className="quiz-game">
-      <h2 className="title">Quiz Game</h2>
-      <p className="instructions">
-        {difficulty === "easy"
-          ? "Choose the translation for each term."
-          : difficulty === "medium"
-          ? "Choose the term for each translation."
-          : "Mixed challenge! Both terms and translations will be tested."}
-      </p>
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Title */}
+      <div className="text-center">
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-500 to-violet-500 bg-clip-text text-transparent mb-3">
+          Quiz Game
+        </h2>
+        <p className="text-lg md:text-xl text-slate-600">
+          {difficulty === "easy"
+            ? "Choose the translation for each term."
+            : difficulty === "medium"
+            ? "Choose the term for each translation."
+            : "Mixed challenge! Both terms and translations will be tested."}
+        </p>
+      </div>
 
+      {/* Controls */}
       <PuzzleControls
         currentDifficulty={difficulty}
         onDifficultyChange={handleDifficultyChange}
@@ -240,59 +248,78 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
         progressLabel={(solved, total) => `Question ${solved + 1} of ${total}`}
       />
 
-      <div className="question-container">
-        <h3 className="question">{currentQuestion.question}</h3>
-        <div className="answers">
-          {currentQuestion.options.map((option) => (
-            <button
-              key={option}
-              className={`answer ${
-                showFeedback
-                  ? option === currentQuestion.correctAnswer
-                    ? "correct"
-                    : selectedAnswer === option &&
-                      option !== currentQuestion.correctAnswer
-                    ? "incorrect"
-                    : ""
-                  : selectedAnswer === option
-                  ? "selected"
-                  : ""
-              }`}
-              onClick={() => !showFeedback && handleAnswer(option)}
-              disabled={showFeedback}
-            >
-              {option}
-            </button>
-          ))}
+      {/* Question Container */}
+      <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-emerald-100 space-y-6">
+        {/* Question */}
+        <h3 className="text-2xl md:text-3xl font-bold text-slate-700 text-center mb-6">
+          {currentQuestion.question}
+        </h3>
+
+        {/* Answer Options */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {currentQuestion.options.map((option) => {
+            const isAnswerCorrect = option === currentQuestion.correctAnswer;
+            const isSelected = selectedAnswer === option;
+            const isIncorrect = showFeedback && isSelected && !isAnswerCorrect;
+
+            return (
+              <button
+                key={option}
+                className={`
+                  px-6 py-4 rounded-xl font-medium text-lg
+                  transition-all duration-200
+                  border-2
+                  ${
+                    showFeedback && isAnswerCorrect
+                      ? "bg-gradient-to-br from-emerald-500 to-emerald-400 text-white border-emerald-600 shadow-lg scale-105"
+                      : isIncorrect
+                      ? "bg-gradient-to-br from-amber-500 to-amber-400 text-white border-amber-600 shadow-lg"
+                      : isSelected
+                      ? "bg-violet-100 text-violet-700 border-violet-400 scale-105"
+                      : "bg-white text-slate-700 border-slate-300 hover:border-emerald-400 hover:shadow-md hover:-translate-y-0.5"
+                  }
+                  disabled:cursor-not-allowed
+                `}
+                onClick={() => !showFeedback && handleAnswer(option)}
+                disabled={showFeedback}
+              >
+                {option}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Feedback section with visual cues */}
-        <div className="feedback-container">
-          {showFeedback && isCorrect && (
-            <div
-              className="solution-correct-overlay"
-              aria-label="Correct answer"
-            >
-              <div className="checkmark">✓</div>
-              <p className="feedback-text">Correct!</p>
-            </div>
-          )}
-
-          {showFeedback && !isCorrect && (
-            <div className="feedback-box">
-              <h3>That's not quite right.</h3>
-              <p>
-                The correct answer is:{" "}
-                <strong>{currentQuestion.correctAnswer}</strong>
-              </p>
-              {currentQuestion.hint && (
-                <p className="hint">{currentQuestion.hint}</p>
-              )}
-            </div>
-          )}
-        </div>
+        {/* Feedback Section */}
+        {showFeedback && (
+          <div className="mt-6 animate-bounce-in">
+            {isCorrect ? (
+              <div className="bg-emerald-50 border-2 border-emerald-500 rounded-2xl p-6 text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-400 flex items-center justify-center shadow-lg">
+                    <span className="text-white text-2xl font-bold">✓</span>
+                  </div>
+                  <p className="text-2xl font-bold text-emerald-600">Correct!</p>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-violet-50 border-2 border-violet-500 rounded-2xl p-6">
+                <h3 className="text-xl font-bold text-violet-700 mb-3 text-center">That's not quite right.</h3>
+                <p className="text-violet-600 text-center mb-2">
+                  The correct answer is:{" "}
+                  <strong className="text-violet-700 text-lg">{currentQuestion.correctAnswer}</strong>
+                </p>
+                {currentQuestion.hint && (
+                  <p className="text-sm text-violet-500 italic text-center mt-3 pt-3 border-t border-violet-300">
+                    💡 {currentQuestion.hint}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
+      {/* Completion Overlay */}
       <CompletionOverlay
         isVisible={isOverlayVisible}
         setIsVisible={setIsOverlayVisible}

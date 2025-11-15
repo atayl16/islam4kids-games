@@ -9,7 +9,6 @@ import {
   Z_INDEX,
 } from "./constants";
 import { JigsawConfig } from "./types";
-import "../../../styles/jigsaw.css";
 
 // Import components
 import { PuzzleBoard } from "./components/PuzzleBoard";
@@ -186,58 +185,49 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
     (window.innerHeight || 600) * 0.9 // 90% of viewport height
   );
   
-  // Custom piece drop handler - convert coordinates from puzzle-container to board-relative
+  // Custom piece drop handler
   const handlePieceDrop = (id: number, x: number, y: number) => {
-    // Get the actual position of the board within the puzzle-container
-    // The board is offset by the PuzzleControls height + any margins
-    const containerRect = wrapperRef.current?.getBoundingClientRect();
-    const boardRect = containerRef.current?.getBoundingClientRect();
+    // Calculate target positions within the grid using piece dimensions
+    const col = id % currentConfig.columns;
+    const row = Math.floor(id / currentConfig.columns);
 
-    if (!containerRect || !boardRect) {
-      console.log('Cannot get container or board rect');
+    // Target position calculation
+    const targetX = col * pieceWidth;
+    const targetY = row * pieceHeight;
+
+    // Calculate the distance between drop position and target position
+    const diffX = Math.abs(x - targetX);
+    const diffY = Math.abs(y - targetY);
+    
+    // Use VERY generous thresholds for snapping
+    const snapThresholdX = pieceWidth * 2.5; // 250% of piece width
+    const snapThresholdY = pieceHeight * 2.5; // 250% of piece height
+    
+    // Determine if the piece should snap
+    const shouldSnap = diffX <= snapThresholdX && diffY <= snapThresholdY;
+    
+    if (shouldSnap) {
+      // If it should snap, use the exact target position
+      return handlePieceMove(id, targetX, targetY);
+    } else {
+      // Otherwise use the actual drop position
       return handlePieceMove(id, x, y);
     }
-
-    // Calculate the board's offset within the container
-    const boardOffsetX = boardRect.left - containerRect.left;
-    const boardOffsetY = boardRect.top - containerRect.top;
-
-    // DEBUG: Log coordinate conversion
-    console.log(`handlePieceDrop: piece ${id} at container coords (${x.toFixed(1)}, ${y.toFixed(1)})`);
-    console.log(`Board offset within container: (${boardOffsetX.toFixed(1)}, ${boardOffsetY.toFixed(1)})`);
-
-    // Convert from puzzle-container coordinates to board-relative coordinates
-    const boardRelativeX = x - boardOffsetX;
-    const boardRelativeY = y - boardOffsetY;
-
-    console.log(`handlePieceDrop: converted to board-relative (${boardRelativeX.toFixed(1)}, ${boardRelativeY.toFixed(1)})`);
-
-    return handlePieceMove(id, boardRelativeX, boardRelativeY);
   };
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <div className="puzzle-wrapper" ref={wrapperRef}>
+      <div className="w-full max-w-7xl mx-auto space-y-6" ref={wrapperRef}>
         {imageError ? (
-          <div
-            style={{
-              padding: "2rem",
-              textAlign: "center",
-              backgroundColor: "#fff5f5",
-              border: "2px solid #fc8181",
-              borderRadius: "8px",
-              margin: "2rem",
-            }}
-          >
-            <h3 style={{ color: "#c53030" }}>Image Loading Error</h3>
-            <p style={{ color: "#742a2a" }}>{imageError}</p>
+          <div className="bg-amber-50 border-2 border-amber-500 rounded-2xl p-8 text-center m-8">
+            <h3 className="text-2xl font-bold text-amber-600 mb-3">Image Loading Error</h3>
+            <p className="text-amber-700">{imageError}</p>
           </div>
         ) : (
           <div
-            className="puzzle-container"
+            className="relative"
             style={{
               maxWidth: fullContainerWidth,
-              position: "relative",
             }}
           >
             {/* Controls section */}
@@ -256,12 +246,9 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           />
 
           <div
-            className="game-area"
+            className="flex relative items-start"
             style={{
               height: maxVisibleHeight,
-              display: "flex",
-              position: "relative",
-              alignItems: "flex-start", // Ensure top alignment
             }}
           >
             {/* Puzzle Board */}
@@ -285,14 +272,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
           {/* Unsolved pieces floating layer */}
           <div
-            className="unsolved-pieces-container"
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
               zIndex: Z_INDEX.UNSOLVED_PIECES,
             }}
           >

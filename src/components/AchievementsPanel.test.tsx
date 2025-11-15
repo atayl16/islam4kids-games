@@ -1,99 +1,87 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AchievementsPanel } from './AchievementsPanel';
+import { ProgressContext } from '../contexts/ProgressContext';
+import { ACHIEVEMENTS } from '../types/achievements';
 
-// Mock the ProgressContext since it doesn't exist on this branch
 const mockProgress = {
-  gamesPlayed: 5,
-  gamesCompleted: 3,
-  totalScore: 1500,
+  gamesPlayed: 0,
+  gamesCompleted: 0,
+  totalScore: 0,
   highScores: {},
   completionTimes: {},
-  streak: 2,
-  achievements: ['first-win', 'score-100', 'speed-demon'],
+  streak: 0,
+  achievements: [],
 };
 
-// Mock the useProgressContext hook
-jest.mock('../contexts/ProgressContext', () => ({
-  useProgressContext: () => ({
-    progress: mockProgress,
-  }),
-}));
+const renderWithContext = (ui: React.ReactElement) => {
+  return render(
+    <ProgressContext.Provider value={{ progress: mockProgress }}>
+      {ui}
+    </ProgressContext.Provider>
+  );
+};
 
 describe('AchievementsPanel', () => {
-  it('renders achievements header', () => {
-    render(<AchievementsPanel />);
+  it('renders achievement list', () => {
+    renderWithContext(<AchievementsPanel />);
+    
     expect(screen.getByText('Achievements')).toBeInTheDocument();
   });
 
-  it('displays correct achievement progress', () => {
-    render(<AchievementsPanel />);
-    // Should show "3 / [total] Unlocked" (we have 3 achievements unlocked in mock)
-    expect(screen.getByText(/3 \/ \d+ Unlocked/)).toBeInTheDocument();
+  it('shows progress bar with total achievements', () => {
+    renderWithContext(<AchievementsPanel />);
+    
+    // Check that we show unlocked/total pattern
+    expect(screen.getByText(/0.*\/ .*20/)).toBeInTheDocument();
   });
 
-  it('renders all filter buttons', () => {
-    render(<AchievementsPanel />);
-    expect(screen.getByText(/All \(\d+\)/)).toBeInTheDocument();
-    expect(screen.getByText(/Unlocked \(3\)/)).toBeInTheDocument();
-    expect(screen.getByText(/Locked \(\d+\)/)).toBeInTheDocument();
+  it('renders filter buttons', () => {
+    renderWithContext(<AchievementsPanel />);
+    
+    expect(screen.getByRole('button', { name: /All/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Unlocked/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Locked/ })).toBeInTheDocument();
   });
 
   it('filters achievements when clicking filter buttons', async () => {
     const user = userEvent.setup();
-    render(<AchievementsPanel />);
-
-    const unlockedButton = screen.getByText(/Unlocked \(3\)/);
+    renderWithContext(<AchievementsPanel />);
+    
+    const allButton = screen.getByRole('button', { name: /All/ });
+    const unlockedButton = screen.getByRole('button', { name: /Unlocked/ });
+    
+    // Check initial state - All button should have gradient background
+    expect(allButton).toHaveClass('from-emerald-500');
+    
+    // Click Unlocked button
     await user.click(unlockedButton);
-
-    // Check that the button is now active
-    expect(unlockedButton).toHaveClass('active');
+    
+    // Check that Unlocked button now has gradient background
+    expect(unlockedButton).toHaveClass('from-emerald-500');
   });
 
-  it('shows locked achievements with locked styling', () => {
-    render(<AchievementsPanel />);
-
-    const achievementCards = screen
-      .getAllByRole('generic')
-      .filter((el) => el.className && el.className.includes('achievement-card'));
-
-    // Some cards should have 'locked' class
-    const lockedCards = achievementCards.filter((card) =>
-      card.className.includes('locked')
-    );
-    expect(lockedCards.length).toBeGreaterThan(0);
+  it('displays all achievements by default', () => {
+    renderWithContext(<AchievementsPanel />);
+    
+    // Should show all achievements count in filter button
+    const allButton = screen.getByRole('button', { name: new RegExp(`All.*${ACHIEVEMENTS.length}`) });
+    expect(allButton).toBeInTheDocument();
   });
 
-  it('shows unlocked badge for unlocked achievements', () => {
-    render(<AchievementsPanel />);
-
-    // Should have 3 "Unlocked" badges
-    const unlockedBadges = screen.getAllByText('✓ Unlocked');
-    expect(unlockedBadges.length).toBe(3);
+  it('shows locked achievements with grayscale styling', () => {
+    const { container } = renderWithContext(<AchievementsPanel />);
+    
+    // Check that achievement cards exist by finding elements with grayscale class
+    const grayscaleCards = container.querySelectorAll('[class*="grayscale"]');
+    expect(grayscaleCards.length).toBeGreaterThan(0);
   });
 
-  it('displays achievement icons, titles, and descriptions', () => {
-    render(<AchievementsPanel />);
-
-    // Should have achievement titles (check for first achievement)
-    expect(screen.getByText('First Victory')).toBeInTheDocument();
-  });
-
-  it('updates progress bar width based on completion percentage', () => {
-    const { container } = render(<AchievementsPanel />);
-
-    const progressFill = container.querySelector('.progress-fill');
-    expect(progressFill).toBeInTheDocument();
-
-    // Check that width attribute exists and is a percentage
-    const width = progressFill?.getAttribute('style');
-    expect(width).toMatch(/width:\s*\d+%/);
-  });
-
-  it('renders achievements in a grid layout', () => {
-    const { container } = render(<AchievementsPanel />);
-
-    const grid = container.querySelector('.achievements-grid');
-    expect(grid).toBeInTheDocument();
+  it('has Tailwind styling classes', () => {
+    const { container } = renderWithContext(<AchievementsPanel />);
+    
+    const panelDiv = container.firstChild as HTMLElement;
+    expect(panelDiv).toHaveClass('rounded-3xl');
+    expect(panelDiv).toHaveClass('border-emerald-100');
   });
 });

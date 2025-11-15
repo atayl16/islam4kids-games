@@ -19,7 +19,7 @@ describe('DifficultySelector', () => {
       />
     );
 
-    expect(screen.getByText('Select Difficulty:')).toBeInTheDocument();
+    expect(screen.getByText('Difficulty:')).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
@@ -82,7 +82,7 @@ describe('DifficultySelector', () => {
     );
 
     const select = screen.getByRole('combobox');
-    const label = screen.getByText('Select Difficulty:');
+    const label = screen.getByText('Difficulty:');
 
     expect(select).toHaveAttribute('id', 'difficulty-selector');
     expect(label).toHaveAttribute('for', 'difficulty-selector');
@@ -108,9 +108,9 @@ describe('DifficultySelector', () => {
     expect(screen.queryByRole('option', { name: 'Easy' })).not.toBeInTheDocument();
   });
 
-  it('has correct CSS classes', () => {
+  it('has Tailwind styling classes', () => {
     const onDifficultyChange = jest.fn();
-    const { container } = render(
+    render(
       <DifficultySelector
         currentDifficulty="easy"
         onDifficultyChange={onDifficultyChange}
@@ -118,8 +118,8 @@ describe('DifficultySelector', () => {
       />
     );
 
-    expect(container.querySelector('.difficulty-selector')).toBeInTheDocument();
-    expect(container.querySelector('.difficulty-label')).toBeInTheDocument();
-    expect(container.querySelector('.difficulty-dropdown')).toBeInTheDocument();
+    const select = screen.getByRole('combobox');
+    expect(select).toHaveClass('rounded-xl');
+    expect(select).toHaveClass('border-emerald-200');
   });
 });

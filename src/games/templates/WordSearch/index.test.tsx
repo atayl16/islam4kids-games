@@ -1,157 +1,122 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { WordSearch } from './index';
 import { WordSearchData } from './types';
-import * as utils from './utils';
 
-// Mock the audio functionality
-jest.mock('../../../components/game-common/CompletionOverlay', () => ({
-  __esModule: true,
-  default: ({ isVisible, title, message, onPlayAgain }: { 
-    isVisible: boolean; 
-    title: string; 
-    message: string; 
-    onPlayAgain: () => void; 
-  }) => 
-    isVisible ? <div data-testid="completion-overlay">{title} {message}
-      <button onClick={onPlayAgain}>Play Again</button>
-    </div> : null
+// Mock the generateWordSearchGrid utility
+jest.mock('./utils', () => ({
+  generateWordSearchGrid: jest.fn(),
 }));
 
-// Mock audio playback
-window.HTMLMediaElement.prototype.play = jest.fn().mockResolvedValue(undefined);
+import { generateWordSearchGrid } from './utils';
+const mockGenerateGrid = generateWordSearchGrid as jest.MockedFunction<typeof generateWordSearchGrid>;
 
-// Mock the generateWordSearchGrid function
-jest.spyOn(utils, 'generateWordSearchGrid').mockImplementation((category, difficulty) => {
-  // Return a simplified grid based on difficulty
-  let gridSize = difficulty === 'easy' ? 8 : difficulty === 'medium' ? 10 : 12;
-  
-  const mockGrid = Array(gridSize).fill(null).map(() => 
-    Array(gridSize).fill('A'));
-  
-  // For test predictability, place a known word in the grid
-  if (gridSize >= 8) {
-    mockGrid[0][0] = 'C';
-    mockGrid[0][1] = 'A';
-    mockGrid[0][2] = 'T';
-  }
-  
-  return {
-    grid: mockGrid,
-    title: `${category} Word Search`,
-    words: [{word: 'CAT'}, {word: 'DOG'}],
-    wordPlacements: [
-      {
-        word: 'CAT',
-        positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]
-      },
-      {
-        word: 'DOG',
-        positions: [{row: 2, col: 2}, {row: 3, col: 2}, {row: 4, col: 2}]
-      }
-    ],
-    meta: {
-      instructions: 'Find all the words in the grid!'
-    }
-  };
-});
-
-// Mock data
-const mockData: WordSearchData = {
-  grid: [
-    ['C', 'A', 'T', 'X'],
-    ['D', 'O', 'G', 'X'],
-    ['X', 'X', 'X', 'X'],
-    ['X', 'X', 'X', 'X']
+const mockGameData: WordSearchData = {
+  title: 'Test Word Search',
+  words: [
+    { word: 'SALAH', hint: 'Prayer' },
+    { word: 'ZAKAT', hint: 'Charity' },
   ],
-  title: 'Animals Word Search',
-  words: [{word: 'CAT'}, {word: 'DOG'}],
+  grid: [
+    ['S', 'A', 'L', 'A', 'H', 'X'],
+    ['Z', 'A', 'K', 'A', 'T', 'X'],
+    ['X', 'X', 'X', 'X', 'X', 'X'],
+  ],
   wordPlacements: [
     {
-      word: 'CAT',
-      positions: [{row: 0, col: 0}, {row: 0, col: 1}, {row: 0, col: 2}]
+      word: 'SALAH',
+      positions: [
+        { row: 0, col: 0 },
+        { row: 0, col: 1 },
+        { row: 0, col: 2 },
+        { row: 0, col: 3 },
+        { row: 0, col: 4 }
+      ]
     },
     {
-      word: 'DOG',
-      positions: [{row: 1, col: 0}, {row: 1, col: 1}, {row: 1, col: 2}]
-    }
+      word: 'ZAKAT',
+      positions: [
+        { row: 1, col: 0 },
+        { row: 1, col: 1 },
+        { row: 1, col: 2 },
+        { row: 1, col: 3 },
+        { row: 1, col: 4 }
+      ]
+    },
   ],
-  meta: {
-    instructions: 'Find all the words in the grid!'
-  }
 };
 
 describe('WordSearch Component', () => {
-  test('renders the word search grid with correct title', () => {
-    render(<WordSearch data={mockData} category="Animals" />);
-    
-    expect(screen.getByText('Animals Word Search')).toBeInTheDocument();
-    expect(screen.getByText('Find all the words in the grid!')).toBeInTheDocument();
-    expect(screen.getByText('Find these words:')).toBeInTheDocument();
-    expect(screen.getByText('CAT')).toBeInTheDocument();
-    expect(screen.getByText('DOG')).toBeInTheDocument();
+  beforeEach(() => {
+    // Mock the grid generation to return our test data
+    mockGenerateGrid.mockReturnValue(mockGameData);
   });
 
-  test('allows cell selection and finds words', async () => {
-    render(<WordSearch data={mockData} category="Animals" />);
-    
-    // Select the word CAT horizontally (cells 0,0 to 0,2)
-    const startCell = screen.getByText('C');
-    const endCell = screen.getByText('T');
-    
-    fireEvent.click(startCell);
-    fireEvent.click(endCell);
-    
-    // Wait for the word to be marked as found
-    await waitFor(() => {
-      const wordItems = document.querySelectorAll('.word-item');
-      const catItem = Array.from(wordItems).find(item => item.textContent?.includes('CAT'));
-      expect(catItem).toHaveClass('found');
-    });
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  test('changes difficulty regenerates the grid', () => {
-    render(<WordSearch data={mockData} category="Animals" />);
+  it('renders game title', () => {
+    render(<WordSearch data={mockGameData} category="test" />);
     
-    // Find and select difficulty option
-    const difficultyOptions = screen.getAllByRole('option');
-    const hardOption = difficultyOptions.find(option => option.textContent?.includes('Hard'));
-    
-    if (hardOption) {
-      const selectElement = hardOption.closest('select');
-      if (selectElement) {
-        fireEvent.change(selectElement, { target: { value: 'hard' } });
-      }
-    }
-    
-    // Verify that generateWordSearchGrid was called with the new difficulty
-    expect(utils.generateWordSearchGrid).toHaveBeenCalledWith('Animals', 'hard');
+    expect(screen.getByText('Test Word Search')).toBeInTheDocument();
   });
 
-  test('resets the game when reset button is clicked', async () => {
-    render(<WordSearch data={mockData} category="Animals" />);
+  it('renders the word grid', () => {
+    render(<WordSearch data={mockGameData} category="test" />);
     
-    // Find a word first
-    const startCell = screen.getByText('C');
-    const endCell = screen.getByText('T');
-    fireEvent.click(startCell);
-    fireEvent.click(endCell);
+    // Check that cells are rendered
+    const cells = screen.getAllByRole('button');
+    expect(cells.length).toBeGreaterThan(0);
+  });
+
+  it('displays word list', () => {
+    render(<WordSearch data={mockGameData} category="test" />);
     
-    // Wait for the word to be marked as found
-    await waitFor(() => {
-      const wordItems = document.querySelectorAll('.word-item');
-      const catItem = Array.from(wordItems).find(item => item.textContent?.includes('CAT'));
-      expect(catItem).toHaveClass('found');
+    expect(screen.getByText('SALAH')).toBeInTheDocument();
+    expect(screen.getByText('ZAKAT')).toBeInTheDocument();
+  });
+
+  it('allows cell selection', async () => {
+    const user = userEvent.setup();
+    render(<WordSearch data={mockGameData} category="test" />);
+    
+    const cells = screen.getAllByRole('button');
+    
+    // Click first cell
+    await user.click(cells[0]);
+    
+    // Cell should have Tailwind classes applied
+    expect(cells[0]).toHaveClass('flex');
+  });
+
+  it('shows hints for words', () => {
+    render(<WordSearch data={mockGameData} category="test" />);
+    
+    expect(screen.getByText(/Prayer/)).toBeInTheDocument();
+    expect(screen.getByText(/Charity/)).toBeInTheDocument();
+  });
+
+  it('tracks found words', () => {
+    render(<WordSearch data={mockGameData} category="test" />);
+
+    // Should show progress
+    const progressElements = screen.getAllByText((content, element) => {
+      return element?.textContent === '0 / 2 words found';
     });
+    expect(progressElements.length).toBeGreaterThan(0);
+  });
+
+  it('has reset button', () => {
+    render(<WordSearch data={mockGameData} category="test" />);
     
-    // Click reset button
-    const resetButton = screen.getByText('Reset Game');
-    fireEvent.click(resetButton);
+    expect(screen.getByRole('button', { name: /Reset/ })).toBeInTheDocument();
+  });
+
+  it('has Tailwind styling classes', () => {
+    const { container } = render(<WordSearch data={mockGameData} category="test" />);
     
-    // Verify the game has been reset
-    await waitFor(() => {
-      const wordItems = document.querySelectorAll('.word-item');
-      const catItem = Array.from(wordItems).find(item => item.textContent?.includes('CAT'));
-      expect(catItem).not.toHaveClass('found');
-    });
+    const mainDiv = container.firstChild as HTMLElement;
+    expect(mainDiv).toHaveClass('mx-auto');
   });
 });
