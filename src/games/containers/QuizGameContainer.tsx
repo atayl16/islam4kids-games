@@ -14,6 +14,11 @@ export const QuizGameContainer = () => {
   useEffect(() => {
     let isMounted = true;
 
+    // Reset loading/error and clear stale questions when quizSlug changes
+    setLoading(true);
+    setError(null);
+    setQuestions([]);
+
     const loadQuiz = async () => {
       try {
         if (!quizSlug || !(quizSlug in quizGamePuzzles)) {
@@ -38,6 +43,7 @@ export const QuizGameContainer = () => {
         }
       } catch (err) {
         if (isMounted) {
+          setQuestions([]);
           setError(err instanceof Error ? err.message : "Failed to load quiz");
           console.error("Quiz loading error:", err);
         }

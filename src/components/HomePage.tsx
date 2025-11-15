@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { getAvailablePuzzles } from "../games/registry";
+import { ProgressStats } from "./ProgressStats";
 
 // Format the slug for display
 const formatName = (slug: string) => {
@@ -206,6 +207,9 @@ export const HomePage = () => {
             <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-violet-500 to-transparent"></div>
           </div>
         </div>
+
+        {/* Progress Statistics */}
+        <ProgressStats />
 
         {/* Filter Buttons */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">

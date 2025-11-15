@@ -1,24 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AchievementsPanel } from './AchievementsPanel';
-import { ProgressContext } from '../contexts/ProgressContext';
+import { ProgressProvider } from '../contexts/ProgressContext';
 import { ACHIEVEMENTS } from '../types/achievements';
 
-const mockProgress = {
-  gamesPlayed: 0,
-  gamesCompleted: 0,
-  totalScore: 0,
-  highScores: {},
-  completionTimes: {},
-  streak: 0,
-  achievements: [],
-};
-
 const renderWithContext = (ui: React.ReactElement) => {
+  // Mock localStorage to prevent test pollution
+  jest.spyOn(Storage.prototype, 'getItem').mockReturnValue(null);
+  jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {});
+  jest.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {});
+
   return render(
-    <ProgressContext.Provider value={{ progress: mockProgress }}>
+    <ProgressProvider>
       {ui}
-    </ProgressContext.Provider>
+    </ProgressProvider>
   );
 };
 
