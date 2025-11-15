@@ -20,10 +20,16 @@ export const JigsawPuzzleContainer = () => {
   useEffect(() => {
     let isMounted = true;
 
+    // Reinitialize state at the start of each puzzle fetch
+    setLoading(true);
+    setError(null);
+    setPuzzleData(null);
+
     if (!puzzleSlug || !(puzzleSlug in jigsawPuzzles)) {
       if (isMounted) {
         setError("Puzzle not found");
         setLoading(false);
+        setPuzzleData(null);
       }
       return;
     }
@@ -42,6 +48,7 @@ export const JigsawPuzzleContainer = () => {
         if (isMounted) {
           console.error("Failed to load puzzle:", err);
           setError("Failed to load puzzle");
+          setPuzzleData(null);
         }
       } finally {
         if (isMounted) {

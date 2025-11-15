@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { HomePage } from "./components/HomePage";
 import { AboutPage } from "./components/AboutPage";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { ProgressProvider } from "./contexts/ProgressContext";
 import { WordScrambleContainer } from "./games/containers/WordScrambleContainer";
 import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer";
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
@@ -14,15 +15,16 @@ import "./styles/tailwind.css";
 export default function App() {
   return (
     <ErrorBoundary>
-      <HashRouter>
-        <IslamicTheme />
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-500 focus:text-white focus:rounded-lg">
-          Skip to main content
-        </a>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-violet-50/30">
-          <Header />
-          <main id="main-content" role="main">
-            <Routes>
+      <ProgressProvider>
+        <HashRouter>
+          <IslamicTheme />
+          <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-500 focus:text-white focus:rounded-lg">
+            Skip to main content
+          </a>
+          <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-violet-50/30">
+            <Header />
+            <main id="main-content" role="main">
+              <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route
@@ -108,10 +110,11 @@ export default function App() {
               }
             />
             <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-        </div>
-      </HashRouter>
+              </Routes>
+            </main>
+          </div>
+        </HashRouter>
+      </ProgressProvider>
     </ErrorBoundary>
   );
 }
