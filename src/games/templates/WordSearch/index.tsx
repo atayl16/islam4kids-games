@@ -8,15 +8,15 @@
   export type { WordSearchData } from "./types";
   
   // Component for individual grid cells
-  const Cell = ({ 
-    letter, 
-    row, 
-    col, 
+  const Cell = ({
+    letter,
+    row,
+    col,
     isSelected,
     isFound,
-    onSelectCell 
-  }: { 
-    letter: string; 
+    onSelectCell
+  }: {
+    letter: string;
     row: number;
     col: number;
     isSelected: boolean;
@@ -24,13 +24,14 @@
     onSelectCell: (row: number, col: number) => void;
   }) => {
     return (
-      <div 
+      <button
+        type="button"
         className={`word-search-cell ${isSelected ? 'selected' : ''} ${isFound ? 'found' : ''}`}
         onClick={() => onSelectCell(row, col)}
         aria-label={`${letter}, row ${row + 1}, column ${col + 1}`}
       >
         {letter}
-      </div>
+      </button>
     );
   };
   
