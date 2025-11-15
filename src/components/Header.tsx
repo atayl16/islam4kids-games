@@ -34,6 +34,20 @@ export const Header = () => {
               }`}></span>
             </Link>
             <Link
+              to="/achievements"
+              className={`relative text-lg font-medium transition-colors duration-200 group ${
+                location.pathname === '/achievements' ? 'text-amber-600' : 'text-slate-700 hover:text-amber-500'
+              }`}
+            >
+              <span className="flex items-center gap-1">
+                <span>🏆</span>
+                <span>Achievements</span>
+              </span>
+              <span className={`absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-emerald-500 transition-transform duration-300 ${
+                location.pathname === '/achievements' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+              }`}></span>
+            </Link>
+            <Link
               to="/about"
               className={`relative text-lg font-medium transition-colors duration-200 group ${
                 location.pathname === '/about' ? 'text-violet-600' : 'text-slate-700 hover:text-violet-500'
