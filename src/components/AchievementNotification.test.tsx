@@ -7,7 +7,8 @@ const mockAchievement: Achievement = {
   title: 'Test Achievement',
   description: 'This is a test achievement',
   icon: '🎉',
-  category: 'milestone',
+  category: 'completion',
+  condition: () => true,
 };
 
 describe('AchievementNotification', () => {

@@ -12,10 +12,46 @@ global.Audio = jest.fn().mockImplementation(() => ({
 }));
 
 const mockWords: WordBankEntry[] = [
-  { id: '1', term: 'Salah', translation: 'Prayer', arabic: 'صلاة', hint: 'Islamic prayer' },
-  { id: '2', term: 'Zakat', translation: 'Charity', arabic: 'زكاة', hint: 'Giving to the poor' },
-  { id: '3', term: 'Sawm', translation: 'Fasting', arabic: 'صوم', hint: 'Ramadan practice' },
-  { id: '4', term: 'Hajj', translation: 'Pilgrimage', arabic: 'حج', hint: 'Journey to Mecca' },
+  {
+    id: '1',
+    term: 'Salah',
+    translation: 'Prayer',
+    arabic: 'صلاة',
+    hints: ['One of the five pillars of Islam'],
+    references: [],
+    categories: ['pillars'],
+    games: {}
+  },
+  {
+    id: '2',
+    term: 'Zakat',
+    translation: 'Charity',
+    arabic: 'زكاة',
+    hints: ['Giving to those in need'],
+    references: [],
+    categories: ['pillars'],
+    games: {}
+  },
+  {
+    id: '3',
+    term: 'Sawm',
+    translation: 'Fasting',
+    arabic: 'صوم',
+    hints: ['Observed during Ramadan'],
+    references: [],
+    categories: ['pillars'],
+    games: {}
+  },
+  {
+    id: '4',
+    term: 'Hajj',
+    translation: 'Pilgrimage',
+    arabic: 'حج',
+    hints: ['Journey to Mecca'],
+    references: [],
+    categories: ['pillars'],
+    games: {}
+  },
 ];
 
 describe('MemoryMatch Component', () => {
@@ -64,19 +100,20 @@ describe('MemoryMatch Component', () => {
   it('tracks move count', async () => {
     const user = userEvent.setup();
     render(<MemoryMatch words={mockWords} />);
-    
+
     const cards = screen.getAllByTestId('memory-card');
-    
-    // Initially 0 moves
-    expect(screen.getByText(/Moves: 0/)).toBeInTheDocument();
-    
+
+    // Initially 0 moves - text and number are in separate elements
+    expect(screen.getByText('Moves:')).toBeInTheDocument();
+    expect(screen.getByText('0')).toBeInTheDocument();
+
     // Click two cards
     await user.click(cards[0]);
     await user.click(cards[1]);
-    
+
     // Should register a move
     await waitFor(() => {
-      expect(screen.getByText(/Moves: 1/)).toBeInTheDocument();
+      expect(screen.getByText('1')).toBeInTheDocument();
     });
   });
 

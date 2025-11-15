@@ -1,29 +1,43 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AchievementsPanel } from './AchievementsPanel';
-import { ProgressProvider } from '../contexts/ProgressContext';
+import { ProgressContext } from '../contexts/ProgressContext';
 import { ACHIEVEMENTS } from '../types/achievements';
 
-const renderWithProvider = (ui: React.ReactElement) => {
-  return render(<ProgressProvider>{ui}</ProgressProvider>);
+const mockProgress = {
+  gamesPlayed: 0,
+  gamesCompleted: 0,
+  totalScore: 0,
+  highScores: {},
+  completionTimes: {},
+  streak: 0,
+  achievements: [],
+};
+
+const renderWithContext = (ui: React.ReactElement) => {
+  return render(
+    <ProgressContext.Provider value={{ progress: mockProgress }}>
+      {ui}
+    </ProgressContext.Provider>
+  );
 };
 
 describe('AchievementsPanel', () => {
   it('renders achievement list', () => {
-    renderWithProvider(<AchievementsPanel />);
+    renderWithContext(<AchievementsPanel />);
     
     expect(screen.getByText('Achievements')).toBeInTheDocument();
   });
 
-  it('shows progress bar', () => {
-    renderWithProvider(<AchievementsPanel />);
+  it('shows progress bar with total achievements', () => {
+    renderWithContext(<AchievementsPanel />);
     
-    // Check that we show total achievements
-    expect(screen.getByText(new RegExp(`${ACHIEVEMENTS.length}`))).toBeInTheDocument();
+    // Check that we show unlocked/total pattern
+    expect(screen.getByText(/0.*\/ .*20/)).toBeInTheDocument();
   });
 
   it('renders filter buttons', () => {
-    renderWithProvider(<AchievementsPanel />);
+    renderWithContext(<AchievementsPanel />);
     
     expect(screen.getByRole('button', { name: /All/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Unlocked/ })).toBeInTheDocument();
@@ -32,7 +46,7 @@ describe('AchievementsPanel', () => {
 
   it('filters achievements when clicking filter buttons', async () => {
     const user = userEvent.setup();
-    renderWithProvider(<AchievementsPanel />);
+    renderWithContext(<AchievementsPanel />);
     
     const allButton = screen.getByRole('button', { name: /All/ });
     const unlockedButton = screen.getByRole('button', { name: /Unlocked/ });
@@ -48,22 +62,23 @@ describe('AchievementsPanel', () => {
   });
 
   it('displays all achievements by default', () => {
-    renderWithProvider(<AchievementsPanel />);
+    renderWithContext(<AchievementsPanel />);
     
     // Should show all achievements count in filter button
     const allButton = screen.getByRole('button', { name: new RegExp(`All.*${ACHIEVEMENTS.length}`) });
     expect(allButton).toBeInTheDocument();
   });
 
-  it('shows unlocked achievements with green styling', () => {
-    renderWithProvider(<AchievementsPanel />);
+  it('shows locked achievements with grayscale styling', () => {
+    const { container } = renderWithContext(<AchievementsPanel />);
     
-    const achievementCards = screen.getAllByText(/Unlocked|Locked/i);
-    expect(achievementCards.length).toBeGreaterThan(0);
+    // Check that achievement cards exist by finding elements with grayscale class
+    const grayscaleCards = container.querySelectorAll('[class*="grayscale"]');
+    expect(grayscaleCards.length).toBeGreaterThan(0);
   });
 
   it('has Tailwind styling classes', () => {
-    const { container } = renderWithProvider(<AchievementsPanel />);
+    const { container } = renderWithContext(<AchievementsPanel />);
     
     const panelDiv = container.firstChild as HTMLElement;
     expect(panelDiv).toHaveClass('rounded-3xl');

@@ -16,14 +16,14 @@ describe('AboutPage', () => {
     expect(mainDiv).toHaveClass('min-h-screen');
   });
 
-  it('displays features section', () => {
+  it('displays educational games text', () => {
     render(<AboutPage />);
-    expect(screen.getByText(/Educational Games/i)).toBeInTheDocument();
+    expect(screen.getByText(/educational Islamic games/i)).toBeInTheDocument();
   });
 
-  it('has contact information', () => {
+  it('has feedback section', () => {
     render(<AboutPage />);
-    expect(screen.getByText(/Contact Us/i)).toBeInTheDocument();
+    expect(screen.getByText(/We Value Your Feedback/i)).toBeInTheDocument();
   });
 
   it('includes email link', () => {
