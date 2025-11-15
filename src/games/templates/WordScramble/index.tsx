@@ -150,20 +150,28 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
   };
 
   if (!data?.words || data.words.length === 0) {
-    return <div className="word-scramble-loading">Loading word puzzle...</div>;
+    return (
+      <div className="text-center p-8 bg-white rounded-2xl shadow-lg">
+        <p className="text-xl text-slate-600">Loading word puzzle...</p>
+      </div>
+    );
   }
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <div className="word-scramble">
-        <h2 className="scramble-title">
-          {data.meta?.title || "Word Scramble"}
-        </h2>
-        <p className="scramble-instructions">
-          {data.meta?.instructions ||
-            "Rearrange the letters to form the correct word."}
-        </p>
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Title */}
+        <div className="text-center">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-500 to-violet-500 bg-clip-text text-transparent mb-3">
+            {data.meta?.title || "Word Scramble"}
+          </h2>
+          <p className="text-lg md:text-xl text-slate-600">
+            {data.meta?.instructions ||
+              "Rearrange the letters to form the correct word."}
+          </p>
+        </div>
 
+        {/* Controls */}
         <PuzzleControls
           currentDifficulty={difficulty}
           solvedCount={currentWordIndex}
@@ -182,64 +190,73 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
           hintButton={
             <button
               onClick={() => setShowHint(!showHint)}
-              className="hint-toggle-button"
+              className="px-5 py-2.5 rounded-xl font-medium bg-white text-emerald-600 border-2 border-emerald-500 hover:bg-emerald-50 transition-all duration-200 hover:shadow-lg"
             >
               {showHint ? "Hide Hint" : "Show Hint"}
             </button>
           }
         />
 
-        <div className="letter-container" role="region">
-          {letters.map((char, i) => (
-            <Letter
-              key={i}
-              char={char}
-              index={i}
-              moveChar={moveChar}
-              onDrop={checkSolution}
-            />
-          ))}
+        {/* Letter Container */}
+        <div className="relative bg-white rounded-2xl p-8 shadow-lg border-2 border-emerald-100" role="region">
+          <div className="flex flex-wrap justify-center gap-3 min-h-[120px] items-center">
+            {letters.map((char, i) => (
+              <Letter
+                key={i}
+                char={char}
+                index={i}
+                moveChar={moveChar}
+                onDrop={checkSolution}
+              />
+            ))}
+          </div>
 
+          {/* Correct Solution Overlay */}
           {correctSolution && (
             <div
-              className="solution-correct-overlay"
+              className="absolute inset-0 bg-emerald-500/20 rounded-2xl flex items-center justify-center backdrop-blur-sm animate-bounce-in"
               aria-label="Correct solution"
             >
-              <div className="checkmark">✓</div>
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-400 flex items-center justify-center shadow-hero">
+                <span className="text-white text-6xl font-bold">✓</span>
+              </div>
             </div>
           )}
-
-          {showHint && filteredWords[currentWordIndex] && (
-            <div className="hint-box">
-              <h3>Hint:</h3>
-              <p>
-                {filteredWords[currentWordIndex].hint || "No hint available"}
-              </p>
-              {filteredWords[currentWordIndex].reference && (
-                <p className="reference">
-                  Reference: {filteredWords[currentWordIndex].reference}
-                </p>
-              )}
-            </div>
-          )}
-
-          <CompletionOverlay
-            isVisible={isOverlayVisible}
-            setIsVisible={setIsOverlayVisible} // Pass setIsVisible to allow closing
-            title="Mashallah! Word Master!"
-            message={`You've unscrambled all ${filteredWords.length} words!`}
-            onPlayAgain={resetGame}
-            soundEffect="/audio/success.mp3"
-          />
         </div>
 
-        {filteredWords[currentWordIndex] && (
-          <div className="word-translation">
-            <p>
-              <i>{filteredWords[currentWordIndex].reference}</i>
+        {/* Hint Box */}
+        {showHint && filteredWords[currentWordIndex] && (
+          <div className="bg-violet-50 border-2 border-violet-500 rounded-2xl p-6">
+            <h3 className="text-xl font-bold text-violet-700 mb-2">Hint:</h3>
+            <p className="text-violet-600 mb-2">
+              {filteredWords[currentWordIndex].hint || "No hint available"}
+            </p>
+            {filteredWords[currentWordIndex].reference && (
+              <p className="text-sm text-violet-500 italic">
+                Reference: {filteredWords[currentWordIndex].reference}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Word Translation/Reference */}
+        {filteredWords[currentWordIndex] && filteredWords[currentWordIndex].reference && (
+          <div className="text-center">
+            <p className="text-lg text-slate-600 italic">
+              {filteredWords[currentWordIndex].reference}
             </p>
           </div>
         )}
+
+        {/* Completion Overlay */}
+        <CompletionOverlay
+          isVisible={isOverlayVisible}
+          setIsVisible={setIsOverlayVisible}
+          title="Mashallah! Word Master!"
+          message={`You've unscrambled all ${filteredWords.length} words!`}
+          onPlayAgain={resetGame}
+          soundEffect="/audio/success.mp3"
+        />
       </div>
     </DndProvider>
   );

@@ -57,29 +57,57 @@ export const CompletionOverlay: React.FC<CompletionOverlayProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="completion-overlay" data-testid="completion-overlay">
-      <div className="completion-overlay-content" ref={overlayRef}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4"
+      data-testid="completion-overlay"
+    >
+      <div
+        ref={overlayRef}
+        className="relative bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl overflow-hidden animate-bounce-in"
+      >
+        {/* Decorative elements */}
+        <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br from-emerald-100 to-violet-100 opacity-20"></div>
+        <div className="h-2 absolute top-0 left-0 right-0 bg-gradient-to-r from-emerald-500 via-violet-500 to-amber-500"></div>
+
         {/* Close Button */}
-        <button 
-          className="close-button" 
-          onClick={() => setIsVisible?.(false)} 
+        <button
+          className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 hover:text-slate-800 transition-all duration-200 text-2xl font-light leading-none"
+          onClick={() => setIsVisible?.(false)}
           aria-label="Close overlay"
         >
           ×
         </button>
 
-        <h2>{title}</h2>
-        <p>{message}</p>
-        
+        {/* Success Icon */}
+        <div className="flex justify-center mb-6">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-violet-500 flex items-center justify-center shadow-lg">
+            <span className="text-4xl">🎉</span>
+          </div>
+        </div>
+
+        {/* Title and Message */}
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+          <span className="bg-gradient-to-r from-emerald-500 to-violet-500 bg-clip-text text-transparent">
+            {title}
+          </span>
+        </h2>
+        <p className="text-lg text-slate-600 text-center mb-6">{message}</p>
+
         {children}
-        
+
+        {/* Play Again Button */}
         {onPlayAgain && (
-          <button 
-            className="play-again-button" 
-            onClick={onPlayAgain}
-          >
-            Play Again
-          </button>
+          <div className="flex justify-center mt-6">
+            <button
+              className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-violet-500 text-white rounded-xl font-medium shadow-lg hover:-translate-y-0.5 hover:shadow-xl transition-all duration-200 flex items-center gap-2"
+              onClick={onPlayAgain}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Play Again
+            </button>
+          </div>
         )}
       </div>
     </div>

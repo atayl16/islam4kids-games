@@ -1,0 +1,2 @@
+/* Using system fonts for COPPA compliance - no external font loading that would expose children's IP addresses */
+@import "tailwindcss";
