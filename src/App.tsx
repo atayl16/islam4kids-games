@@ -3,6 +3,8 @@ import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Header } from "./components/Header";
 import { HomePage } from "./components/HomePage";
 import { AboutPage } from "./components/AboutPage";
+import { AchievementsPage } from "./components/AchievementsPage";
+import { AchievementManager } from "./components/AchievementManager";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ProgressProvider } from "./contexts/ProgressContext";
 import { WordScrambleContainer } from "./games/containers/WordScrambleContainer";
@@ -18,6 +20,7 @@ export default function App() {
       <ProgressProvider>
         <HashRouter>
           <IslamicTheme />
+          <AchievementManager />
           <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-500 focus:text-white focus:rounded-lg">
             Skip to main content
           </a>
@@ -27,6 +30,7 @@ export default function App() {
               <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/achievements" element={<AchievementsPage />} />
             <Route
               path="/wordscramble/:gameSlug"
               element={
