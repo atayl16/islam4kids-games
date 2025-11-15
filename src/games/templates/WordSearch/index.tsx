@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { WordSearchData, WordPosition } from './types';
 import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
 import { generateWordSearchGrid } from './utils';
+import { useProgressContext } from "../../../contexts/ProgressContext";
 
 export { generateWordSearchGrid } from "./utils";
 export type { WordSearchData } from "./types";
@@ -49,7 +50,9 @@ const Cell = ({
 };
 
 // Export main WordSearch component
-export const WordSearch = ({ data, category }: { data: WordSearchData; category: string }) => {
+export const WordSearch = ({ data, category, gameSlug }: { data: WordSearchData; category: string; gameSlug: string }) => {
+  const { recordGameSession } = useProgressContext();
+  const startTimeRef = useRef<number>(Date.now());
   const [selectedCells, setSelectedCells] = useState<WordPosition[]>([]);
   const [startCell, setStartCell] = useState<WordPosition | null>(null);
   const [foundWords, setFoundWords] = useState<string[]>([]);
@@ -67,14 +70,26 @@ export const WordSearch = ({ data, category }: { data: WordSearchData; category:
     setSelectedCells([]);
     setStartCell(null);
     setIsOverlayVisible(false);
+    startTimeRef.current = Date.now(); // Reset timer
   }, [difficulty, category]);
 
   // Check for game completion
   useEffect(() => {
     if (foundWords.length === gameData.words.length && gameData.words.length > 0) {
+      // Record game session before showing overlay
+      const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      recordGameSession({
+        gameType: 'wordSearch',
+        gameSlug,
+        score: foundWords.length, // Score is number of words found
+        completed: true,
+        timeSpent,
+        difficulty,
+        timestamp: new Date().toISOString(),
+      });
       setIsOverlayVisible(true);
     }
-  }, [foundWords, gameData.words.length]);
+  }, [foundWords, gameData.words.length, difficulty, gameSlug, recordGameSession]);
 
   // Handle cell click
   const handleCellClick = (row: number, col: number) => {
@@ -181,6 +196,7 @@ export const WordSearch = ({ data, category }: { data: WordSearchData; category:
     setSelectedCells([]);
     setStartCell(null);
     setIsOverlayVisible(false);
+    startTimeRef.current = Date.now(); // Reset timer
   };
 
   return (

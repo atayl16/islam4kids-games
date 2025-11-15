@@ -60,5 +60,5 @@ export const MemoryMatchContainer: React.FC = () => {
     return <div>No game data available.</div>;
   }
 
-  return <MemoryMatch words={gameData.words} />;
+  return <MemoryMatch words={gameData.words} gameSlug={categorySlug || 'unknown'} />;
 };

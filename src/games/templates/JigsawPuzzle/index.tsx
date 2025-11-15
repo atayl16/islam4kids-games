@@ -16,6 +16,7 @@ import { PieceTray } from "./components/PieceTray";
 import { Piece } from "./Piece";
 import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
+import { useProgressContext } from "../../../contexts/ProgressContext";
 
 // Import hooks
 import { useBoardPosition } from "./hooks/useBoardPosition";
@@ -56,7 +57,11 @@ const calculateResponsiveBoardDimensions = () => {
   return { boardWidth, boardHeight };
 };
 
-export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
+export const JigsawPuzzle = ({ data, gameSlug }: { data: JigsawConfig; gameSlug: string }) => {
+  // Progress tracking
+  const { recordGameSession } = useProgressContext();
+  const startTimeRef = useRef<number>(Date.now());
+
   // Validate configuration
   const validatedData = validateJigsawConfig(data);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
@@ -169,13 +174,25 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Update overlay visibility when the puzzle is solved
   useEffect(() => {
     if (solvedCount === totalPieces && totalPieces > 0) {
+      // Record game session before showing overlay
+      const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      recordGameSession({
+        gameType: 'jigsawPuzzle',
+        gameSlug,
+        score: totalPieces, // Score is number of pieces completed
+        completed: true,
+        timeSpent,
+        difficulty: currentDifficulty,
+        timestamp: new Date().toISOString(),
+      });
       setIsOverlayVisible(true);
     }
-  }, [solvedCount, totalPieces]);
+  }, [solvedCount, totalPieces, currentDifficulty, gameSlug, recordGameSession]);
 
   // Handle difficulty change
   const handleDifficultyChange = (difficulty: string) => {
     setCurrentDifficulty(difficulty as keyof typeof JIGSAW_DIFFICULTY_PRESETS);
+    startTimeRef.current = Date.now(); // Reset timer when difficulty changes
   };
   
   const fullContainerWidth = validBoardWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
@@ -307,6 +324,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
             onPlayAgain={() => {
               initializePieces();
               setIsOverlayVisible(false); // Close overlay after restarting
+              startTimeRef.current = Date.now(); // Reset timer
             }}
             soundEffect="/audio/success.mp3"
           />

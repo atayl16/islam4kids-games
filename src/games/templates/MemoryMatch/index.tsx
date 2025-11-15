@@ -1,16 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { WordBankEntry } from "../../../types/WordBank";
 import { MemoryCard as MemoryCardComponent } from "./MemoryCard";
 import { initializeCards } from "./utils";
 import { MemoryCard } from "./types";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
 import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
+import { useProgressContext } from "../../../contexts/ProgressContext";
 
 type Props = {
   words: WordBankEntry[];
+  gameSlug: string;
 };
 
-export const MemoryMatch = ({ words }: Props) => {
+export const MemoryMatch = ({ words, gameSlug }: Props) => {
+  const { recordGameSession } = useProgressContext();
+  const startTimeRef = useRef<number>(Date.now());
   const [cards, setCards] = useState<MemoryCard[]>([]);
   const [flippedIds, setFlippedIds] = useState<string[]>([]);
   const [moves, setMoves] = useState(0);
@@ -28,6 +32,7 @@ export const MemoryMatch = ({ words }: Props) => {
       setFlippedIds([]);
       setError(null);
       setIsOverlayVisible(false); // Reset overlay visibility
+      startTimeRef.current = Date.now(); // Reset timer
     } catch (err) {
       setError(`Couldn't create a game. You need at least 3 words to play.`);
       setCards([]);
@@ -85,6 +90,7 @@ export const MemoryMatch = ({ words }: Props) => {
       setFlippedIds([]);
       setError(null);
       setIsOverlayVisible(false); // Reset overlay visibility
+      startTimeRef.current = Date.now(); // Reset timer
     } catch (err) {
       setError(`Couldn't create a game. You need at least 3 words to play.`);
       setCards([]);
@@ -98,9 +104,20 @@ export const MemoryMatch = ({ words }: Props) => {
   // Show overlay when the game is complete
   useEffect(() => {
     if (isGameComplete) {
+      // Record game session before showing overlay
+      const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      recordGameSession({
+        gameType: 'memoryMatch',
+        gameSlug,
+        score: totalPairs, // Score is number of pairs matched
+        completed: true,
+        timeSpent,
+        difficulty,
+        timestamp: new Date().toISOString(),
+      });
       setIsOverlayVisible(true);
     }
-  }, [isGameComplete]);
+  }, [isGameComplete, totalPairs, difficulty, gameSlug, recordGameSession]);
 
   // Get grid columns based on difficulty
   const getGridCols = () => {

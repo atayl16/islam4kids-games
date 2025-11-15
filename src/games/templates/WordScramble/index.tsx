@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
@@ -6,8 +6,11 @@ import { WordScrambleData } from "./types";
 import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
 import Letter from "./Letter";
+import { useProgressContext } from "../../../contexts/ProgressContext";
 
-export const WordScramble = ({ data }: { data: WordScrambleData }) => {
+export const WordScramble = ({ data, gameSlug }: { data: WordScrambleData; gameSlug: string }) => {
+  const { recordGameSession } = useProgressContext();
+  const startTimeRef = useRef<number>(Date.now());
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [letters, setLetters] = useState<string[]>([]);
   const [showHint, setShowHint] = useState(false);
@@ -45,6 +48,7 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
 
       setCurrentWordIndex(0);
       setIsOverlayVisible(false); // Reset overlay visibility
+      startTimeRef.current = Date.now(); // Reset timer when difficulty changes
     }
   }, [difficulty, data]);
 
@@ -133,6 +137,17 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
         if (currentWordIndex < filteredWords.length - 1) {
           setCurrentWordIndex((prev) => prev + 1);
         } else {
+          // Record game session before showing overlay
+          const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+          recordGameSession({
+            gameType: 'wordScramble',
+            gameSlug,
+            score: filteredWords.length, // Score is number of words completed
+            completed: true,
+            timeSpent,
+            difficulty,
+            timestamp: new Date().toISOString(),
+          });
           setIsOverlayVisible(true); // Show overlay when game is complete
         }
       }, 1500);
@@ -146,6 +161,7 @@ export const WordScramble = ({ data }: { data: WordScrambleData }) => {
   const resetGame = () => {
     setCurrentWordIndex(0);
     setIsOverlayVisible(false); // Reset overlay visibility
+    startTimeRef.current = Date.now(); // Reset timer
     initializeWord();
   };
 

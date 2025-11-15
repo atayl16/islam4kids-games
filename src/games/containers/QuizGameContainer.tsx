@@ -64,5 +64,5 @@ export const QuizGameContainer = () => {
   if (loading) return <LoadingSpinner message="Loading Quiz..." />;
   if (error) return <div className="error-message">{error}</div>;
 
-  return <QuizGame questions={questions} />;
+  return <QuizGame questions={questions} gameSlug={quizSlug || 'unknown'} />;
 };

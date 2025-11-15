@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { QuizQuestion } from "./types";
 import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
 import { shuffleArray } from "./utils";
+import { useProgressContext } from "../../../contexts/ProgressContext";
 
 type QuizGameProps = {
   questions: QuizQuestion[];
+  gameSlug: string;
   onDifficultyChange?: (difficulty: string) => void;
 };
 
 type Difficulty = "easy" | "medium" | "hard";
 
-export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: QuizGameProps) => {
+export const QuizGame = ({ questions: initialQuestions, gameSlug, onDifficultyChange }: QuizGameProps) => {
+  const { recordGameSession } = useProgressContext();
+  const startTimeRef = useRef<number>(Date.now());
   const [difficulty, setDifficulty] = useState<Difficulty>("medium");
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -30,6 +34,7 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
     setShowFeedback(false);
     setIsCorrect(false);
     setIsOverlayVisible(false);
+    startTimeRef.current = Date.now(); // Reset timer
 
     if (!initialQuestions || initialQuestions.length === 0) {
       return;
@@ -187,6 +192,18 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
         setSelectedAnswer(null);
         setShowFeedback(false);
       } else {
+        // Record game session before showing overlay
+        const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+        const finalScore = correct ? score + 1 : score; // Account for the current correct answer
+        recordGameSession({
+          gameType: 'quiz',
+          gameSlug,
+          score: finalScore,
+          completed: true,
+          timeSpent,
+          difficulty,
+          timestamp: new Date().toISOString(),
+        });
         setIsOverlayVisible(true);
       }
     }, feedbackDelay);
@@ -199,6 +216,7 @@ export const QuizGame = ({ questions: initialQuestions, onDifficultyChange }: Qu
     setSelectedAnswer(null);
     setShowFeedback(false);
     setIsCorrect(false);
+    startTimeRef.current = Date.now(); // Reset timer
   };
 
   const handleDifficultyChange = (newDifficulty: string) => {
