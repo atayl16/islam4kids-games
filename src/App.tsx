@@ -12,6 +12,7 @@ import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer"
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
 import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer";
 import { QuizGameContainer } from "./games/containers/QuizGameContainer";
+import { SnakeGameContainer } from "./games/containers/SnakeGameContainer";
 import "./styles/tailwind.css";
 
 export default function App() {
@@ -110,6 +111,22 @@ export default function App() {
               element={
                 <div className="p-4">
                   <QuizGameContainer />
+                </div>
+              }
+            />
+            <Route
+              path="/snake"
+              element={
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-violet-50/30">
+                  <SnakeGameContainer />
+                </div>
+              }
+            />
+            <Route
+              path="/embed/snake"
+              element={
+                <div className="p-4">
+                  <SnakeGameContainer />
                 </div>
               }
             />
