@@ -42,6 +42,8 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
         return { name: "Memory Match", emoji: "🔄", gradient: "from-emerald-500 to-violet-500" };
       case "quizGame":
         return { name: "Quiz Game", emoji: "❓", gradient: "from-violet-500 to-emerald-500" };
+      case "connectFour":
+        return { name: "Connect Four", emoji: "🔴", gradient: "from-amber-600 to-emerald-600" };
       default:
         return { name: "Game", emoji: "🎮", gradient: "from-emerald-500 to-violet-500" };
     }
@@ -114,26 +116,34 @@ export const HomePage = () => {
   
   // Create an array of all games with their types
   const allGames = [
-    ...wordScramble.map(slug => ({ 
-      slug, 
+    // Standalone games
+    {
+      slug: "connect-four",
+      title: "Connect Four",
+      type: "connectFour",
+      path: "/connect-four"
+    },
+    // Word bank games
+    ...wordScramble.map(slug => ({
+      slug,
       title: `${formatName(slug)} Word Scramble`,
       type: "wordScramble",
       path: `/wordscramble/${slug}`
     })),
-    ...wordSearch.map(slug => ({ 
-      slug, 
+    ...wordSearch.map(slug => ({
+      slug,
       title: `${formatName(slug)} Word Search`,
       type: "wordSearch",
       path: `/wordsearch/${slug}`
     })),
-    ...jigsaw.map(slug => ({ 
-      slug, 
+    ...jigsaw.map(slug => ({
+      slug,
       title: `${formatName(slug)} Jigsaw Puzzle`,
       type: "jigsaw",
       path: `/jigsaw/${slug}`
     })),
-    ...memoryMatch.map(slug => ({ 
-      slug, 
+    ...memoryMatch.map(slug => ({
+      slug,
       title: `${formatName(slug)} Memory Match`,
       type: "memoryMatchIcon",
       path: `/memorymatch/${slug}`
@@ -162,8 +172,8 @@ export const HomePage = () => {
   // Validate the URL parameter when component mounts
   useEffect(() => {
     // Valid filter values
-    const validFilters = ["all", "wordScramble", "wordSearch", "jigsaw", "memoryMatchIcon", "quizGame"];
-    
+    const validFilters = ["all", "connectFour", "wordScramble", "wordSearch", "jigsaw", "memoryMatchIcon", "quizGame"];
+
     // If filter parameter is invalid, redirect to the homepage with no filter
     if (filterParam !== "all" && !validFilters.includes(filterParam)) {
       navigate("/", { replace: true });
