@@ -54,5 +54,5 @@ export const WordScrambleContainer = () => {
     return <div className="error-message">{error || "Something went wrong"}</div>;
   }
 
-  return <WordScramble data={puzzleData} />;
+  return <WordScramble data={puzzleData} gameSlug={gameSlug || 'unknown'} />;
 };

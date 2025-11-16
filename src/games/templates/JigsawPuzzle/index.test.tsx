@@ -17,6 +17,26 @@ jest.mock("react-dnd", () => ({
   useDrop: () => [{ isOver: false }, jest.fn()],
 }));
 
+// Mock progress context
+jest.mock('../../../contexts/ProgressContext', () => ({
+  useProgressContext: () => ({
+    recordGameSession: jest.fn(),
+    unlockAchievement: jest.fn(),
+    getGameStats: jest.fn(() => ({ highScore: 0, bestTime: null, hasPlayed: false })),
+    resetProgress: jest.fn(),
+    progress: {
+      gamesPlayed: 0,
+      gamesCompleted: 0,
+      totalScore: 0,
+      highScores: {},
+      completionTimes: {},
+      lastPlayed: '',
+      streak: 0,
+      achievements: []
+    }
+  })
+}));
+
 // Mock the Audio API
 global.Audio = jest.fn().mockImplementation(() => ({
   play: jest.fn().mockResolvedValue(undefined),
@@ -40,7 +60,7 @@ describe("JigsawPuzzle Component", () => {
   };
 
   it("renders without crashing", () => {
-    render(<JigsawPuzzle data={mockData} />);
+    render(<JigsawPuzzle data={mockData} gameSlug="test-slug" />);
 
     // Check if basic elements are rendered
     expect(screen.getByText(/Scramble Pieces/i)).toBeInTheDocument();
@@ -49,7 +69,7 @@ describe("JigsawPuzzle Component", () => {
   });
 
   it("displays difficulty selector with correct options", () => {
-    render(<JigsawPuzzle data={mockData} />);
+    render(<JigsawPuzzle data={mockData} gameSlug="test-slug" />);
 
     const selector = screen.getByLabelText(/Difficulty:/i);
     expect(selector).toBeInTheDocument();
@@ -62,14 +82,14 @@ describe("JigsawPuzzle Component", () => {
   });
 
   it("uses the default difficulty from the puzzle data", () => {
-    render(<JigsawPuzzle data={mockData} />);
+    render(<JigsawPuzzle data={mockData} gameSlug="test-slug" />);
 
     const selector = screen.getByLabelText(/Difficulty:/i) as HTMLSelectElement;
     expect(selector.value).toBe("easy");
   });
 
   it("changes difficulty when selector is changed", () => {
-    render(<JigsawPuzzle data={mockData} />);
+    render(<JigsawPuzzle data={mockData} gameSlug="test-slug" />);
 
     const selector = screen.getByLabelText(/Difficulty:/i) as HTMLSelectElement;
 
@@ -81,7 +101,7 @@ describe("JigsawPuzzle Component", () => {
   });
 
   it("scrambles pieces when the scramble button is clicked", () => {
-    render(<JigsawPuzzle data={mockData} />);
+    render(<JigsawPuzzle data={mockData} gameSlug="test-slug" />);
 
     const scrambleButton = screen.getByText(/Scramble Pieces/i);
     expect(scrambleButton).toBeInTheDocument();
@@ -94,7 +114,7 @@ describe("JigsawPuzzle Component", () => {
   });
 
   it("shows the completion overlay when all pieces are solved", () => {
-    render(<JigsawPuzzle data={mockData} />);
+    render(<JigsawPuzzle data={mockData} gameSlug="test-slug" />);
 
     // Mock the completion state
     const completionMessage = screen.queryByText(/Puzzle Complete/i);

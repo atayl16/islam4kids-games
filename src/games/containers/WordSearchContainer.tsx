@@ -53,5 +53,5 @@ export const WordSearchContainer = () => {
   // Extract the category from the puzzle data
   const category = puzzleData.words[0]?.categories?.[0] || "general";
 
-  return <WordSearch data={puzzleData} category={category} />;
+  return <WordSearch data={puzzleData} category={category} gameSlug={gameSlug || 'unknown'} />;
 };

@@ -3,6 +3,26 @@ import userEvent from '@testing-library/user-event';
 import { QuizGame } from './index';
 import { QuizQuestion } from './types';
 
+// Mock progress context
+jest.mock('../../../contexts/ProgressContext', () => ({
+  useProgressContext: () => ({
+    recordGameSession: jest.fn(),
+    unlockAchievement: jest.fn(),
+    getGameStats: jest.fn(() => ({ highScore: 0, bestTime: null, hasPlayed: false })),
+    resetProgress: jest.fn(),
+    progress: {
+      gamesPlayed: 0,
+      gamesCompleted: 0,
+      totalScore: 0,
+      highScores: {},
+      completionTimes: {},
+      lastPlayed: '',
+      streak: 0,
+      achievements: []
+    }
+  })
+}));
+
 // Mock Audio
 global.Audio = jest.fn().mockImplementation(() => ({
   play: jest.fn().mockResolvedValue(undefined),
@@ -52,20 +72,20 @@ const mockQuestions: QuizQuestion[] = [
 
 describe('QuizGame Component Tests', () => {
   it('renders game interface', () => {
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     expect(screen.getByText('Quiz Game')).toBeInTheDocument();
   });
 
   it('displays question on medium difficulty', () => {
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     // Medium difficulty asks for term given translation
     expect(screen.getByText(/What is the term for/)).toBeInTheDocument();
   });
 
   it('displays answer options', () => {
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     // Get all buttons - there should be 4 answer buttons
     const buttons = screen.getAllByRole('button');
@@ -77,7 +97,7 @@ describe('QuizGame Component Tests', () => {
 
   it('provides feedback for correct answers', async () => {
     const user = userEvent.setup();
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     // On medium difficulty, correct answers are terms not translations
     // Get the question to find out what the correct answer is
@@ -102,7 +122,7 @@ describe('QuizGame Component Tests', () => {
 
   it('provides feedback for incorrect answers', async () => {
     const user = userEvent.setup();
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     // Get the question to find what the INCORRECT answer is
     const questionText = screen.getByRole('heading', { level: 3 }).textContent;
@@ -123,25 +143,25 @@ describe('QuizGame Component Tests', () => {
   });
 
   it('shows difficulty selector', () => {
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     expect(screen.getByText('Difficulty:')).toBeInTheDocument();
   });
 
   it('has restart button', () => {
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     expect(screen.getByRole('button', { name: /Restart/ })).toBeInTheDocument();
   });
 
   it('shows question progress', () => {
-    render(<QuizGame questions={mockQuestions} />);
+    render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     expect(screen.getByText(/Question 1 of/)).toBeInTheDocument();
   });
 
   it('has Tailwind styling classes', () => {
-    const { container } = render(<QuizGame questions={mockQuestions} />);
+    const { container } = render(<QuizGame questions={mockQuestions} gameSlug="test-slug" />);
     
     const mainDiv = container.firstChild as HTMLElement;
     expect(mainDiv).toHaveClass('mx-auto');

@@ -3,6 +3,26 @@ import userEvent from '@testing-library/user-event';
 import { MemoryMatch } from './index';
 import { WordBankEntry } from '../../../types/WordBank';
 
+// Mock progress context
+jest.mock('../../../contexts/ProgressContext', () => ({
+  useProgressContext: () => ({
+    recordGameSession: jest.fn(),
+    unlockAchievement: jest.fn(),
+    getGameStats: jest.fn(() => ({ highScore: 0, bestTime: null, hasPlayed: false })),
+    resetProgress: jest.fn(),
+    progress: {
+      gamesPlayed: 0,
+      gamesCompleted: 0,
+      totalScore: 0,
+      highScores: {},
+      completionTimes: {},
+      lastPlayed: '',
+      streak: 0,
+      achievements: []
+    }
+  })
+}));
+
 // Mock Audio
 global.Audio = jest.fn().mockImplementation(() => ({
   play: jest.fn().mockResolvedValue(undefined),
@@ -56,14 +76,14 @@ const mockWords: WordBankEntry[] = [
 
 describe('MemoryMatch Component', () => {
   it('renders the game interface', () => {
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     expect(screen.getByText('Memory Match')).toBeInTheDocument();
     expect(screen.getByText(/Match all the cards/i)).toBeInTheDocument();
   });
 
   it('creates pairs of cards for each word', () => {
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     // Each word should have 2 cards (pairs)
     const cards = screen.getAllByTestId('memory-card');
@@ -72,7 +92,7 @@ describe('MemoryMatch Component', () => {
 
   it('flips card on click', async () => {
     const user = userEvent.setup();
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     const cards = screen.getAllByTestId('memory-card');
     const firstCard = cards[0];
@@ -85,7 +105,7 @@ describe('MemoryMatch Component', () => {
 
   it('allows selecting two cards', async () => {
     const user = userEvent.setup();
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     const cards = screen.getAllByTestId('memory-card');
     
@@ -99,7 +119,7 @@ describe('MemoryMatch Component', () => {
 
   it('tracks move count', async () => {
     const user = userEvent.setup();
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
 
     const cards = screen.getAllByTestId('memory-card');
 
@@ -118,27 +138,27 @@ describe('MemoryMatch Component', () => {
   });
 
   it('displays difficulty selector', () => {
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     expect(screen.getByText('Difficulty:')).toBeInTheDocument();
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
   it('has reset game button', () => {
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     expect(screen.getByRole('button', { name: /Reset Game/ })).toBeInTheDocument();
   });
 
   it('displays hint button', () => {
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     expect(screen.getByRole('button', { name: /Show Hint/ })).toBeInTheDocument();
   });
 
   it('shows hint when hint button is clicked', async () => {
     const user = userEvent.setup();
-    render(<MemoryMatch words={mockWords} />);
+    render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     const hintButton = screen.getByRole('button', { name: /Show Hint/ });
     await user.click(hintButton);
@@ -147,7 +167,7 @@ describe('MemoryMatch Component', () => {
   });
 
   it('has Tailwind styling classes', () => {
-    const { container } = render(<MemoryMatch words={mockWords} />);
+    const { container } = render(<MemoryMatch words={mockWords} gameSlug="test-slug" />);
     
     const mainDiv = container.firstChild as HTMLElement;
     expect(mainDiv).toHaveClass('mx-auto');

@@ -82,5 +82,5 @@ export const JigsawPuzzleContainer = () => {
     }
   };
 
-  return <JigsawPuzzle data={enhancedData} />;
+  return <JigsawPuzzle data={enhancedData} gameSlug={puzzleSlug || 'unknown'} />;
 };
