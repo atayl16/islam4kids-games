@@ -6,14 +6,24 @@ import { useProgress } from '../../hooks/useProgress';
 
 export const Game2048Container = () => {
   const navigate = useNavigate();
-  const { recordGameCompletion } = useProgress();
+  const { recordGameSession } = useProgress();
 
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [currentScore, setCurrentScore] = useState(0);
+  const [startTime] = useState(Date.now());
 
   const handleComplete = () => {
     // Record completion in progress tracking
-    recordGameCompletion('2048', difficulty, currentScore);
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000); // in seconds
+    recordGameSession({
+      gameType: 'game2048',
+      gameSlug: '2048',
+      score: currentScore,
+      completed: true,
+      timeSpent,
+      difficulty,
+      timestamp: new Date().toISOString(),
+    });
     navigate('/');
   };
 
@@ -21,9 +31,19 @@ export const Game2048Container = () => {
     setCurrentScore(score);
   };
 
+  const difficultyOptions = [
+    { value: 'easy', label: 'Easy (3x3)' },
+    { value: 'medium', label: 'Medium (4x4)' },
+    { value: 'hard', label: 'Hard (5x5)' },
+  ];
+
   return (
     <div>
-      <DifficultySelector difficulty={difficulty} onChange={setDifficulty} />
+      <DifficultySelector
+        currentDifficulty={difficulty}
+        onDifficultyChange={(value) => setDifficulty(value as 'easy' | 'medium' | 'hard')}
+        options={difficultyOptions}
+      />
       <Game2048
         difficulty={difficulty}
         onComplete={handleComplete}
