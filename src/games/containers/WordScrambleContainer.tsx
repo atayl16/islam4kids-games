@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { WordScramble } from "../templates/WordScramble";
 import { wordScramblePuzzles, WordScrambleData } from "../registry";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const WordScrambleContainer = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
@@ -46,12 +47,12 @@ export const WordScrambleContainer = () => {
   }, [gameSlug]);
 
   if (loading) {
-    return <div className="loading">Loading puzzle...</div>;
+    return <LoadingSpinner message="Loading Word Scramble..." />;
   }
 
   if (error || !puzzleData) {
-    return <div className="error">{error || "Something went wrong"}</div>;
+    return <div className="error-message">{error || "Something went wrong"}</div>;
   }
 
-  return <WordScramble data={puzzleData} />;
+  return <WordScramble data={puzzleData} gameSlug={gameSlug || 'unknown'} />;
 };

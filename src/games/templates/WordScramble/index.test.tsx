@@ -17,6 +17,26 @@ jest.mock('react-dnd-touch-backend', () => ({
   TouchBackend: {}
 }));
 
+// Mock progress context
+jest.mock('../../../contexts/ProgressContext', () => ({
+  useProgressContext: () => ({
+    recordGameSession: jest.fn(),
+    unlockAchievement: jest.fn(),
+    getGameStats: jest.fn(() => ({ highScore: 0, bestTime: null, hasPlayed: false })),
+    resetProgress: jest.fn(),
+    progress: {
+      gamesPlayed: 0,
+      gamesCompleted: 0,
+      totalScore: 0,
+      highScores: {},
+      completionTimes: {},
+      lastPlayed: '',
+      streak: 0,
+      achievements: []
+    }
+  })
+}));
+
 // Import component after mocks to ensure mocks are used
 import { WordScramble } from './index';
 
@@ -75,21 +95,21 @@ describe('WordScramble Component', () => {
   });
 
   test('renders the word scramble game', () => {
-    render(<WordScramble data={mockData} />);
+    render(<WordScramble data={mockData} gameSlug="test-slug" />);
     
     expect(screen.getByText('Islamic Terms')).toBeInTheDocument();
     expect(screen.getByText('Rearrange the letters to form Islamic terms')).toBeInTheDocument();
   });
 
   test('renders difficulty selector', () => {
-    render(<WordScramble data={mockData} />);
+    render(<WordScramble data={mockData} gameSlug="test-slug" />);
     
     // Check that the difficulty dropdown exists
     expect(screen.getByRole('combobox')).toBeInTheDocument();
   });
 
   test('shows and hides hint when hint button is clicked', () => {
-    render(<WordScramble data={mockData} />);
+    render(<WordScramble data={mockData} gameSlug="test-slug" />);
     
     // Initially, hint is not shown
     expect(screen.queryByText('Hint:')).not.toBeInTheDocument();
@@ -108,15 +128,15 @@ describe('WordScramble Component', () => {
   });
 
   test('renders reset button', () => {
-    render(<WordScramble data={mockData} />);
+    render(<WordScramble data={mockData} gameSlug="test-slug" />);
     
     // Check that the reset button exists
     expect(screen.getByText('Reset Word')).toBeInTheDocument();
   });
 
   test('shows loading message when no data is provided', () => {
-    render(<WordScramble data={{meta: {title: '', instructions: '', difficulty: 'easy', learningObjectives: []}, words: []}} />);
-    
+    render(<WordScramble data={{meta: {title: '', instructions: '', difficulty: 'easy', learningObjectives: []}, words: []}} gameSlug="test-slug" />);
+
     expect(screen.getByText('Loading word puzzle...')).toBeInTheDocument();
   });
 });

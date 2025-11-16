@@ -3,6 +3,7 @@ import { MemoryMatch } from "../templates/MemoryMatch";
 import { MemoryMatchData } from "../templates/MemoryMatch/types";
 import { useParams } from "react-router-dom";
 import { memoryMatchPuzzles } from "../registry";
+import { LoadingSpinner } from "../../components/LoadingSpinner";
 
 export const MemoryMatchContainer: React.FC = () => {
   const { categorySlug } = useParams<{ categorySlug: string }>();
@@ -48,16 +49,16 @@ export const MemoryMatchContainer: React.FC = () => {
   }, [categorySlug]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner message="Loading Memory Match..." />;
   }
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="error-message">{error}</div>;
   }
 
   if (!gameData) {
     return <div>No game data available.</div>;
   }
 
-  return <MemoryMatch words={gameData.words} />;
+  return <MemoryMatch words={gameData.words} gameSlug={categorySlug || 'unknown'} />;
 };

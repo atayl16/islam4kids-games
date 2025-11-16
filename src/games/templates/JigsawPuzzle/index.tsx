@@ -9,7 +9,6 @@ import {
   Z_INDEX,
 } from "./constants";
 import { JigsawConfig } from "./types";
-import "../../../styles/jigsaw.css";
 
 // Import components
 import { PuzzleBoard } from "./components/PuzzleBoard";
@@ -17,6 +16,7 @@ import { PieceTray } from "./components/PieceTray";
 import { Piece } from "./Piece";
 import CompletionOverlay from "../../../components/game-common/CompletionOverlay";
 import { PuzzleControls } from "../../../components/game-common/PuzzleControls";
+import { useProgressContext } from "../../../contexts/ProgressContext";
 
 // Import hooks
 import { useBoardPosition } from "./hooks/useBoardPosition";
@@ -57,7 +57,11 @@ const calculateResponsiveBoardDimensions = () => {
   return { boardWidth, boardHeight };
 };
 
-export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
+export const JigsawPuzzle = ({ data, gameSlug }: { data: JigsawConfig; gameSlug: string }) => {
+  // Progress tracking
+  const { recordGameSession } = useProgressContext();
+  const startTimeRef = useRef<number>(Date.now());
+
   // Validate configuration
   const validatedData = validateJigsawConfig(data);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
@@ -170,13 +174,25 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
   // Update overlay visibility when the puzzle is solved
   useEffect(() => {
     if (solvedCount === totalPieces && totalPieces > 0) {
+      // Record game session before showing overlay
+      const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+      recordGameSession({
+        gameType: 'jigsawPuzzle',
+        gameSlug,
+        score: totalPieces, // Score is number of pieces completed
+        completed: true,
+        timeSpent,
+        difficulty: currentDifficulty,
+        timestamp: new Date().toISOString(),
+      });
       setIsOverlayVisible(true);
     }
-  }, [solvedCount, totalPieces]);
+  }, [solvedCount, totalPieces, currentDifficulty, gameSlug, recordGameSession]);
 
   // Handle difficulty change
   const handleDifficultyChange = (difficulty: string) => {
     setCurrentDifficulty(difficulty as keyof typeof JIGSAW_DIFFICULTY_PRESETS);
+    startTimeRef.current = Date.now(); // Reset timer when difficulty changes
   };
   
   const fullContainerWidth = validBoardWidth * 2 + GAME_SETTINGS.PIECE_TRAY_GAP;
@@ -218,27 +234,17 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <div className="puzzle-wrapper" ref={wrapperRef}>
+      <div className="w-full max-w-7xl mx-auto space-y-6" ref={wrapperRef}>
         {imageError ? (
-          <div
-            style={{
-              padding: "2rem",
-              textAlign: "center",
-              backgroundColor: "#fff5f5",
-              border: "2px solid #fc8181",
-              borderRadius: "8px",
-              margin: "2rem",
-            }}
-          >
-            <h3 style={{ color: "#c53030" }}>Image Loading Error</h3>
-            <p style={{ color: "#742a2a" }}>{imageError}</p>
+          <div className="bg-amber-50 border-2 border-amber-500 rounded-2xl p-8 text-center m-8">
+            <h3 className="text-2xl font-bold text-amber-600 mb-3">Image Loading Error</h3>
+            <p className="text-amber-700">{imageError}</p>
           </div>
         ) : (
           <div
-            className="puzzle-container"
+            className="relative"
             style={{
               maxWidth: fullContainerWidth,
-              position: "relative",
             }}
           >
             {/* Controls section */}
@@ -257,12 +263,9 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
           />
 
           <div
-            className="game-area"
+            className="flex relative items-start"
             style={{
               height: maxVisibleHeight,
-              display: "flex",
-              position: "relative",
-              alignItems: "flex-start", // Ensure top alignment
             }}
           >
             {/* Puzzle Board */}
@@ -286,14 +289,8 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
 
           {/* Unsolved pieces floating layer */}
           <div
-            className="unsolved-pieces-container"
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
             style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              pointerEvents: "none",
               zIndex: Z_INDEX.UNSOLVED_PIECES,
             }}
           >
@@ -327,6 +324,7 @@ export const JigsawPuzzle = ({ data }: { data: JigsawConfig }) => {
             onPlayAgain={() => {
               initializePieces();
               setIsOverlayVisible(false); // Close overlay after restarting
+              startTimeRef.current = Date.now(); // Reset timer
             }}
             soundEffect="/audio/success.mp3"
           />
