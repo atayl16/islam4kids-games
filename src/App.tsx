@@ -12,6 +12,7 @@ import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer"
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
 import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer";
 import { QuizGameContainer } from "./games/containers/QuizGameContainer";
+import { SlidingPuzzleContainer } from "./games/containers/SlidingPuzzleContainer";
 import "./styles/tailwind.css";
 
 export default function App() {
@@ -110,6 +111,22 @@ export default function App() {
               element={
                 <div className="p-4">
                   <QuizGameContainer />
+                </div>
+              }
+            />
+            <Route
+              path="/sliding-puzzle/:puzzleSlug"
+              element={
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-violet-50/30">
+                  <SlidingPuzzleContainer />
+                </div>
+              }
+            />
+            <Route
+              path="/embed/sliding-puzzle/:puzzleSlug"
+              element={
+                <div className="p-4">
+                  <SlidingPuzzleContainer />
                 </div>
               }
             />

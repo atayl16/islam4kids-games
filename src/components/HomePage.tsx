@@ -13,14 +13,14 @@ const formatName = (slug: string) => {
 
 // Game card component with brand styling
 const GameCard = ({ title, type, slug, path }: { title: string; type: string; slug: string; path: string }) => {
-  // Get thumbnail image for jigsaw puzzles
-  const thumbnailSrc = type === "jigsaw"
+  // Get thumbnail image for jigsaw and sliding puzzles
+  const thumbnailSrc = (type === "jigsaw" || type === "slidingPuzzle")
     ? `/images/jigsaw/${slug}.jpg`
     : undefined;
 
   // Fallback to png if needed (with guard to prevent infinite loop)
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    if (type !== "jigsaw") return;
+    if (type !== "jigsaw" && type !== "slidingPuzzle") return;
 
     const img = e.target as HTMLImageElement;
     if (img.dataset.fallbackApplied === "true") return;
@@ -38,6 +38,8 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
         return { name: "Word Search", emoji: "🔍", gradient: "from-violet-500 to-violet-400" };
       case "jigsaw":
         return { name: "Jigsaw Puzzle", emoji: "🧩", gradient: "from-amber-500 to-amber-400" };
+      case "slidingPuzzle":
+        return { name: "Sliding Puzzle", emoji: "🔢", gradient: "from-violet-600 to-amber-500" };
       case "memoryMatchIcon":
         return { name: "Memory Match", emoji: "🔄", gradient: "from-emerald-500 to-violet-500" };
       case "quizGame":
@@ -62,7 +64,7 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
 
       <div className="p-6">
         {/* Icon or Image */}
-        {type === "jigsaw" ? (
+        {(type === "jigsaw" || type === "slidingPuzzle") ? (
           <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-4 shadow-lg">
             <img
               src={thumbnailSrc}
@@ -77,8 +79,8 @@ const GameCard = ({ title, type, slug, path }: { title: string; type: string; sl
           </div>
         )}
 
-        {/* Title - only show for non-jigsaw games */}
-        {type !== "jigsaw" && (
+        {/* Title - only show for non-image games */}
+        {type !== "jigsaw" && type !== "slidingPuzzle" && (
           <h3 className="text-2xl font-bold text-slate-700 mb-2">
             {title}
           </h3>
@@ -114,26 +116,32 @@ export const HomePage = () => {
   
   // Create an array of all games with their types
   const allGames = [
-    ...wordScramble.map(slug => ({ 
-      slug, 
+    ...wordScramble.map(slug => ({
+      slug,
       title: `${formatName(slug)} Word Scramble`,
       type: "wordScramble",
       path: `/wordscramble/${slug}`
     })),
-    ...wordSearch.map(slug => ({ 
-      slug, 
+    ...wordSearch.map(slug => ({
+      slug,
       title: `${formatName(slug)} Word Search`,
       type: "wordSearch",
       path: `/wordsearch/${slug}`
     })),
-    ...jigsaw.map(slug => ({ 
-      slug, 
+    ...jigsaw.map(slug => ({
+      slug,
       title: `${formatName(slug)} Jigsaw Puzzle`,
       type: "jigsaw",
       path: `/jigsaw/${slug}`
     })),
-    ...memoryMatch.map(slug => ({ 
-      slug, 
+    ...jigsaw.map(slug => ({
+      slug,
+      title: `${formatName(slug)} Sliding Puzzle`,
+      type: "slidingPuzzle",
+      path: `/sliding-puzzle/${slug}`
+    })),
+    ...memoryMatch.map(slug => ({
+      slug,
       title: `${formatName(slug)} Memory Match`,
       type: "memoryMatchIcon",
       path: `/memorymatch/${slug}`
@@ -162,8 +170,8 @@ export const HomePage = () => {
   // Validate the URL parameter when component mounts
   useEffect(() => {
     // Valid filter values
-    const validFilters = ["all", "wordScramble", "wordSearch", "jigsaw", "memoryMatchIcon", "quizGame"];
-    
+    const validFilters = ["all", "wordScramble", "wordSearch", "jigsaw", "slidingPuzzle", "memoryMatchIcon", "quizGame"];
+
     // If filter parameter is invalid, redirect to the homepage with no filter
     if (filterParam !== "all" && !validFilters.includes(filterParam)) {
       navigate("/", { replace: true });
