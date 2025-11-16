@@ -1,4 +1,4 @@
-import { Tile, GRID_SIZES } from './types';
+import { Tile } from './types';
 
 /**
  * Create initial solved tiles
