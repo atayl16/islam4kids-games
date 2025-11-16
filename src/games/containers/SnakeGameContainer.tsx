@@ -7,15 +7,25 @@ import { useProgress } from '../../hooks/useProgress';
 export const SnakeGameContainer = () => {
   const { gameSlug } = useParams<{ gameSlug: string }>();
   const navigate = useNavigate();
-  const { recordGameCompletion } = useProgress();
+  const { recordGameSession } = useProgress();
 
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [currentScore, setCurrentScore] = useState(0);
+  const [startTime] = useState(Date.now());
 
   const handleComplete = () => {
     // Record completion in progress tracking
     if (gameSlug) {
-      recordGameCompletion(gameSlug, difficulty, currentScore);
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000); // in seconds
+      recordGameSession({
+        gameType: 'snake',
+        gameSlug: gameSlug,
+        score: currentScore,
+        completed: true,
+        timeSpent,
+        difficulty,
+        timestamp: new Date().toISOString(),
+      });
     }
     navigate('/');
   };
@@ -24,11 +34,18 @@ export const SnakeGameContainer = () => {
     setCurrentScore(score);
   };
 
+  const difficultyOptions = [
+    { value: 'easy', label: 'Easy' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'hard', label: 'Hard' },
+  ];
+
   return (
     <div>
       <DifficultySelector
-        difficulty={difficulty}
-        onChange={setDifficulty}
+        currentDifficulty={difficulty}
+        onDifficultyChange={(value) => setDifficulty(value as 'easy' | 'medium' | 'hard')}
+        options={difficultyOptions}
       />
       <SnakeGame
         difficulty={difficulty}
