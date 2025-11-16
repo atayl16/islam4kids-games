@@ -6,14 +6,24 @@ import { useProgress } from '../../hooks/useProgress';
 
 export const ConnectFourGameContainer = () => {
   const navigate = useNavigate();
-  const { recordGameCompletion } = useProgress();
+  const { recordGameSession } = useProgress();
 
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy');
   const [currentScore, setCurrentScore] = useState(0);
+  const [startTime] = useState(Date.now());
 
   const handleComplete = () => {
     // Record completion in progress tracking
-    recordGameCompletion('connect-four', difficulty, currentScore);
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000); // in seconds
+    recordGameSession({
+      gameType: 'connectfour',
+      gameSlug: 'connect-four',
+      score: currentScore,
+      completed: true,
+      timeSpent,
+      difficulty,
+      timestamp: new Date().toISOString(),
+    });
     navigate('/');
   };
 
@@ -21,11 +31,18 @@ export const ConnectFourGameContainer = () => {
     setCurrentScore(score);
   };
 
+  const difficultyOptions = [
+    { value: 'easy', label: 'Easy' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'hard', label: 'Hard' },
+  ];
+
   return (
     <div>
       <DifficultySelector
-        difficulty={difficulty}
-        onChange={setDifficulty}
+        currentDifficulty={difficulty}
+        onDifficultyChange={(value) => setDifficulty(value as 'easy' | 'medium' | 'hard')}
+        options={difficultyOptions}
       />
       <ConnectFourGame
         difficulty={difficulty}
