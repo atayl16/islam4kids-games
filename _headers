@@ -1,2 +1,3 @@
 /*
+  X-Frame-Options: ALLOW-FROM https://islam4kids.org
   Content-Security-Policy: frame-ancestors 'self' https://islam4kids.org https://*.islam4kids.org http://localhost:3000
