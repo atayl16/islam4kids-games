@@ -12,6 +12,7 @@ import { JigsawPuzzleContainer } from "./games/containers/JigsawPuzzleContainer"
 import { WordSearchContainer } from "./games/containers/WordSearchContainer";
 import { MemoryMatchContainer } from "./games/containers/MemoryMatchContainer";
 import { QuizGameContainer } from "./games/containers/QuizGameContainer";
+import { ConnectFourGameContainer } from "./games/containers/ConnectFourGameContainer";
 import "./styles/tailwind.css";
 
 export default function App() {
@@ -110,6 +111,22 @@ export default function App() {
               element={
                 <div className="p-4">
                   <QuizGameContainer />
+                </div>
+              }
+            />
+            <Route
+              path="/connect-four"
+              element={
+                <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/30 to-violet-50/30">
+                  <ConnectFourGameContainer />
+                </div>
+              }
+            />
+            <Route
+              path="/embed/connect-four"
+              element={
+                <div className="p-4">
+                  <ConnectFourGameContainer />
                 </div>
               }
             />
